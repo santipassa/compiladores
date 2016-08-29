@@ -1,6 +1,7 @@
 %%
 %public
 %class analisisLexico
+%standalone
 %unicode
 %line
 %column
