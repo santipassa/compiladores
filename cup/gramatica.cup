@@ -1,29 +1,50 @@
+package Example;
 
 import java_cup.runtime.*;
+import Example.Parser.Expr;
 
 parser code {:
     
 :}
 
-terminal SEMI, PLUS, TIMES, LPAREN, RPAREN;
+terminal TRUE, FALSE, FLOAT, SEMICOLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, COMILLA_DOBLE, CORCH_A, CORCH_C, ASIG, IGUAL, SUM, RES, MENOR, MAYOR MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC;
 terminal Integer NUMBER;
 
 non terminal expr_list, expr_part;
 non terminal Expr expr;
 
-precedence left PLUS;
-precedence left TIMES;
+program ::= class_decl
 
-expr_list ::= expr_list expr_part | expr_part;
-expr_part ::= expr:e {: System.out.println(" = "+e.eval()+";"); :} SEMI
-            | error:e SEMI:s {: parser.report_error("Syntax error in input from "+exleft +" to "+sxright,e); :}
-            ;
-expr      ::= NUMBER:n
-              {: RESULT= new Expr.Const(nxleft,n,nxright); :}
-            | expr:l PLUS expr:r
-	    {: RESULT=new Expr.BinExpr(l,sym.PLUS,r); :}
-	    | expr:l TIMES expr:r
-	    {: RESULT=new Expr.BinExpr(l,sym.TIMES,r); :}
-	    | LPAREN expr:e RPAREN
-	      {: RESULT=e; :}
-	    ;
+class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
+	|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
+	|CLASS ID MUSTACHE_A field_declarations MUSTACHE_C
+	|CLASS ID MUSTACHE_A  MUSTACHE_C
+
+field_decl ::=  type MUSTACHE_A ID 
+			| ID CORCH_A int_literal CORCH_C MUSTACHE_C SEMICOLON
+
+field_declarations ::= field_decl
+			|field_declarations SEMICOLON fiel_decl
+
+
+method_declarations ::= type ID PAR_A MUSTACHE_A type ID MUSTACHE_C PAR_C body
+			
+
+method_decl ::= method_declarations
+		|method_decl 
+
+
+int_literal ::= NUM 
+		|NUM NUM
+
+
+body ::= block | extern ;
+
+
+block ::= {field_decl* statement*}
+
+
+type ::= integer | float | bool | id | void
+
+
+
