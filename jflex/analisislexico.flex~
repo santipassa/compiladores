@@ -47,6 +47,11 @@ extern = extern
 whitespace = [ \t\n]+
 comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
+parentesisA = (
+parentesisC = )
+corcheteA = {
+corcheteC = 
+
 %%
 "true" {return TRUE}
 "false"{return FALSE}
