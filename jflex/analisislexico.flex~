@@ -1,4 +1,4 @@
-import java_cup.runtime.ComplexSymbolFactory.Location
+import java_cup.runtime.Symbol;
 %%
 %public
 %class analisisLexico
@@ -47,15 +47,11 @@ extern = extern
 whitespace = [ \t\n]+
 comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
-parentesisA = (
-parentesisC = )
-corcheteA = {
-corcheteC = 
-
 %%
-"true" {return TRUE}
-"false"{return FALSE}
-";" {return SEMICOLON}
+"true" {SymbolFactory fs = n
+		return SymbolTRUE;}
+"false"{return FALSE;}
+";" {return SEMICOLON;}
 ")" {return PAR_C;}
 "(" {return PAR_A;}	
 "{" {return MUSTACHE_A;}
