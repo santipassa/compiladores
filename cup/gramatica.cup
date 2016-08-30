@@ -1,13 +1,13 @@
-package Example;
+
 
 import java_cup.runtime.*;
-import Example.Parser.Expr;
+
 
 parser code {:
     
 :}
 
-terminal TRUE, FALSE, FLOAT, SEMICOLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, COMILLA_DOBLE, CORCH_A, CORCH_C, ASIG, IGUAL, SUM, RES, MENOR, MAYOR MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC;
+terminal TRUE, FALSE, FLOAT, SEMICOLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, IGUAL, SUM, RES, MENOR, MAYOR MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC;
 terminal Integer NUMBER;
 
 non terminal expr_list, expr_part;
