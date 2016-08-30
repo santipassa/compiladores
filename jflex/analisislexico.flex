@@ -1,16 +1,18 @@
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 %%
 %public
-%class analisisLexico
 %unicode
+%cup
+%char
 %line
 %column
-%class Scanner
+%class AnalisisLexico
 %{
 
 	private ComplexSymbolFactory sf;
 
-	public Scanner(java.io.InputStream r, ComplexSymbolFactory sf){
+	public AnalisisLexico(java.io.InputStream r, ComplexSymbolFactory sf){
 		this(r);
 		this.sf=sf;
 	}
@@ -24,16 +26,15 @@ import java_cup.runtime.Symbol;
 %eofval{
     return sf.newSymbol("EOF",sym.EOF);
 %eofval}
-%{
-
-%}  
-/*macros*/
+%% 
+/*Definición de macros*/
 num =  [0-9]
 id = [a-z][a-z0-9]*
 real = ([0-9]+"."[0-9]+)
 whitespace = [ \t\n]+
 comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
+/* Código asociado */
 %%
 "true" {return  new symbol("TRUE", sym.TRUE);}
 "false" {return new symbol("FALSE",sym.FALSE);}
@@ -47,7 +48,7 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "=" {return new symbol("ASIG",sym.ASIG);}
 "==" {return new symbol("IGUAL",sym.IGUAL);}
 "+" {return new symbol("SUM",sym.SUM);}
-"-" {return new symbol("RES",sym.RES;}
+"-" {return new symbol("RES",sym.RES);}
 "<" {return new symbol("MENOR",sym.MENOR);}
 ">" {return new symbol("MAYOR",sym.MAYOR);}
 "*" {return new symbol("MUL",sym.MUL);}
@@ -78,6 +79,6 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 {id}	  {return new symbol("ID",sym.ID);}
 {real}    {return new symbol("REAL",sym.REAL);}
 {whitespace} {/* no hace nada */}
-{comentariounalinea} { }
-{comentariovariaslineas} { }
+{comentariounalinea} {/* no hace nada */}
+{comentariovariaslineas} {/* no hace nada */}
 . { System.err.println("Illegal character: "+yytext()); }
