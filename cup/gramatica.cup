@@ -33,18 +33,76 @@ method_declarations ::= type ID PAR_A MUSTACHE_A type ID MUSTACHE_C PAR_C body
 method_decl ::= method_declarations
 		|method_decl 
 
+body ::= block
+	| EXTERN SEMICOLON
 
-int_literal ::= NUM 
-		|NUM NUM
+block ::= MUSTACHE_A field_declarations statement MUSTACHE_C
+	| MUSTACHE_A field_declarations MUSTACHE_C
+	| MUSTACHE_A statement MUSTACHE_C
+	| MUSTACHE_A MUSTACHE_C
+
+type ::= INTEGER
+	|FLOAT
+	|BOOL
+	|ID
+	|VOID
+
+statement ::= location asign_op expr SEMICOLON
+	  |method_call SEMICOLON
+	  |IF PAR_A expr PAR_C statement ELSE statement
+	  |FOR ID IGUAL expr SEMICOLON expr statement
+	  |WHILE expr statement
+	  |RETURN expr SEMICOLON
+	  |BREAK SEMICOLON
+	  |CONTINUE SEMICOLON
+	  |SEMICOLON
+	  |block
+
+asign_op ::= ASIG
+	  | +=
+	  | -=
+
+expr ::= location
+	| method_call
+	| literal
+	| expr bin_op expr
+	| RES expr
+	| NEGAC expr
+	| PAR_A expr PAR_C
+
+bin_op ::= arith_op
+	| rel_op
+	| eq_op
+	| cond_op
+
+arith_op ::= SUM
+	  | RES
+	  | MUL
+	  | DIV
+	  | PORCENT
+
+rel_op ::= MENOR
+	| MAYOR
+	| MAY_IGUAL
+	| MEN_IGUAL
+
+eq_op ::= IGUAL
+	| NO_IGUAL
+
+cond_op ::= AND
+	| OR
+
+literal ::= int_literal
+	| float_literal
+	| bool_literal
+
+bool_literal ::= TRUE
+	      | FALSE
 
 
-body ::= block | extern ;
 
 
-block ::= {field_decl* statement*}
 
-
-type ::= integer | float | bool | id | void
 
 
 
