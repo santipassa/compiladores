@@ -58,8 +58,6 @@ statement ::= location asign_op expr SEMICOLON
 	  |block
 	  ;
 asign_op ::= ASIG
-	  | +=
-	  | -=
 	  ;
 expr ::= location
 	| method_call
