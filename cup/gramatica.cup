@@ -7,48 +7,45 @@ parser code {:
     
 :}
 
-terminal TRUE, FALSE, REAL, SEMICOLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, NUM,EOF;
-terminal Integer NUMBER;
+terminal TRUE, FALSE, REAL, SEMICOLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN;
+terminal Integer NUM;
 
 non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr;
 
 
-suma ::= NUM SUM NUM
-
-program ::= class_decl
+program ::= class_decl;
 
 class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
 	|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
 	|CLASS ID MUSTACHE_A field_declarations MUSTACHE_C
 	|CLASS ID MUSTACHE_A  MUSTACHE_C
-
+	;
 field_decl ::=  type MUSTACHE_A ID 
-			| ID CORCH_A int_literal CORCH_C MUSTACHE_C SEMICOLON
-
+		| ID CORCH_A int_literal CORCH_C MUSTACHE_C SEMICOLON
+		;		
 field_declarations ::= field_decl
 			|field_declarations SEMICOLON fiel_decl
+			;
 
-
-method_declarations ::= type ID PAR_A MUSTACHE_A type ID MUSTACHE_C PAR_C body
-			
+method_declarations ::= type ID PAR_A MUSTACHE_A type ID MUSTACHE_C PAR_C body;
 
 method_decl ::= method_declarations
 		|method_decl 
-
+		;
 body ::= block
 	| EXTERN SEMICOLON
-
+	;
 block ::= MUSTACHE_A field_declarations statement MUSTACHE_C
 	| MUSTACHE_A field_declarations MUSTACHE_C
 	| MUSTACHE_A statement MUSTACHE_C
 	| MUSTACHE_A MUSTACHE_C
-
+	;
 type ::= INTEGER
 	|FLOAT
 	|BOOL
 	|ID
 	|VOID
-
+	;
 statement ::= location asign_op expr SEMICOLON
 	  |method_call SEMICOLON
 	  |IF PAR_A expr PAR_C statement ELSE statement
@@ -59,11 +56,11 @@ statement ::= location asign_op expr SEMICOLON
 	  |CONTINUE SEMICOLON
 	  |SEMICOLON
 	  |block
-
+	  ;
 asign_op ::= ASIG
 	  | +=
 	  | -=
-
+	  ;
 expr ::= location
 	| method_call
 	| literal
@@ -71,36 +68,36 @@ expr ::= location
 	| RES expr
 	| NEGAC expr
 	| PAR_A expr PAR_C
-
+	;
 bin_op ::= arith_op
 	| rel_op
 	| eq_op
 	| cond_op
-
+	;
 arith_op ::= SUM
 	  | RES
 	  | MUL
 	  | DIV
 	  | PORCENT
-
+	;
 rel_op ::= MENOR
 	| MAYOR
 	| MAY_IGUAL
 	| MEN_IGUAL
-
+	;
 eq_op ::= IGUAL
 	| NO_IGUAL
-
+	;
 cond_op ::= AND
 	| OR
-
+	;
 literal ::= int_literal
 	| float_literal
 	| bool_literal
-
+	;
 bool_literal ::= TRUE
 	      | FALSE
-
+		;
 
 
 
