@@ -13,13 +13,13 @@ terminal Integer NUM;
 non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal,alpha_num;
 
 
-program ::= class_decl;
+program ::= class_decl | class_decl program ;
 
 class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
-	|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
-	|CLASS ID MUSTACHE_A field_declarations MUSTACHE_C
-	|CLASS ID MUSTACHE_A  MUSTACHE_C
-	;
+		|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
+		|CLASS ID MUSTACHE_A field_declarations MUSTACHE_C
+		|CLASS ID MUSTACHE_A  MUSTACHE_C
+		;
 field_decl ::=  type MUSTACHE_A ID 
 		| ID CORCH_A int_literal CORCH_C MUSTACHE_C SEMICOLON
 		;		
@@ -126,15 +126,11 @@ alpha_num ::= ALPHA
 	   | GUION_BAJO
 	   ;
 
-bool_literal ::= TRUE
-	      | FALSE
-		;
+bool_literal ::= TRUE | FALSE ;
 
-int_literal ::= NUM
-	     | int_literal NUM
-	     ;
-float_literal ::= REAL
-	       ;
+int_literal ::= NUM | int_literal NUM ;
+
+float_literal ::= REAL ;
 
 
 
