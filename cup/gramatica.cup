@@ -7,10 +7,10 @@ parser code {:
     
 :}
 
-terminal TRUE, FALSE, REAL, SEMICOLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN;
+terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO;
 terminal Integer NUM;
 
-non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal;
+non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id;
 
 
 program ::= class_decl;
@@ -27,11 +27,17 @@ field_declarations ::= field_decl
 			|field_declarations SEMICOLON field_decl
 			;
 
-method_declarations ::= type ID PAR_A MUSTACHE_A type ID MUSTACHE_C PAR_C body;
+method_declarations ::= type ID PAR_A PAR_C body
+			| type ID PAR_A param_decl PAR_C body
+			;
 
 method_decl ::= method_declarations
-		|method_decl 
+		|method_decl SEMICOLON method_declarations
 		;
+
+param_decl ::= type ID
+	     | param_decl COLON type ID
+	     ;
 body ::= block
 	| EXTERN SEMICOLON
 	;
@@ -49,16 +55,37 @@ type ::= INTEGER
 statement ::= location asign_op expr SEMICOLON
 	  |method_call SEMICOLON
 	  |IF PAR_A expr PAR_C statement ELSE statement
-	  |FOR ID IGUAL expr SEMICOLON expr statement
+	  |IF PAR_A expre PAR_C statement
+	  |FOR ID IGUAL expr COLON expr statement
 	  |WHILE expr statement
 	  |RETURN expr SEMICOLON
+	  |RETURN SEMICOLON
 	  |BREAK SEMICOLON
 	  |CONTINUE SEMICOLON
 	  |SEMICOLON
 	  |block
 	  ;
+
 asign_op ::= ASIG
+	  |SUMASIG
+	  |RESASIG
 	  ;
+
+method_call ::= ID PAR_A param_expr PAR_C
+		|ID PAR_A PAR_C
+		|ID PAR_A param_id param_expr PAR_C  
+		;
+param_expr ::= expr
+	    | param_expr COLON expr
+	    ;
+param_id ::= PUNTO ID
+	  |param_id PUNTO ID
+	  ;
+location ::= ID 
+	|ID param_id
+	|ID LLAVE_A expr LLAVE_C
+	|ID param_id LLAVE_A expr LLAVE_C
+	;
 expr ::= location
 	| method_call
 	| literal
@@ -93,10 +120,21 @@ literal ::= int_literal
 	| float_literal
 	| bool_literal
 	;
+
+alpha_num ::= ALPHA
+	   | NUM
+	   | GUIONBAJO
+	   ;
+
 bool_literal ::= TRUE
 	      | FALSE
 		;
 
+int_literal ::= NUM
+	     | int_literal NUM
+	     ;
+float_literal ::= int_literal PUNTO int_literal
+	       ;
 
 
 

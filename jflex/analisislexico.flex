@@ -29,6 +29,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %% 
 /*Definición de macros*/
 num =  [0-9]
+alpha = [a-zA-Z]
 id = [a-z][a-z0-9]*
 real = ([0-9]+"."[0-9]+)
 whitespace = [ \t\n]+
@@ -39,6 +40,8 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "true" {return  new symbol("TRUE", sym.TRUE);}
 "false" {return new symbol("FALSE",sym.FALSE);}
 ";" {return new symbol("SEMICOLON",sym.SEMICOLON);}
+"," {return new symbol("COLON",sym.COLON);}
+"." {return new symbol("PUNTO",sym.PUNTO);}
 ")" {return new symbol("PAR_C",sym.PAR_C);}
 "(" {return new symbol("PAR_A",sym.PAR_A);}	
 "{" {return new symbol("MUSTACHE_A",sym.MUSTACHE_A);}
@@ -49,6 +52,8 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "==" {return new symbol("IGUAL",sym.IGUAL);}
 "+" {return new symbol("SUM",sym.SUM);}
 "-" {return new symbol("RES",sym.RES);}
+"+="{return new symbol ("SUMASIG",sym.SUMASIG);}
+"-="{return new symbol ("RESASIG",sym.RESASIG);}
 "<" {return new symbol("MENOR",sym.MENOR);}
 ">" {return new symbol("MAYOR",sym.MAYOR);}
 "*" {return new symbol("MUL",sym.MUL);}
@@ -78,6 +83,7 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 {num}    {return new symbol("NUM",sym.NUM,new Integer(yytext()));}
 {id}	  {return new symbol("ID",sym.ID);}
 {real}    {return new symbol("REAL",sym.REAL);}
+{alpha}	  {return new symbol("ALPHA",sym.ALPHA);}
 {whitespace} {/* no hace nada */}
 {comentariounalinea} {/* no hace nada */}
 {comentariovariaslineas} {/* no hace nada */}
