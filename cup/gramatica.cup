@@ -7,10 +7,10 @@ parser code {:
     
 :}
 
-terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO;
+terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO,ALPHA,GUION_BAJO;
 terminal Integer NUM;
 
-non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id;
+non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal,alpha_num;
 
 
 program ::= class_decl;
@@ -55,7 +55,7 @@ type ::= INTEGER
 statement ::= location asign_op expr SEMICOLON
 	  |method_call SEMICOLON
 	  |IF PAR_A expr PAR_C statement ELSE statement
-	  |IF PAR_A expre PAR_C statement
+	  |IF PAR_A expr PAR_C statement
 	  |FOR ID IGUAL expr COLON expr statement
 	  |WHILE expr statement
 	  |RETURN expr SEMICOLON
@@ -83,8 +83,8 @@ param_id ::= PUNTO ID
 	  ;
 location ::= ID 
 	|ID param_id
-	|ID LLAVE_A expr LLAVE_C
-	|ID param_id LLAVE_A expr LLAVE_C
+	|ID MUSTACHE_A expr MUSTACHE_C
+	|ID param_id MUSTACHE_A expr MUSTACHE_C
 	;
 expr ::= location
 	| method_call
@@ -123,7 +123,7 @@ literal ::= int_literal
 
 alpha_num ::= ALPHA
 	   | NUM
-	   | GUIONBAJO
+	   | GUION_BAJO
 	   ;
 
 bool_literal ::= TRUE
@@ -133,7 +133,7 @@ bool_literal ::= TRUE
 int_literal ::= NUM
 	     | int_literal NUM
 	     ;
-float_literal ::= int_literal PUNTO int_literal
+float_literal ::= REAL
 	       ;
 
 

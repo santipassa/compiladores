@@ -26,7 +26,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %eofval{
     return sf.newSymbol("EOF",sym.EOF);
 %eofval}
-
+/* macros */
 num = [0-9]+
 alpha = [a-zA-Z]
 id = [a-z][a-z0-9]*
@@ -35,8 +35,10 @@ whitespace = [ \t\n]+
 comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
 %%
+/* codigo asociado */
 "true" {return  new symbol("TRUE", sym.TRUE);}
 "false" {return new symbol("FALSE",sym.FALSE);}
+"_" {return new symbol("GUION_BAJO",sym.GUION_BAJO);}
 ";" {return new symbol("SEMICOLON",sym.SEMICOLON);}
 "," {return new symbol("COLON",sym.COLON);}
 "." {return new symbol("PUNTO",sym.PUNTO);}
@@ -78,6 +80,7 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "void"	{return new symbol("VOID",sym.VOID);}
 "while" {return new symbol("WHILE",sym.WHILE);}
 "extern" {return new symbol("EXTERN",sym.EXTERN);}
+"_" {return new symbol("EXTERN",sym.EXTERN);}
 {num} {return new symbol("NUM",sym.NUM,new Integer(yytext()));}
 {id} {return new symbol("ID",sym.ID);}
 {real} {return new symbol("REAL",sym.REAL);}
