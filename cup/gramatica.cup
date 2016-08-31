@@ -4,6 +4,11 @@ import java_cup.runtime.*;
 
 
 parser code {:
+	public static void main(String[] args)throws Exception{
+		ComplexSymbolFactory sf = new ComplexSymbolFactory();
+		new Parser(new AnalisisLexico(new java.io.FileInputStream(args[0],sf),sf).parse());
+		
+	}
     
 :}
 
@@ -12,7 +17,15 @@ terminal Integer NUM;
 
 non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal,alpha_num;
 
-
+precedence left PAR_A, PAR_C;
+precedence left MUSTACHE_A, MUSTACHE_C;
+precedence left CORCH_A, CORCH_C;
+precedence left ELSE, NEGAC;
+precedence nonassoc  MENOR, MAYOR, MEN_IGUAL, MAY_IGUAL;
+precedence left OR, AND, PORCENT, IGUAL, NO_IGUAL;
+precedence left SUM, RES;
+precedence left MUL, DIV;
+ 
 program ::= class_decl | class_decl program ;
 
 class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
@@ -54,8 +67,8 @@ type ::= INTEGER
 	;
 statement ::= location asign_op expr SEMICOLON
 	  |method_call SEMICOLON
-	  |IF PAR_A expr PAR_C statement ELSE statement
 	  |IF PAR_A expr PAR_C statement
+	  |IF PAR_A expr PAR_C statement ELSE statement
 	  |FOR ID IGUAL expr COLON expr statement
 	  |WHILE expr statement
 	  |RETURN expr SEMICOLON
@@ -73,18 +86,22 @@ asign_op ::= ASIG
 
 method_call ::= ID PAR_A param_expr PAR_C
 		|ID PAR_A PAR_C
-		|ID PAR_A param_id param_expr PAR_C  
+		|ID param_id PAR_A param_expr PAR_C
+		|ID param_id PAR_A PAR_C  
 		;
+
 param_expr ::= expr
 	    | param_expr COLON expr
 	    ;
+
 param_id ::= PUNTO ID
 	  |param_id PUNTO ID
 	  ;
+
 location ::= ID 
 	|ID param_id
-	|ID MUSTACHE_A expr MUSTACHE_C
-	|ID param_id MUSTACHE_A expr MUSTACHE_C
+	|ID CORCH_A expr CORCH_C
+	|ID param_id CORCH_A expr CORCH_C
 	;
 expr ::= location
 	| method_call

@@ -329,15 +329,15 @@ public class AnalisisLexico implements java_cup.runtime.Scanner {
 
 	private ComplexSymbolFactory sf;
 
-	public AnalisisLexico(java.io.InputStream r, ComplexSymbolFactory sf){
+	public AnalisisLexico(java.io.Reader r, ComplexSymbolFactory sf){
 		this(r);
 		this.sf=sf;
 	}
 	public Symbol symbol(String plaintext,int code){
-	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar));
+	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1), new Location("",yyline+1,yycolumn+yylength()));
 	}
 	public Symbol symbol(String plaintext,int code,Integer number){
-	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar),number);
+	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1), new Location("",yyline+1,yycolumn+yylength()),number);
 	}
 
 
@@ -732,19 +732,19 @@ public class AnalisisLexico implements java_cup.runtime.Scanner {
             }
           case 51: break;
           case 2: 
-            { return new symbol("NUM",sym.NUM,new Integer(yytext()));
+            { return symbol("NUM",sym.NUM,new Integer(yytext()));
             }
           case 52: break;
           case 3: 
-            { return new symbol("ALPHA",sym.ALPHA);
+            { return symbol("ALPHA",sym.ALPHA);
             }
           case 53: break;
           case 4: 
-            { return new symbol("ID",sym.ID);
+            { return  symbol("ID",sym.ID);
             }
           case 54: break;
           case 5: 
-            { return new symbol("PUNTO",sym.PUNTO);
+            { return  symbol("PUNTO",sym.PUNTO);
             }
           case 55: break;
           case 6: 
@@ -752,179 +752,179 @@ public class AnalisisLexico implements java_cup.runtime.Scanner {
             }
           case 56: break;
           case 7: 
-            { return new symbol("DIV",sym.DIV);
+            { return  symbol("DIV",sym.DIV);
             }
           case 57: break;
           case 8: 
-            { return new symbol("MUL",sym.MUL);
+            { return  symbol("MUL",sym.MUL);
             }
           case 58: break;
           case 9: 
-            { return new symbol("GUION_BAJO",sym.GUION_BAJO);
+            { return  symbol("GUION_BAJO",sym.GUION_BAJO);
             }
           case 59: break;
           case 10: 
-            { return new symbol("SEMICOLON",sym.SEMICOLON);
+            { return  symbol("SEMICOLON",sym.SEMICOLON);
             }
           case 60: break;
           case 11: 
-            { return new symbol("COLON",sym.COLON);
+            { return  symbol("COLON",sym.COLON);
             }
           case 61: break;
           case 12: 
-            { return new symbol("PAR_C",sym.PAR_C);
+            { return  symbol("PAR_C",sym.PAR_C);
             }
           case 62: break;
           case 13: 
-            { return new symbol("PAR_A",sym.PAR_A);
+            { return  symbol("PAR_A",sym.PAR_A);
             }
           case 63: break;
           case 14: 
-            { return new symbol("MUSTACHE_A",sym.MUSTACHE_A);
+            { return  symbol("MUSTACHE_A",sym.MUSTACHE_A);
             }
           case 64: break;
           case 15: 
-            { return new symbol("MUSTACHE_C",sym.MUSTACHE_C);
+            { return  symbol("MUSTACHE_C",sym.MUSTACHE_C);
             }
           case 65: break;
           case 16: 
-            { return new symbol("CORCH_A",sym.CORCH_A);
+            { return  symbol("CORCH_A",sym.CORCH_A);
             }
           case 66: break;
           case 17: 
-            { return new symbol("CORCH_C",sym.CORCH_C);
+            { return  symbol("CORCH_C",sym.CORCH_C);
             }
           case 67: break;
           case 18: 
-            { return new symbol("ASIG",sym.ASIG);
+            { return  symbol("ASIG",sym.ASIG);
             }
           case 68: break;
           case 19: 
-            { return new symbol("SUM",sym.SUM);
+            { return  symbol("SUM",sym.SUM);
             }
           case 69: break;
           case 20: 
-            { return new symbol("RES",sym.RES);
+            { return  symbol("RES",sym.RES);
             }
           case 70: break;
           case 21: 
-            { return new symbol("MENOR",sym.MENOR);
+            { return  symbol("MENOR",sym.MENOR);
             }
           case 71: break;
           case 22: 
-            { return new symbol("MAYOR",sym.MAYOR);
+            { return  symbol("MAYOR",sym.MAYOR);
             }
           case 72: break;
           case 23: 
-            { return new symbol("PORCENT",sym.PORCENT);
+            { return  symbol("PORCENT",sym.PORCENT);
             }
           case 73: break;
           case 24: 
-            { return new symbol("NEGAC",sym.NEGAC);
+            { return  symbol("NEGAC",sym.NEGAC);
             }
           case 74: break;
           case 25: 
-            { return new symbol("IF",sym.IF);
+            { return  symbol("IF",sym.IF);
             }
           case 75: break;
           case 26: 
-            { return new symbol("IGUAL",sym.IGUAL);
+            { return symbol("IGUAL",sym.IGUAL);
             }
           case 76: break;
           case 27: 
-            { return new symbol ("SUMASIG",sym.SUMASIG);
+            { return symbol ("SUMASIG",sym.SUMASIG);
             }
           case 77: break;
           case 28: 
-            { return new symbol("INC",sym.INC);
+            { return symbol("INC",sym.INC);
             }
           case 78: break;
           case 29: 
-            { return new symbol ("RESASIG",sym.RESASIG);
+            { return symbol ("RESASIG",sym.RESASIG);
             }
           case 79: break;
           case 30: 
-            { return new symbol("DEC",sym.DEC);
+            { return symbol("DEC",sym.DEC);
             }
           case 80: break;
           case 31: 
-            { return new symbol("MEN_IGUAL",sym.MEN_IGUAL);
+            { return symbol("MEN_IGUAL",sym.MEN_IGUAL);
             }
           case 81: break;
           case 32: 
-            { return new symbol("MAY_IGUAL",sym.MAY_IGUAL);
+            { return symbol("MAY_IGUAL",sym.MAY_IGUAL);
             }
           case 82: break;
           case 33: 
-            { return new symbol("AND",sym.AND);
+            { return symbol("AND",sym.AND);
             }
           case 83: break;
           case 34: 
-            { return new symbol("OR",sym.OR);
+            { return symbol("OR",sym.OR);
             }
           case 84: break;
           case 35: 
-            { return new symbol("NO_IGUAL",sym.NO_IGUAL);
+            { return symbol("NO_IGUAL",sym.NO_IGUAL);
             }
           case 85: break;
           case 36: 
-            { return new symbol("REAL",sym.REAL);
+            { return symbol("REAL",sym.REAL);
             }
           case 86: break;
           case 37: 
-            { return new symbol("FOR",sym.FOR);
+            { return  symbol("FOR",sym.FOR);
             }
           case 87: break;
           case 38: 
-            { return  new symbol("TRUE", sym.TRUE);
+            { return  symbol("TRUE", sym.TRUE);
             }
           case 88: break;
           case 39: 
-            { return new symbol("ELSE",sym.ELSE);
+            { return  symbol("ELSE",sym.ELSE);
             }
           case 89: break;
           case 40: 
-            { return new symbol("BOOL",sym.BOOL);
+            { return symbol("BOOL",sym.BOOL);
             }
           case 90: break;
           case 41: 
-            { return new symbol("VOID",sym.VOID);
+            { return symbol("VOID",sym.VOID);
             }
           case 91: break;
           case 42: 
-            { return new symbol("WHILE",sym.WHILE);
+            { return symbol("WHILE",sym.WHILE);
             }
           case 92: break;
           case 43: 
-            { return new symbol("CLASS",sym.CLASS);
+            { return  symbol("CLASS",sym.CLASS);
             }
           case 93: break;
           case 44: 
-            { return new symbol("FALSE",sym.FALSE);
+            { return  symbol("FALSE",sym.FALSE);
             }
           case 94: break;
           case 45: 
-            { return new symbol("FLOAT",sym.FLOAT);
+            { return  symbol("FLOAT",sym.FLOAT);
             }
           case 95: break;
           case 46: 
-            { return new symbol("BREAK",sym.BREAK);
+            { return symbol("BREAK",sym.BREAK);
             }
           case 96: break;
           case 47: 
-            { return new symbol("EXTERN",sym.EXTERN);
+            { return symbol("EXTERN",sym.EXTERN);
             }
           case 97: break;
           case 48: 
-            { return new symbol("RETURN",sym.RETURN);
+            { return  symbol("RETURN",sym.RETURN);
             }
           case 98: break;
           case 49: 
-            { return new symbol("INTEGER",sym.INTEGER);
+            { return symbol("INTEGER",sym.INTEGER);
             }
           case 99: break;
           case 50: 
-            { return new symbol("CONTINUE",sym.CONTINUE);
+            { return symbol("CONTINUE",sym.CONTINUE);
             }
           case 100: break;
           default:
