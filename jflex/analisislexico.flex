@@ -26,16 +26,14 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %eofval{
     return sf.newSymbol("EOF",sym.EOF);
 %eofval}
-%% 
-/*Definición de macros*/
-num =  [0-9]
+
+num = [0-9]+
 alpha = [a-zA-Z]
 id = [a-z][a-z0-9]*
 real = ([0-9]+"."[0-9]+)
 whitespace = [ \t\n]+
 comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
-/* Código asociado */
 %%
 "true" {return  new symbol("TRUE", sym.TRUE);}
 "false" {return new symbol("FALSE",sym.FALSE);}
@@ -52,8 +50,8 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "==" {return new symbol("IGUAL",sym.IGUAL);}
 "+" {return new symbol("SUM",sym.SUM);}
 "-" {return new symbol("RES",sym.RES);}
-"+="{return new symbol ("SUMASIG",sym.SUMASIG);}
-"-="{return new symbol ("RESASIG",sym.RESASIG);}
+"+=" {return new symbol ("SUMASIG",sym.SUMASIG);}
+"-=" {return new symbol ("RESASIG",sym.RESASIG);}
 "<" {return new symbol("MENOR",sym.MENOR);}
 ">" {return new symbol("MAYOR",sym.MAYOR);}
 "*" {return new symbol("MUL",sym.MUL);}
@@ -80,10 +78,10 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "void"	{return new symbol("VOID",sym.VOID);}
 "while" {return new symbol("WHILE",sym.WHILE);}
 "extern" {return new symbol("EXTERN",sym.EXTERN);}
-{num}    {return new symbol("NUM",sym.NUM,new Integer(yytext()));}
-{id}	  {return new symbol("ID",sym.ID);}
-{real}    {return new symbol("REAL",sym.REAL);}
-{alpha}	  {return new symbol("ALPHA",sym.ALPHA);}
+{num} {return new symbol("NUM",sym.NUM,new Integer(yytext()));}
+{id} {return new symbol("ID",sym.ID);}
+{real} {return new symbol("REAL",sym.REAL);}
+{alpha} {return new symbol("ALPHA",sym.ALPHA);}
 {whitespace} {/* no hace nada */}
 {comentariounalinea} {/* no hace nada */}
 {comentariovariaslineas} {/* no hace nada */}
