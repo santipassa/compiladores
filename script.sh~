@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "=====================================\n"
+echo "============EJECUTANDO===============\n"
+echo "=====================================\n"
+cd bin/
+java -cp .:../lib/java-cup-11b-runtime.jar Example.Parser ../input.test
+

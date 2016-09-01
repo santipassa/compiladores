@@ -35,6 +35,11 @@ comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
 %%
 /* codigo asociado */
+{num} {return symbol("NUM",sym.NUM,new Integer(yytext()));}
+{real} {return symbol("REAL",sym.REAL);}
+{whitespace} {/* no hace nada */}
+{comentariounalinea} {/* no hace nada */}
+{comentariovariaslineas} {/* no hace nada */}
 "true" {return  symbol("TRUE", sym.TRUE);}
 "false" {return  symbol("FALSE",sym.FALSE);}
 "_" {return  symbol("GUION_BAJO",sym.GUION_BAJO);}
@@ -79,12 +84,6 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "void"	{return symbol("VOID",sym.VOID);}
 "while" {return symbol("WHILE",sym.WHILE);}
 "extern" {return symbol("EXTERN",sym.EXTERN);}
-"_" {return symbol("EXTERN",sym.EXTERN);}
-{num} {return symbol("NUM",sym.NUM,new Integer(yytext()));}
 {id} {return  symbol("ID",sym.ID);}
-{real} {return symbol("REAL",sym.REAL);}
 {alpha} {return symbol("ALPHA",sym.ALPHA);}
-{whitespace} {/* no hace nada */}
-{comentariounalinea} {/* no hace nada */}
-{comentariovariaslineas} {/* no hace nada */}
 . { System.err.println("Illegal character: "+yytext()); }
