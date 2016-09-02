@@ -18,6 +18,7 @@ parser code {:
 
     public void syntax_error(Symbol sym){ 
 	// Mute legacy Error Printing
+	System.out.println("Syntax error" );
     	System.out.println("Error: "+sym );
     }
 :}
@@ -159,5 +160,6 @@ bool_literal ::= TRUE | FALSE ;
 int_literal ::= NUM | int_literal NUM ;
 
 float_literal ::= REAL ;
+
 
 
