@@ -51,12 +51,12 @@ field_declarations ::= field_decl
 			|field_declarations SEMICOLON field_decl
 			;
 
-method_declarations ::= type ID PAR_A PAR_C body
+method_decl ::= type ID PAR_A PAR_C body
 			| type ID PAR_A param_decl PAR_C body
 			;
 
-method_decl ::= method_declarations
-		|method_decl SEMICOLON method_declarations
+method_declarations ::= method_decl
+		|method_declarations method_decl
 		;
 
 param_decl ::= type ID
