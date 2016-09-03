@@ -19,5 +19,9 @@ echo "=====================================\n"
 echo "============EJECUTANDO===============\n"
 echo "=====================================\n"
 cd bin/
-java -cp .:../lib/java-cup-11b-runtime.jar Example.Parser ../input.test
 
+for var in $(seq 5)
+do
+	echo "TEST $var"
+	java -cp .:../lib/java-cup-11b-runtime.jar Example.Parser ../test/input$var.test	 
+done

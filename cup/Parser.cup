@@ -18,14 +18,15 @@ parser code {:
 
     public void syntax_error(Symbol sym){ 
 	// Mute legacy Error Printing
+	System.out.println("Syntax error" );
     	System.out.println("Error: "+sym );
     }
 :}
 
-terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, INC, DEC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO,ALPHA,GUION_BAJO;
+terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO,ALPHA,GUION_BAJO;
 terminal Integer NUM;
 
-non terminal expr_list, expr_part,program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal,alpha_num;
+non terminal program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block, bl,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal,alpha_num;
 
 precedence left PAR_A, PAR_C;
 precedence left MUSTACHE_A, MUSTACHE_C;
@@ -36,19 +37,19 @@ precedence left OR, AND, PORCENT, IGUAL, NO_IGUAL;
 precedence left SUM, RES;
 precedence left MUL, DIV;
  
-program ::= class_decl | class_decl program 
-		| error:e SEMICOLON:s {: parser.report_error("Syntax error in input from "+exleft +" to "+sxright,e); :};
+program ::= class_decl | class_decl program ;
 
 class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
 		|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
 		|CLASS ID MUSTACHE_A field_declarations MUSTACHE_C
 		|CLASS ID MUSTACHE_A  MUSTACHE_C
 		;
-field_decl ::=  type MUSTACHE_A ID 
-		| ID CORCH_A int_literal CORCH_C MUSTACHE_C SEMICOLON
+field_decl ::=  type ID 
+		| type ID CORCH_A int_literal CORCH_C 
+		| field_decl COLON ID 
 		;		
-field_declarations ::= field_decl
-			|field_declarations SEMICOLON field_decl
+field_declarations ::= field_decl SEMICOLON
+			| field_declarations field_decl SEMICOLON
 			;
 
 method_decl ::= type ID PAR_A PAR_C body
@@ -65,11 +66,15 @@ param_decl ::= type ID
 body ::= block
 	| EXTERN SEMICOLON
 	;
-block ::= MUSTACHE_A field_declarations statement MUSTACHE_C
-	| MUSTACHE_A field_declarations MUSTACHE_C
-	| MUSTACHE_A statement MUSTACHE_C
+block ::= MUSTACHE_A bl MUSTACHE_C
 	| MUSTACHE_A MUSTACHE_C
 	;
+bl ::= field_decl 
+	| statement
+	| bl statement
+	| bl field_decl
+	;
+
 type ::= INTEGER
 	|FLOAT
 	|BOOL
@@ -80,7 +85,7 @@ statement ::= location asign_op expr SEMICOLON
 	  |method_call SEMICOLON
 	  |IF PAR_A expr PAR_C statement
 	  |IF PAR_A expr PAR_C statement ELSE statement
-	  |FOR ID IGUAL expr COLON expr statement
+	  |FOR ID ASIG expr COLON expr statement
 	  |WHILE expr statement
 	  |RETURN expr SEMICOLON
 	  |RETURN SEMICOLON
@@ -159,5 +164,6 @@ bool_literal ::= TRUE | FALSE ;
 int_literal ::= NUM | int_literal NUM ;
 
 float_literal ::= REAL ;
+
 
 

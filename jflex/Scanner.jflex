@@ -28,9 +28,9 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 /* macros */
 num = [0-9]+
 alpha = [a-zA-Z]
-id = [a-z][a-z0-9]*
+id = [a-z][a-z0-9_]*
 real = ([0-9]+"."[0-9]+)
-whitespace = [ \t\n]+
+whitespace = [\t \n]+
 comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*"(.|whitespace)*"*/"
 %%
@@ -69,8 +69,6 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "||" {return symbol("OR",sym.OR);}
 "!=" {return symbol("NO_IGUAL",sym.NO_IGUAL);}
 "!" {return  symbol("NEGAC",sym.NEGAC);}
-"++" {return symbol("INC",sym.INC);}
-"--" {return symbol("DEC",sym.DEC);}
 "bool" {return symbol("BOOL",sym.BOOL);}
 "break"	{return symbol("BREAK",sym.BREAK);}
 "class" {return  symbol("CLASS",sym.CLASS);}
