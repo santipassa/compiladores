@@ -1,4 +1,4 @@
-package Example;
+package Compi;
 
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
@@ -32,7 +32,7 @@ id = [a-z][a-z0-9_]*
 real = ([0-9]+"."[0-9]+)
 whitespace = [\t \n]+
 comentariounalinea =  "//".*[\n]
-comentariovariaslineas = "/*"(.|whitespace)*"*/"
+comentariovariaslineas = "/*" ~"*/"
 %%
 /* codigo asociado */
 {num} {return symbol("NUM",sym.NUM,new Integer(yytext()));}
@@ -42,7 +42,6 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 {comentariovariaslineas} {/* no hace nada */}
 "true" {return  symbol("TRUE", sym.TRUE);}
 "false" {return  symbol("FALSE",sym.FALSE);}
-"_" {return  symbol("GUION_BAJO",sym.GUION_BAJO);}
 ";" {return  symbol("SEMICOLON",sym.SEMICOLON);}
 "," {return  symbol("COLON",sym.COLON);}
 "." {return  symbol("PUNTO",sym.PUNTO);}
@@ -83,5 +82,4 @@ comentariovariaslineas = "/*"(.|whitespace)*"*/"
 "while" {return symbol("WHILE",sym.WHILE);}
 "extern" {return symbol("EXTERN",sym.EXTERN);}
 {id} {return  symbol("ID",sym.ID);}
-{alpha} {return symbol("ALPHA",sym.ALPHA);}
 . { System.err.println("Illegal character: "+yytext()); }

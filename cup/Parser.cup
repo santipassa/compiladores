@@ -1,7 +1,7 @@
-package Example;
+package Compi;
 
 import java_cup.runtime.*;
-import Example.Parser.Expr;
+import Compi.Parser.Expr;
 
 parser code {:
     public static abstract class Expr {
@@ -18,24 +18,21 @@ parser code {:
 
     public void syntax_error(Symbol sym){ 
 	// Mute legacy Error Printing
-	System.out.println("Syntax error" );
+		System.out.println("Syntax error" );
     	System.out.println("Error: "+sym );
     }
 :}
 
-terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO,ALPHA,GUION_BAJO;
+terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO;
 terminal Integer NUM;
 
-non terminal program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block, bl,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal,alpha_num;
+non terminal program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block, bl_field, bl_statement,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal;
 
-precedence left PAR_A, PAR_C;
-precedence left MUSTACHE_A, MUSTACHE_C;
-precedence left CORCH_A, CORCH_C;
-precedence left ELSE, NEGAC;
-precedence nonassoc  MENOR, MAYOR, MEN_IGUAL, MAY_IGUAL;
-precedence left OR, AND, PORCENT, IGUAL, NO_IGUAL;
+precedence left OR, AND;
+precedence nonassoc  MENOR, MAYOR, MEN_IGUAL, MAY_IGUAL, IGUAL, NO_IGUAL;
 precedence left SUM, RES;
-precedence left MUL, DIV;
+precedence left MUL, DIV, PORCENT;
+precedence left ELSE, NEGAC;
  
 program ::= class_decl | class_decl program ;
 
@@ -66,14 +63,19 @@ param_decl ::= type ID
 body ::= block
 	| EXTERN SEMICOLON
 	;
-block ::= MUSTACHE_A bl MUSTACHE_C
+block ::= MUSTACHE_A bl_field bl_statement MUSTACHE_C
+	| MUSTACHE_A bl_field MUSTACHE_C
+	| MUSTACHE_A bl_statement MUSTACHE_C
 	| MUSTACHE_A MUSTACHE_C
 	;
-bl ::= field_decl 
-	| statement
-	| bl statement
-	| bl field_decl
+
+bl_field ::= field_decl
+	| bl_field field_decl 
 	;
+
+bl_statement ::= statement
+	| bl_statement statement
+	;	
 
 type ::= INTEGER
 	|FLOAT
@@ -153,11 +155,6 @@ literal ::= int_literal
 	| float_literal
 	| bool_literal
 	;
-
-alpha_num ::= ALPHA
-	   | NUM
-	   | GUION_BAJO
-	   ;
 
 bool_literal ::= TRUE | FALSE ;
 
