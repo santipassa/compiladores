@@ -23,18 +23,49 @@ parser code {:
     }
 :}
 
-terminal TRUE, FALSE, REAL, SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO;
+terminal Boolean TRUE, FALSE;
+terminal float REAL;
+terminal String SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A, CORCH_C, ASIG, SUMASIG, RESASIG, IGUAL, SUM, RES, MENOR, MAYOR, MUL, DIV, PORCENT, MAY_IGUAL, MEN_IGUAL, AND, OR, NO_IGUAL, NEGAC, ID, BOOL, BREAK, CLASS, CONTINUE, ELSE, FLOAT, FOR, IF, INTEGER, RETURN, VOID, WHILE, EXTERN, PUNTO;
 terminal Integer NUM;
 
-non terminal program,class_decl,field_decl,field_declarations,method_declarations,method_decl,body,block, bl_field, bl_statement,type,statement,asign_op,bin_op,arith_op,rel_op,eq_op,cond_op,literal,bool_literal,expr,int_literal, param_decl, param_id, param_expr,location,method_call,float_literal;
+non terminal Program program;
+non terminal ClasDecl class_decl;
+non terminal LinkedList<FieldDecl> field_declarations;
+non terminal FieldDecl field_decl;
+non terminal MethodDeclarations method_declarations;
+non terminal MethodDecl method_decl;
+non terminal Body body;
+non terminal Block block;
+non terminal BlField bl_field;
+non terminal BlStatement bl_statement;
+non terminal Type type;
+non terminal Statement statement;
+non terminal Asign_op asign_op;
+non terminal Bin_op bin_op;
+non terminal Arith_op arith_op;
+non terminal Rel_op rel_op;
+non terminal Eq_op eq_op;
+non terminal Cond_op cond_op;
+non terminal Literal literal;
+non terminal Bool_literal bool_literal;
+non terminal Expr expr;
+non terminal Int_literal int_literal;
+non terminal Param_decl param_decl;
+non terminal Param_id param_id;
+non terminal Param_expr param_expr;
+non terminal Location location;
+non terminal Method_call method_call;
+non terminal Float_literal float_literal;
 
 precedence left OR, AND;
 precedence nonassoc  MENOR, MAYOR, MEN_IGUAL, MAY_IGUAL, IGUAL, NO_IGUAL;
 precedence left SUM, RES;
 precedence left MUL, DIV, PORCENT;
 precedence left ELSE, NEGAC;
- 
-program ::= class_decl | class_decl program ;
+ ,
+program ::= class_decl:c {RESULT = new Program(c);}
+         | class_decl:c program:p {p.addClass(c); RESULT=p;} 
+         ;
 
 class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
 		|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
@@ -116,7 +147,7 @@ param_id ::= PUNTO ID
 	  |param_id PUNTO ID
 	  ;
 
-location ::= ID 
+location ::= ID:i {:System.out.println(i);:} 
 	|ID param_id
 	|ID CORCH_A expr CORCH_C
 	|ID param_id CORCH_A expr CORCH_C

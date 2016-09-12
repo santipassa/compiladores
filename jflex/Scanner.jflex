@@ -16,6 +16,9 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	public Symbol symbol(String plaintext,int code){
 	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar));
 	}
+	public Symbol symbol(String plaintext,int code,String number){
+	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar),number);
+	}
 	public Symbol symbol(String plaintext,int code,Integer number){
 	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar),number);
 	}
@@ -35,7 +38,7 @@ comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*" ~"*/"
 %%
 /* codigo asociado */
-{num} {return symbol("NUM",sym.NUM,new Integer(yytext()));}
+{num} {return symbol("NUM",sym.NUM,yytext());}
 {real} {return symbol("REAL",sym.REAL);}
 {whitespace} {/* no hace nada */}
 {comentariounalinea} {/* no hace nada */}
@@ -81,5 +84,5 @@ comentariovariaslineas = "/*" ~"*/"
 "void"	{return symbol("VOID",sym.VOID);}
 "while" {return symbol("WHILE",sym.WHILE);}
 "extern" {return symbol("EXTERN",sym.EXTERN);}
-{id} {return  symbol("ID",sym.ID);}
+{id} {return  symbol("ID",sym.ID, yytext());}
 . { System.err.println("Illegal character: "+yytext()); }
