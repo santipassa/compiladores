@@ -29,7 +29,7 @@ terminal String SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A,
 terminal Integer NUM;
 
 non terminal Program program;
-non terminal ClasDecl class_decl;
+non terminal ClassDecl class_decl;
 non terminal LinkedList<FieldDecl> field_declarations;
 non terminal FieldDecl field_decl;
 non terminal MethodDeclarations method_declarations;
@@ -56,33 +56,42 @@ non terminal Param_expr param_expr;
 non terminal Location location;
 non terminal Method_call method_call;
 non terminal Float_literal float_literal;
+non terminal list_names, name ;
 
 precedence left OR, AND;
 precedence nonassoc  MENOR, MAYOR, MEN_IGUAL, MAY_IGUAL, IGUAL, NO_IGUAL;
 precedence left SUM, RES;
 precedence left MUL, DIV, PORCENT;
 precedence left ELSE, NEGAC;
- ,
-program ::= class_decl:c {RESULT = new Program(c);}
-         | class_decl:c program:p {p.addClass(c); RESULT=p;} 
+ 
+program ::= class_decl:c {:RESULT = new Program(c);:}
+         | class_decl:c program:p {:p.addClass(c); RESULT=p;:} 
          ;
 
-class_decl ::= CLASS ID MUSTACHE_A field_declarations method_declarations MUSTACHE_C
-		|CLASS ID MUSTACHE_A  method_declarations MUSTACHE_C
-		|CLASS ID MUSTACHE_A field_declarations MUSTACHE_C
-		|CLASS ID MUSTACHE_A  MUSTACHE_C
-		;
-field_decl ::=  type ID 
-		| type ID CORCH_A int_literal CORCH_C 
-		| field_decl COLON ID 
-		;		
-field_declarations ::= field_decl SEMICOLON
-			| field_declarations field_decl SEMICOLON
+class_decl ::= CLASS:cl ID:name MUSTACHE_A field_declarations:f method_declarations:m MUSTACHE_C {:RESULT = new ClassDecl(name,f,m,clxleft.getLine());:}
+		    |CLASS:cl ID:name MUSTACHE_A  method_declarations:m MUSTACHE_C {:RESULT = new ClassDecl(name,m,clxleft.getLine());:}
+		    |CLASS:cl ID:name MUSTACHE_A field_declarations:f MUSTACHE_C {:RESULT = new ClassDecl(name,f,clxleft.getLine());:}
+		    |CLASS:cl ID:name MUSTACHE_A  MUSTACHE_C {:RESULT = new ClassDecl(name,clxleft.getLine());:}
+		    ;
+			
+field_decl ::=  type:t	list_names SEMICOLON
 			;
 
-method_decl ::= type ID PAR_A PAR_C body
-			| type ID PAR_A param_decl PAR_C body
+list_names ::= name
+			| list_names COLON name
 			;
+
+name ::= ID
+		| ID CORCH_A int_literal CORCH_C
+		;
+
+field_declarations ::= field_decl 
+					| field_declarations field_decl 
+			        ;
+
+method_decl ::= type ID PAR_A PAR_C body
+			 | type ID PAR_A param_decl PAR_C body
+			 ;
 
 method_declarations ::= method_decl
 		|method_declarations method_decl
@@ -147,7 +156,7 @@ param_id ::= PUNTO ID
 	  |param_id PUNTO ID
 	  ;
 
-location ::= ID:i {:System.out.println(i);:} 
+location ::= ID:i {:System.out.println(i.left);:} 
 	|ID param_id
 	|ID CORCH_A expr CORCH_C
 	|ID param_id CORCH_A expr CORCH_C
