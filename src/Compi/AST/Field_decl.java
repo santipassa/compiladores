@@ -2,9 +2,9 @@ import java.util.LinkedList;
 public class Field_decl{
 	Type type;
 	int numeroLinea
-	List_names list_names;
+	LinkedList<Name> list_names;
 
-	public Field_decl(Type t,List_names l, int numeroLinea){
+	public Field_decl(Type t,LinkedList<Name> l, int numeroLinea){
 		this.type=t;
 		list_namesList = l; 
 		this.numeroLinea=numeroLinea;
@@ -20,12 +20,6 @@ public class Field_decl{
 	}	
 	public void setNumeroLinea(int n){
 		this.numeroLinea=n;
-	}
-	public List_names getList_names(){
-		return this.list_names;
-	}
-	public void setList_names(List_names l){
-		this.list_names=l;
 	}
 
 }
