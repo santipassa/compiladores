@@ -1,5 +1,6 @@
 import java.util.LinkedList;
-public class Block{
+public class Block extends Statement{
+	
 	LinkedList<Field_decl> field_declList;
 	LinkedList<Statement> statement_List;
 	int numeroLinea;

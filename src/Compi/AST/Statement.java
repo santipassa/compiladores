@@ -1,6 +1,6 @@
-public class Statement{
-	Location location;
-	Asign_op asign_op;
-	Expr expr;
+public class Statement extends Expr{
+	
+	public Statement(){
+		}
 	
 }
