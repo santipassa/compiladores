@@ -29,11 +29,11 @@ terminal String SEMICOLON, COLON, PAR_C, PAR_A, MUSTACHE_A, MUSTACHE_C, CORCH_A,
 terminal Integer NUM;
 
 non terminal Program program;
-non terminal ClassDecl class_decl;
-non terminal LinkedList<FieldDecl> field_declarations;
-non terminal FieldDecl field_decl;
-non terminal MethodDeclarations method_declarations;
-non terminal MethodDecl method_decl;
+non terminal Class_decl class_decl;
+non terminal LinkedList<Field_decl> field_declarations;
+non terminal Field_decl field_decl;
+non terminal LinkedList<Method_decl> method_declarations;
+non terminal Method_decl method_decl;
 non terminal Body body;
 non terminal Block block;
 non terminal BlField bl_field;
@@ -49,7 +49,7 @@ non terminal Cond_op cond_op;
 non terminal Literal literal;
 non terminal Bool_literal bool_literal;
 non terminal Expr expr;
-non terminal Int_literal int_literal;
+non terminal LinkedList<Param_decl> param_declarations;
 non terminal Param_decl param_decl;
 non terminal Param_id param_id;
 non terminal Param_expr param_expr;
@@ -64,143 +64,134 @@ precedence left SUM, RES;
 precedence left MUL, DIV, PORCENT;
 precedence left ELSE, NEGAC;
  
-program ::= class_decl:c {:RESULT = new Program(c);:}
-         | class_decl:c program:p {:p.addClass(c); RESULT=p;:} 
+program ::= class_decl:c {: RESULT = new Program(c); :}
+         | class_decl:c program:p {: p.addClass(c); RESULT=p; :} 
          ;
 
-class_decl ::= CLASS:cl ID:name MUSTACHE_A field_declarations:f method_declarations:m MUSTACHE_C {:RESULT = new ClassDecl(name,f,m,clxleft.getLine());:}
-		    |CLASS:cl ID:name MUSTACHE_A  method_declarations:m MUSTACHE_C {:RESULT = new ClassDecl(name,m,clxleft.getLine());:}
-		    |CLASS:cl ID:name MUSTACHE_A field_declarations:f MUSTACHE_C {:RESULT = new ClassDecl(name,f,clxleft.getLine());:}
-		    |CLASS:cl ID:name MUSTACHE_A  MUSTACHE_C {:RESULT = new ClassDecl(name,clxleft.getLine());:}
+class_decl ::= CLASS:cl ID:name MUSTACHE_A field_declarations:f method_declarations:m MUSTACHE_C {: RESULT = new Class_decl(name,f,m,clxleft.getLine()); :}
+		    |CLASS:cl ID:name MUSTACHE_A  method_declarations:m MUSTACHE_C {: RESULT = new Class_decl(name,m,clxleft.getLine()); :}
+		    |CLASS:cl ID:name MUSTACHE_A field_declarations:f MUSTACHE_C {: RESULT = new Class_decl(name,f,clxleft.getLine()); :}
+		    |CLASS:cl ID:name MUSTACHE_A  MUSTACHE_C {: RESULT = new Class_decl(name,clxleft.getLine()); :}
 		    ;
-			
-field_decl ::=  type:t	list_names SEMICOLON
-			;
-
-list_names ::= name
-			| list_names COLON name
-			;
-
-name ::= ID
-		| ID CORCH_A int_literal CORCH_C
-		;
-
-field_declarations ::= field_decl 
-					| field_declarations field_decl 
+		
+field_declarations ::= field_decl:f {: LinkedList<Field_decl> fd = new LinkedList<Field_decl>();
+										fd.add(f); RESULT = fd; :} 
+					| field_declarations:fd field_decl:f {: fd.add(f); RESULT = fd; :}
 			        ;
 
-method_decl ::= type ID PAR_A PAR_C body
-			 | type ID PAR_A param_decl PAR_C body
+field_decl ::=  type:t	list_names:l SEMICOLON {: RESULT = new Field_decl(t, l); :}
+			;
+
+list_names ::= name:n {: LinkedList<Name> ln = new LinkedList<Name>(); ln.add(n); RESULT = ln; :}
+			| list_names:ln COLON name:n {: ln.add(n); RESULT = ln; :}
+			;
+
+name ::= ID:id {: RESULT = new Name(id, idxleft.getLine()); :}
+		| ID:id CORCH_A NUM:il CORCH_C {: RESULT = new Name(id, il, idxleft.getLine()); :}
+		;
+
+method_declarations ::= method_decl:m {: LinkedList<Method_decl> md = new LinkedList<Method_decl>();
+										md.add(m); RESULT = md; :} 
+					| method_declarations:md method_decl:m {: md.add(m); RESULT = md; :}
+					;
+
+method_decl ::= type:t ID:id PAR_A PAR_C body:b {: RESULT = new Method_decl(t, id, b, idxleft.getLine()); :}
+			 | type:t ID:id PAR_A param_declarations:pd PAR_C body:b {: RESULT = new Method_decl(t, id, pd, b, idxleft.getLine()); :}
 			 ;
 
-method_declarations ::= method_decl
-		|method_declarations method_decl
-		;
-
-param_decl ::= type ID
-	     | param_decl COLON type ID
+param_declarations ::= param_decl:p {: LinkedList<Param_decl> pd = new LinkedList<Param_decl>();
+										pd.add(p); RESULT = pd; :}
+	     | param_declarations:pd COLON param_decl:p {: pd.add(p); RESULT = pd; :}
 	     ;
-body ::= block
-	| EXTERN SEMICOLON
-	;
-block ::= MUSTACHE_A bl_field bl_statement MUSTACHE_C
-	| MUSTACHE_A bl_field MUSTACHE_C
-	| MUSTACHE_A bl_statement MUSTACHE_C
-	| MUSTACHE_A MUSTACHE_C
+
+param_decl ::= type:t ID:id {: RESULT = new Param_decl(t, id); :}
+
+
+body ::= block:b {: RESULT = new Body(b); :}
+	| EXTERN SEMICOLON 
 	;
 
-bl_field ::= field_decl
-	| bl_field field_decl 
+block ::= MUSTACHE_A field_declarations:f bl_statement:s MUSTACHE_C {: RESULT = new Block(f, s, fxleft.getLine()); :}
+	| MUSTACHE_A field_declarations:f MUSTACHE_C {: RESULT = new Block(f, fxleft.getLine()); :}
+	| MUSTACHE_A bl_statement:s MUSTACHE_C {: RESULT = new Block(s, sxleft.getLine()); :}
+	| MUSTACHE_A:m MUSTACHE_C {: RESULT = new Block(mxleft.getLine()); :}
 	;
 
-bl_statement ::= statement
-	| bl_statement statement
+
+bl_statement ::= statement:s {: LinkedList<Statement> ls = new LinkedList<Statement>(); ls.add(s); RESULT = ls; :}
+	| bl_statement:ls statement:s {: ls.add(s); RESULT = ls; :}
 	;	
 
-type ::= INTEGER
-	|FLOAT
-	|BOOL
-	|ID
-	|VOID
+type ::= INTEGER:t {: RESULT = new Type(t); :}
+	|FLOAT:t {: RESULT = new Type(t); :}
+	|BOOL:t {: RESULT = new Type(t); :}
+	|ID:t {: RESULT = new Type(t); :}
+	|VOID:t {: RESULT = new Type(t); :}
 	;
-statement ::= location asign_op expr SEMICOLON
-	  |method_call SEMICOLON
-	  |IF PAR_A expr PAR_C statement
-	  |IF PAR_A expr PAR_C statement ELSE statement
-	  |FOR ID ASIG expr COLON expr statement
-	  |WHILE expr statement
-	  |RETURN expr SEMICOLON
-	  |RETURN SEMICOLON
-	  |BREAK SEMICOLON
-	  |CONTINUE SEMICOLON
-	  |SEMICOLON
-	  |block
+
+statement ::= location:l asign_op:a expr:e SEMICOLON {: RESULT = new Statement_asig(l, a, e); :}
+	  |method_call:m SEMICOLON {: RESULT = m; :}
+	  |IF:i PAR_A expr:e PAR_C statement:s {: RESULT = new Statement_if(e, s, ixleft.getLine()); :} 
+	  |IF:i PAR_A expr:e PAR_C statement:s ELSE statement:st {: RESULT = new Statement_ifelse(e, s, st, ixleft.getLine()); :}
+	  |FOR:f ID:id ASIG expr:e COLON expr:ex statement:s {: RESULT = new Statement_for(id, e, ex, s, fxleft.getLine()); :}
+	  |WHILE:w expr:e statement:s {: RESULT = new Statement_while(e, s, wxleft.getLine()); :}
+	  |RETURN:r expr:e SEMICOLON {: RESULT = new Statement_expr(e, rxleft.getLine()); :}
+	  |RETURN:r SEMICOLON {: RESULT = new Statement_void(rxleft.getLine()); :}
+	  |BREAK:b SEMICOLON 
+	  |CONTINUE:c SEMICOLON 
+	  |SEMICOLON:s 
+	  |block:b {: RESULT = b; :}
 	  ;
 
-asign_op ::= ASIG
-	  |SUMASIG
-	  |RESASIG
+asign_op ::= ASIG:a {: RESULT = new Asign_op(a); :}
+	  |SUMASIG:a {: RESULT = new Asign_op(a); :}
+	  |RESASIG:a {: RESULT = new Asign_op(a); :}
 	  ;
 
-method_call ::= ID PAR_A param_expr PAR_C
-		|ID PAR_A PAR_C
-		|ID param_id PAR_A param_expr PAR_C
-		|ID param_id PAR_A PAR_C  
+method_call ::= ID:id PAR_A param_expr:pe PAR_C {: RESULT = new Method_call(id, pe, idxleft.getLine()); :}
+		|ID:id PAR_A PAR_C {: RESULT = new Method_call(id, idxleft.getLine()); :}
+		|ID:id param_id:pi PAR_A param_expr:pe PAR_C {: RESULT = new Method_call(id, pi, pe, idxleft.getLine()); :}
+		|ID:id param_id:pi PAR_A PAR_C {: RESULT = new Method_call(id, pi, idxleft.getLine()); :} 
 		;
 
-param_expr ::= expr
-	    | param_expr COLON expr
+param_expr ::= expr:e {: LinkedList<Expr> ex = new LinkedList<Expr>(); ex.add(e); RESULT = ex; :}
+	    | param_expr:ex COLON expr:e {: ex.add(e); RESULT = ex; :}
 	    ;
 
-param_id ::= PUNTO ID
-	  |param_id PUNTO ID
+param_id ::= PUNTO ID:id {: LinkedList<String> ex = new LinkedList<String>(); ex.add(id); RESULT = ex; :}
+	  |param_id:ex PUNTO ID:id {: ex.add(id); RESULT = ex; :}
 	  ;
 
-location ::= ID:i {:System.out.println(i.left);:} 
-	|ID param_id
-	|ID CORCH_A expr CORCH_C
-	|ID param_id CORCH_A expr CORCH_C
+location ::= ID:id {: RESULT = new Location(id, idxleft.getLine()); :}
+	|ID:id param_id:pi {: RESULT = new Location(id, pi, idxleft.getLine()); :}
+	|ID:id CORCH_A expr:e CORCH_C {: RESULT = new Location(id, e, idxleft.getLine()); :}
+	|ID:id param_id:pi CORCH_A expr:e CORCH_C {: RESULT = new Location(id, pi, e, idxleft.getLine()); :}
 	;
-expr ::= location
-	| method_call
-	| literal
-	| expr bin_op expr
+
+expr ::= location:l {: RESULT = l; :}
+	| method_call:m {: RESULT = m; :}
 	| RES expr
 	| NEGAC expr
 	| PAR_A expr PAR_C
-	;
-bin_op ::= arith_op
-	| rel_op
-	| eq_op
-	| cond_op
-	;
-arith_op ::= SUM
-	  | RES
-	  | MUL
-	  | DIV
-	  | PORCENT
-	;
-rel_op ::= MENOR
-	| MAYOR
-	| MAY_IGUAL
-	| MEN_IGUAL
-	;
-eq_op ::= IGUAL
-	| NO_IGUAL
-	;
-cond_op ::= AND
-	| OR
-	;
-literal ::= int_literal
-	| float_literal
-	| bool_literal
+	| expr SUM expr
+	| expr RES expr
+	| expr MUL expr
+	| expr DIV expr
+	| expr PORCENT expr
+	| expr MENOR expr
+	| expr MAYOR expr
+	| expr MAY_IGUAL expr
+	| expr MEN_IGUAL expr
+	| expr IGUAL expr
+	| expr NO_IGUAL expr
+	| expr AND expr
+	| expr OR expr
+	| TRUE
+	| FALSE
+	| REAL
+	| NUM
 	;
 
-bool_literal ::= TRUE | FALSE ;
-
-int_literal ::= NUM | int_literal NUM ;
-
-float_literal ::= REAL ;
 
 
 
