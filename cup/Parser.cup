@@ -1,19 +1,20 @@
 package Compi;
 
 import java_cup.runtime.*;
-import Compi.Parser.Expr;
+import java.util.LinkedList;
+
 
 parser code {:
-    public static abstract class Expr {
-		public abstract int eval();
-		public abstract Location right();
-		public abstract Location left();
-    }
 
     public static void main(String args[]) throws Exception {
 		ComplexSymbolFactory sf = new ComplexSymbolFactory();
 		if (args.length==0) new Parser(new Scanner(System.in,sf),sf).parse();
 		else new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
+    	// obtener objeto
+    	// prog p;
+    	// printv = new PrettyVisitor();
+    	// printv.Visit(p);
+
     }
 
     public void syntax_error(Symbol sym){ 
@@ -55,6 +56,7 @@ non terminal Param_id param_id;
 non terminal Param_expr param_expr;
 non terminal Location location;
 non terminal Method_call method_call;
+non terminal Method_call_expr method_call_expr;
 non terminal Float_literal float_literal;
 non terminal list_names, name ;
 
@@ -79,7 +81,7 @@ field_declarations ::= field_decl:f {: LinkedList<Field_decl> fd = new LinkedLis
 					| field_declarations:fd field_decl:f {: fd.add(f); RESULT = fd; :}
 			        ;
 
-field_decl ::=  type:t	list_names:l SEMICOLON {: RESULT = new Field_decl(t, l); :}
+field_decl ::=  type:t	list_names:l SEMICOLON {: RESULT = new Field_decl(t, l, txleft.getLine()); :}
 			;
 
 list_names ::= name:n {: LinkedList<Name> ln = new LinkedList<Name>(); ln.add(n); RESULT = ln; :}
@@ -105,15 +107,15 @@ param_declarations ::= param_decl:p {: LinkedList<Param_decl> pd = new LinkedLis
 	     ;
 
 param_decl ::= type:t ID:id {: RESULT = new Param_decl(t, id); :}
-
+			;
 
 body ::= block:b {: RESULT = new Body(b); :}
-	| EXTERN SEMICOLON 
+	| EXTERN:e SEMICOLON {: RESULT = new Extern(exleft.getLine()); :} 
 	;
 
 block ::= MUSTACHE_A field_declarations:f bl_statement:s MUSTACHE_C {: RESULT = new Block(f, s, fxleft.getLine()); :}
 	| MUSTACHE_A field_declarations:f MUSTACHE_C {: RESULT = new Block(f, fxleft.getLine()); :}
-	| MUSTACHE_A bl_statement:s MUSTACHE_C {: RESULT = new Block(s, sxleft.getLine()); :}
+	| MUSTACHE_A bl_statement:s MUSTACHE_C {: RESULT = new Block(sxleft.getLine(), s); :}
 	| MUSTACHE_A:m MUSTACHE_C {: RESULT = new Block(mxleft.getLine()); :}
 	;
 
@@ -137,9 +139,9 @@ statement ::= location:l asign_op:a expr:e SEMICOLON {: RESULT = new Statement_a
 	  |WHILE:w expr:e statement:s {: RESULT = new Statement_while(e, s, wxleft.getLine()); :}
 	  |RETURN:r expr:e SEMICOLON {: RESULT = new Statement_expr(e, rxleft.getLine()); :}
 	  |RETURN:r SEMICOLON {: RESULT = new Statement_void(rxleft.getLine()); :}
-	  |BREAK:b SEMICOLON 
-	  |CONTINUE:c SEMICOLON 
-	  |SEMICOLON:s 
+	  |BREAK:b SEMICOLON {: RESULT = new Statement_break(bxleft.getLine()); :}
+	  |CONTINUE:c SEMICOLON {: RESULT = new Statement_continue(cxleft.getLine()); :}
+	  |SEMICOLON:s {: RESULT = new Statement_semicolon(sxleft.getLine()); :}
 	  |block:b {: RESULT = b; :}
 	  ;
 
@@ -148,7 +150,7 @@ asign_op ::= ASIG:a {: RESULT = new Asign_op(a); :}
 	  |RESASIG:a {: RESULT = new Asign_op(a); :}
 	  ;
 
-method_call ::= ID:id PAR_A param_expr:pe PAR_C {: RESULT = new Method_call(id, pe, idxleft.getLine()); :}
+method_call ::= ID:id PAR_A param_expr:pe PAR_C {: RESULT = new Method_call(id, idxleft.getLine(), pe); :}
 		|ID:id PAR_A PAR_C {: RESULT = new Method_call(id, idxleft.getLine()); :}
 		|ID:id param_id:pi PAR_A param_expr:pe PAR_C {: RESULT = new Method_call(id, pi, pe, idxleft.getLine()); :}
 		|ID:id param_id:pi PAR_A PAR_C {: RESULT = new Method_call(id, pi, idxleft.getLine()); :} 
@@ -168,28 +170,34 @@ location ::= ID:id {: RESULT = new Location(id, idxleft.getLine()); :}
 	|ID:id param_id:pi CORCH_A expr:e CORCH_C {: RESULT = new Location(id, pi, e, idxleft.getLine()); :}
 	;
 
+method_call_expr ::= ID:id PAR_A param_expr:pe PAR_C {: RESULT = new Method_call_expr(id, idxleft.getLine(), pe); :}
+		|ID:id PAR_A PAR_C {: RESULT = new Method_call_expr(id, idxleft.getLine()); :}
+		|ID:id param_id:pi PAR_A param_expr:pe PAR_C {: RESULT = new Method_call_expr(id, pi, pe, idxleft.getLine()); :}
+		|ID:id param_id:pi PAR_A PAR_C {: RESULT = new Method_call_expr(id, pi, idxleft.getLine()); :} 
+		;
+
 expr ::= location:l {: RESULT = l; :}
-	| method_call:m {: RESULT = m; :}
-	| RES expr
-	| NEGAC expr
-	| PAR_A expr PAR_C
-	| expr SUM expr
-	| expr RES expr
-	| expr MUL expr
-	| expr DIV expr
-	| expr PORCENT expr
-	| expr MENOR expr
-	| expr MAYOR expr
-	| expr MAY_IGUAL expr
-	| expr MEN_IGUAL expr
-	| expr IGUAL expr
-	| expr NO_IGUAL expr
-	| expr AND expr
-	| expr OR expr
-	| TRUE
-	| FALSE
-	| REAL
-	| NUM
+	| method_call_expr:m {: RESULT = m; :}
+	| RES:o expr:e1 {: RESULT = new Unary_op(o,e1,oxleft.getLine());:}
+	| NEGAC:o expr:e1 {: RESULT = new Unary_op(o,e1,oxleft.getLine());:}
+	| PAR_A expr:e PAR_C {: RESULT = e; :}
+	| expr:e1 SUM:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 RES:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 MUL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 DIV:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 PORCENT:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 MENOR:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 MAYOR:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 MAY_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 MEN_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 NO_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 AND:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| expr:e1 OR:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
+	| TRUE {: RESULT = true; :}
+	| FALSE {: RESULT = false; :}
+	| REAL:x {: RESULT = Float.parseFloat(x); :}
+	| NUM:x {: RESULT = new Integer.parseInt(x); :}
 	;
 
 
