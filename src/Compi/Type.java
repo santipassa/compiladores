@@ -8,5 +8,8 @@ public class Type {
 		this.tipo=t;
 
 	}
+	public String toString(){
+		return this.tipo;
+	}
 
 }

@@ -20,5 +20,5 @@ public abstract class AST {
 		colNumber = cn;
 	}
 	
-	// public abstract <T> T accept(ASTVisitor<T> v);
+	//public abstract <T> T accept(ASTVisitor<T> v);
 }

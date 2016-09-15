@@ -26,5 +26,5 @@ cd ../bin/
 for var in $(seq $I)
 do
 	echo "TEST $var"
-	java -cp .:../lib/java-cup-11b-runtime.jar Compi.Parser ../test/input$var.test	 
+	java -cp .:../lib/java-cup-11b-runtime.jar Compi.Main ../test/input$var.test	 
 done

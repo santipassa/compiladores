@@ -9,11 +9,9 @@ class Class_decl extends AST {
 	LinkedList<Method_decl> method_declList;
 
 	// CONSTRUCTORES
-	public Class_decl(String id,Field_decl f,Method_decl m,int numeroLinea){
-		field_declList = new LinkedList<Field_decl>();
-		field_declList.add(f);
-		method_declList = new LinkedList<Method_decl>();
-		method_declList.add(m);
+	public Class_decl(String id,LinkedList<Field_decl> f, LinkedList<Method_decl> m,int numeroLinea){
+		this.field_declList=f;
+		this.method_declList=m;
 		this.id=id;
 		setLineNumber(numeroLinea);
 	}
@@ -23,17 +21,13 @@ class Class_decl extends AST {
 		this.id=id;
 		setLineNumber(numeroLinea);
 	}
-	public Class_decl(String id,Field_decl f,int numeroLinea){
-		field_declList = new LinkedList<Field_decl>();
-		field_declList.add(f);
-		method_declList = null;
+	public Class_decl(String id,LinkedList<Field_decl> f,int numeroLinea){
+		this.field_declList=f;
 		this.id=id;
 		setLineNumber(numeroLinea);
 	}
-	public Class_decl(String id,Method_decl m,int numeroLinea){
-		field_declList = null;
-		method_declList = new LinkedList<Method_decl>();
-		method_declList.add(m);
+	public Class_decl(String id,int numeroLinea,LinkedList<Method_decl> m){
+		this.method_declList=m;
 		this.id=id;
 		setLineNumber(numeroLinea);
 	}
