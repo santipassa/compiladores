@@ -20,4 +20,19 @@ public class Field_decl extends AST {
 		this.type=t;
 	}
 
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		return type.toString() +" ";
+	}
+
+	public LinkedList<Name> getName(){
+		return list_names;
+	}
+
+
 }

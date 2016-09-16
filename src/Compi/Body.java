@@ -9,10 +9,14 @@ public class Body extends AST{
 		extern = false;
 	}
 
-
 	public Body(int n){
 		extern = true;
 		setLineNumber(n);
+	}
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
 	}
 
 }

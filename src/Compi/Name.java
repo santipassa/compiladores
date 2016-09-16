@@ -17,4 +17,18 @@ public class Name extends AST {
 		this.esArreglo=true;
 		setLineNumber(n);	
 	}
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		if (esArreglo) 
+			return id+"["+int_literal+"]";
+		else
+			return id;
+	}
+
 }

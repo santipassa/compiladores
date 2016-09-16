@@ -5,8 +5,8 @@ import java.util.LinkedList;
 class Class_decl extends AST {
 	
 	private String id;
-	LinkedList<Field_decl> field_declList;
-	LinkedList<Method_decl> method_declList;
+	private LinkedList<Field_decl> field_declList;
+	private LinkedList<Method_decl> method_declList;
 
 	// CONSTRUCTORES
 	public Class_decl(String id,LinkedList<Field_decl> f, LinkedList<Method_decl> m,int numeroLinea){
@@ -45,4 +45,23 @@ class Class_decl extends AST {
 	public void addField_decl(Field_decl f){
 		field_declList.add(f);
 	}
+
+	public LinkedList<Field_decl> getField_decl(){
+		return field_declList;
+	}
+
+	public LinkedList<Method_decl> getMethod_decl(){
+		return method_declList;
+	}
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		return "class "+getId()+"\n";
+	}
+	
 }

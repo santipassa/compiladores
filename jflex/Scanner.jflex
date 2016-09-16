@@ -22,6 +22,9 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	public Symbol symbol(String plaintext,int code,Integer number){
 	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar),number);
 	}
+	public Symbol symbol(String plaintext,int code,float number){
+	    return sf.newSymbol(plaintext,code,new Location("",yyline+1, yycolumn +1,yychar), new Location("",yyline+1,yycolumn+yylength(),yychar),number);
+	}
 	private ComplexSymbolFactory sf;
 %}
 %eofval{
@@ -38,8 +41,8 @@ comentariounalinea =  "//".*[\n]
 comentariovariaslineas = "/*" ~"*/"
 %%
 /* codigo asociado */
-{num} {return symbol("NUM",sym.NUM,yytext());}
-{real} {return symbol("REAL",sym.REAL);}
+{num} {return symbol("NUM",sym.NUM, new Integer(yytext()));}
+{real} {return symbol("REAL",sym.REAL, new Float(yytext()));}
 {whitespace} {/* no hace nada */}
 {comentariounalinea} {/* no hace nada */}
 {comentariovariaslineas} {/* no hace nada */}

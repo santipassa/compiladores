@@ -8,6 +8,8 @@ public class Type {
 		this.tipo=t;
 
 	}
+	
+	@Override
 	public String toString(){
 		return this.tipo;
 	}

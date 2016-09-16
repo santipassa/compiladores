@@ -14,8 +14,9 @@ public static void main(String args[]) throws Exception {
 		else sym = new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
     	
 		Program prog;
-    	//ASTVisitor printv = new PrettyVisitor();
-    	//printv.visit(prog);
+		prog = (Program)sym.value;
+    	ASTVisitor printv = new PrettyPrintVisitor();
+    	System.out.println(prog.accept(printv));
 
     }
 

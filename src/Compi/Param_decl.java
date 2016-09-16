@@ -17,5 +17,10 @@ public class Param_decl extends AST {
 	public Type getType(){
 		return this.type;
 	}
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
 	
 }

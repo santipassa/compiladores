@@ -1,8 +1,7 @@
 package Compi;
 
-public class Statement extends AST {
+public abstract class Statement extends AST {
 	
-	public Statement(){
-	}
+
 	
 }

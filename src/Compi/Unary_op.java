@@ -10,5 +10,9 @@ public class Unary_op extends Expr {
 		setLineNumber(n);
 	}
 	
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
 
 }

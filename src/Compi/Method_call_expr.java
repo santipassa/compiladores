@@ -32,5 +32,9 @@ public class Method_call_expr extends Expr {
 
 	}
 
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
 
 }	

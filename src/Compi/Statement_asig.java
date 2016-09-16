@@ -10,5 +10,10 @@ public class Statement_asig extends Statement{
 		this.asign_op=a;
 		this.expr=e;
 		}
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
 	
 }

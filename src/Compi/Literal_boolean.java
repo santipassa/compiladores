@@ -9,4 +9,9 @@ public class Literal_boolean extends Expr {
 			literal_bool = b;
 		}
 
+		@Override
+		public <T> T accept(ASTVisitor<T> v) {
+			return v.visit(this);
+		}
+
 }

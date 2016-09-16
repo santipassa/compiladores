@@ -20,4 +20,14 @@ public class Method_decl extends AST {
 		this.param_declList=p;
 		setLineNumber(n);
 	}	
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
+
+	@Override
+	public String toString() {
+		return type.toString() +" "+ id ;
+	}
 }

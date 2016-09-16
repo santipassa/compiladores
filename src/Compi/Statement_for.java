@@ -17,6 +17,16 @@ public class Statement_for extends Statement{
 		this.numeroLinea=n;
 	}
 
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
 
+	@Override
+	public String toString() {
+		String rtn = "for " + id + expr.toString() + expr2.toString() + stat.toString();
+		
+		return rtn;
+	}
 
 }

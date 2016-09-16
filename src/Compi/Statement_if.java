@@ -14,6 +14,16 @@ public class Statement_if extends Statement{
 
 	}
 
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
+	}
 
+	@Override
+	public String toString() {
+		String rtn = "if " + expr.toString() + '\n' + stat.toString();
+		
+		return rtn;
+	}
 
 }

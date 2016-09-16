@@ -100,11 +100,11 @@ bl_statement ::= statement:s {: LinkedList<Statement> ls = new LinkedList<Statem
 	| bl_statement:ls statement:s {: ls.add(s); RESULT = ls; :}
 	;	
 
-type ::= INTEGER:t {: RESULT = new Type(t); :}
-	|FLOAT:t {: RESULT = new Type(t); :}
-	|BOOL:t {: RESULT = new Type(t); :}
+type ::= INTEGER {: RESULT = new Type("integer"); :}
+	|FLOAT {: RESULT = new Type("float"); :}
+	|BOOL {: RESULT = new Type("bool"); :}
 	|ID:t {: RESULT = new Type(t); :}
-	|VOID:t {: RESULT = new Type(t); :}
+	|VOID {: RESULT = new Type("void"); :}
 	;
 
 statement ::= location:l asign_op:a expr:e SEMICOLON {: RESULT = new Statement_asig(l, a, e); :}
@@ -121,9 +121,9 @@ statement ::= location:l asign_op:a expr:e SEMICOLON {: RESULT = new Statement_a
 	  |block:b {: RESULT = b; :}
 	  ;
 
-asign_op ::= ASIG:a {: RESULT = new Asign_op(a); :}
-	  |SUMASIG:a {: RESULT = new Asign_op(a); :}
-	  |RESASIG:a {: RESULT = new Asign_op(a); :}
+asign_op ::= ASIG {: RESULT = new Asign_op("="); :}
+	  |SUMASIG {: RESULT = new Asign_op("+="); :}
+	  |RESASIG {: RESULT = new Asign_op("-="); :}
 	  ;
 
 method_call ::= ID:id PAR_A param_expr:pe PAR_C {: RESULT = new Method_call(id, idxleft.getLine(), pe); :}
@@ -154,24 +154,24 @@ method_call_expr ::= ID:id PAR_A param_expr:pe PAR_C {: RESULT = new Method_call
 
 expr ::= location:l {: RESULT = l; :}
 	| method_call_expr:m {: RESULT = m; :}
-	| RES:o expr:e1 {: RESULT = new Unary_op(o,e1,oxleft.getLine());:}
-	| NEGAC:o expr:e1 {: RESULT = new Unary_op(o,e1,oxleft.getLine());:}
+	| RES:o expr:e1 {: RESULT = new Unary_op("-",e1,oxleft.getLine());:}
+	| NEGAC:o expr:e1 {: RESULT = new Unary_op("!",e1,oxleft.getLine());:}
 	| PAR_A expr:e PAR_C {: RESULT = e; :}
-	| expr:e1 SUM:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 RES:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 MUL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 DIV:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 PORCENT:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 MENOR:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 MAYOR:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 MAY_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 MEN_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 NO_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 AND:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| expr:e1 OR:o expr:e2 {: RESULT = new Bin_op(e1, o, e2, oxleft.getLine()); :}
-	| TRUE:t {: RESULT = new Literal_boolean(t); :}
-	| FALSE:f {: RESULT = new Literal_boolean(f); :}
+	| expr:e1 SUM:o expr:e2 {: RESULT = new Bin_op(e1, "+", e2, oxleft.getLine()); :}
+	| expr:e1 RES:o expr:e2 {: RESULT = new Bin_op(e1, "-", e2, oxleft.getLine()); :}
+	| expr:e1 MUL:o expr:e2 {: RESULT = new Bin_op(e1, "*", e2, oxleft.getLine()); :}
+	| expr:e1 DIV:o expr:e2 {: RESULT = new Bin_op(e1, "/", e2, oxleft.getLine()); :}
+	| expr:e1 PORCENT:o expr:e2 {: RESULT = new Bin_op(e1, "%", e2, oxleft.getLine()); :}
+	| expr:e1 MENOR:o expr:e2 {: RESULT = new Bin_op(e1, "<", e2, oxleft.getLine()); :}
+	| expr:e1 MAYOR:o expr:e2 {: RESULT = new Bin_op(e1, ">", e2, oxleft.getLine()); :}
+	| expr:e1 MAY_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, ">=", e2, oxleft.getLine()); :}
+	| expr:e1 MEN_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, "<=", e2, oxleft.getLine()); :}
+	| expr:e1 IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, "==", e2, oxleft.getLine()); :}
+	| expr:e1 NO_IGUAL:o expr:e2 {: RESULT = new Bin_op(e1, "!=", e2, oxleft.getLine()); :}
+	| expr:e1 AND:o expr:e2 {: RESULT = new Bin_op(e1, "&&", e2, oxleft.getLine()); :}
+	| expr:e1 OR:o expr:e2 {: RESULT = new Bin_op(e1, "||", e2, oxleft.getLine()); :}
+	| TRUE {: RESULT = new Literal_boolean(true); :}
+	| FALSE {: RESULT = new Literal_boolean(false); :}
 	| REAL:x {: RESULT = new Literal_float(x); :}
 	| NUM:x {: RESULT = new Literal_integer(x); :}
 	;
