@@ -1,8 +1,8 @@
 class main {
 	
 	integer identifi_454cador;
-	bool id2;
+	bool iden;
 	void id;
-	float id[10];
+	float id[5];
 
 }

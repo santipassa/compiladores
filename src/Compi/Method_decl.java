@@ -28,6 +28,6 @@ public class Method_decl extends AST {
 
 	@Override
 	public String toString() {
-		return type.toString() +" "+ id ;
+		return "\n"+type.toString() +" "+ id+"\n" ;
 	}
 }

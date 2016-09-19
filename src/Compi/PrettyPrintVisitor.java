@@ -10,8 +10,30 @@ import java.util.List;
 public class PrettyPrintVisitor implements ASTVisitor<String> {
 	
 	@Override
-	public String visit(Bin_op expr) {
-		return expr.accept(this);		
+	public String visit(Program expr) {
+		String conc;
+		conc = " -------------\n";
+		if (expr.getClasses() != null)
+			for (Class_decl c :expr.getClasses())
+				conc = c.accept(this)+conc;
+
+		return conc;
+	}
+
+	@Override
+	public String visit(Class_decl expr) {
+		String conc;
+		conc = expr.toString();
+
+		if (expr.getField_decl() != null)
+			for (Field_decl c :expr.getField_decl())
+				conc = conc+c.accept(this);
+
+		if (expr.getMethod_decl() != null)
+			for (Method_decl c :expr.getMethod_decl())
+				conc = conc+c.accept(this);
+
+		return conc;
 	}
 
 	@Override
@@ -31,27 +53,18 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 	}
 
 	@Override
-	public String visit(Body expr) {
-		return expr.accept(this);
-	}
-
-	@Override
-	public String visit(Class_decl expr) {
-		String conc;
-		conc = expr.toString();
-
-		for (Field_decl c :expr.getField_decl())
-			conc = conc+c.accept(this);
-
-		for (Method_decl c :expr.getMethod_decl())
-			conc = conc+c.accept(this);
-
-		return conc;
-	}
-
-	@Override
 	public String visit(Method_decl expr) {
 		return expr.toString();
+	}
+
+	@Override
+	public String visit(Bin_op expr) {
+		return expr.accept(this);		
+	}	
+
+	@Override
+	public String visit(Body expr) {
+		return expr.accept(this);
 	}
 
 	@Override
@@ -82,16 +95,6 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 	@Override
 	public String visit(Method_call_expr expr) {
 		return expr.accept(this);
-	}
-
-	@Override
-	public String visit(Program expr) {
-		String conc;
-		conc = " -------------\n";
-		for (Class_decl c :expr.getClasses())
-			conc = conc+c.accept(this);
-
-		return conc;
 	}
 
 	@Override

@@ -1,5 +1,4 @@
 class main {
-	
 	float a;
 	integer read_int() extern;
 	void print(bool s) extern;
