@@ -30,4 +30,7 @@ public class Method_decl extends AST {
 	public String toString() {
 		return "\n"+type.toString() +" "+ id+"\n" ;
 	}
+	public java.util.LinkedList<Param_decl> getParam_decl(){
+		return param_declList;
+	}
 }

@@ -19,4 +19,12 @@ public class Body extends AST{
 		return v.visit(this);
 	}
 
+	public boolean isExtern(){
+		return extern;
+	}
+
+	public Block getBlock(){
+		return block;
+	}
+
 }

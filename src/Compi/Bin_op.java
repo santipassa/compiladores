@@ -17,4 +17,6 @@ public class Bin_op extends Expr {
 		return v.visit(this);
 	}
 
+	//get expr1 y get expr2 y hago el accept
+
 }
