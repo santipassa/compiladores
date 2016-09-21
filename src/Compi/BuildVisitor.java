@@ -9,6 +9,7 @@ import java.util.LinkedList;
 
 // String checker, concrete visitor 
 public class BuildVisitor implements ASTVisitor<String> {
+
 	LinkedList<TableLevel> stack;
 
 	public BuildVisitor(){
@@ -29,6 +30,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	public void pop(){
 		stack.removeLast();
+
 	}
 
 	@Override
@@ -68,6 +70,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 			for (Name c :expr.getName())
 				x.setSymbol(new SymbolTable(c));
 		
+
 		return "";		
 	}
 
@@ -82,7 +85,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 		if (expr.getParam_decl() != null)
 			for (Param_decl c : expr.getParam_decl())
 				x.setSymbol(new SymbolTable(c));
-				
+
 		return "";
 	}
 
@@ -121,6 +124,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 		expr.getExpr1().accept(this);		
 		expr.getExpr2().accept(this);
 		return "";
+
 	}	
 
 	
@@ -150,6 +154,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 		if (!this.searchSymbol(expr.getId()))
 			return "Error: variable no definida";
 		return ""; //llamo al buscar 
+
 	}
 
 	@Override
@@ -157,6 +162,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 		if (!this.searchSymbol(expr.getId()))
 			return "Error: metodo no definido";
 		return ""; //obtengo el nombre del metodo y llamo al buscar de esta q llama a table
+
 	}
 
 	@Override
