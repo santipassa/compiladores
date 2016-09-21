@@ -28,6 +28,11 @@ public class Method_decl extends AST {
 
 	@Override
 	public String toString() {
-		return "\n"+type.toString() +" "+ id+"\n" ;
+		return "\n"+type.toString() +" "+ id;
 	}
+
+	public java.util.LinkedList<Param_decl> getParam_decl(){
+		return param_declList;
+	}
+
 }

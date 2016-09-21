@@ -54,6 +54,18 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 
 	@Override
 	public String visit(Method_decl expr) {
+		String conc;
+		conc = expr.toString();
+
+		if (expr.getParam_decl() != null)
+			for (Param_decl c :expr.getParam_decl())
+				conc = conc + c.accept(this);
+
+		return conc+"\n";
+	}
+
+	@Override
+	public String visit(Param_decl expr) {
 		return expr.toString();
 	}
 
@@ -64,11 +76,6 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 
 	@Override
 	public String visit(Body expr) {
-		return expr.accept(this);
-	}
-
-	@Override
-	public String visit(Param_decl expr) {
 		return expr.accept(this);
 	}
 
