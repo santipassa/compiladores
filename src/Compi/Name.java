@@ -1,18 +1,18 @@
 package Compi;
 
 public class Name extends AST {
-	String id;
+
 	int int_literal;
 	Boolean esArreglo;
 	
 	public Name(String i,int n){
-		this.id=i;
+		setId(i);
 		this.esArreglo=false;
 		setLineNumber(n);	
 	}
 
 	public Name(String i,int il,int n){
-		this.id=i;
+		setId(i);
 		this.int_literal=il;
 		this.esArreglo=true;
 		setLineNumber(n);	
@@ -26,9 +26,9 @@ public class Name extends AST {
 	@Override
 	public String toString() {
 		if (esArreglo) 
-			return id+"["+int_literal+"]";
+			return getId()+"["+int_literal+"]";
 		else
-			return id;
+			return getId();
 	}
 
 }

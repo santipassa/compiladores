@@ -17,4 +17,12 @@ public class Bin_op extends Expr {
 		return v.visit(this);
 	}
 
+	public Expr getExpr1(){
+		return expr1;
+	}
+
+	public Expr getExpr2(){
+		return expr2;
+	}
+	
 }

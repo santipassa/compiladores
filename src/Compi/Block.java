@@ -26,6 +26,14 @@ public class Block extends Statement{
 		
 	}
 
+	public LinkedList<Field_decl> getField_decl(){
+		return field_declList;
+	}
+
+	public LinkedList<Statement> getStatement(){
+		return statement_List;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

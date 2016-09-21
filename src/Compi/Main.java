@@ -15,8 +15,9 @@ public static void main(String args[]) throws Exception {
     	
 		Program prog;
 		prog = (Program)sym.value;
-    	ASTVisitor printv = new PrettyPrintVisitor();
-    	System.out.println(prog.accept(printv));
+    	//ASTVisitor printv = new PrettyPrintVisitor();
+    	ASTVisitor build = new BuildVisitor();
+    	System.out.println(prog.accept(build));
 
     }
 

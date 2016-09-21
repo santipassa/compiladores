@@ -1,17 +1,13 @@
 package Compi;
 
 public class Param_decl extends AST {
-	private String id;
+
 	private Type type;
 
 	public Param_decl(String i,Type t,int n){
-		this.id=i;
+		setId(i);
 		this.type=t;
 		setLineNumber(n);	
-	}
-	
-	public String getId(){
-		return this.id;
 	}
 	
 	public Type getType(){
@@ -25,7 +21,7 @@ public class Param_decl extends AST {
 
 	@Override
 	public String toString() {
-		return "("+type.toString() +" "+ id+")" ;
+		return "("+type.toString() +" "+ getId()+")" ;
 	}
 	
 }
