@@ -17,11 +17,13 @@ public static void main(String args[]) throws Exception {
 		prog = (Program)sym.value;
     	//ASTVisitor printv = new PrettyPrintVisitor();
     	ASTVisitor build = new BuildVisitor();
-    	ASTVisitor checkmain = new CheckMainVisitor();
-    	Integer cantMain = (Integer)checkmain.visit(prog);
+    	ASTVisitor mainVisitor = new MainVisitor();
+    	Integer cantMain = (Integer)mainVisitor.visit(prog);
     	if (cantMain != 1){
-    		System.out.println("ERROR debe haber una clase main, con un metodo main");
-    	}
+    		System.out.println("Programa incorrecto debe haber una clase main, con un metodo main");
+    	} else {
+            System.out.println("Programa correcto, clase main con metodo main");
+        } 
     	System.out.println(prog.accept(build));
  
     }

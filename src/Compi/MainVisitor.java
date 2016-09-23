@@ -4,42 +4,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 
-public class CheckMainVisitor implements ASTVisitor<Integer>{
+public class MainVisitor implements ASTVisitor<Integer>{
 
-	public CheckMainVisitor(){
+	public MainVisitor(){
 
 	}
 
 	@Override
 	public Integer visit(Program expr) {
 		int cantMain = 0;
-		for (Class_decl c : expr.getClasses()) {
-			cantMain = cantMain + c.accept(this);
-		}
+		if (expr.getClasses() != null)
+
+			for (Class_decl c : expr.getClasses()) {
+				if (c.getId().equals("main"))
+				cantMain = cantMain + c.accept(this);
+			}
 		return cantMain;
 	}
 
 	@Override
 	public Integer visit(Class_decl expr) {
 		int cantMain = 0;
-		for (Method_decl c : expr.getMethod_decl()) {
-			cantMain = cantMain + c.accept(this);
-		}
+		if (expr.getMethod_decl() != null)
+			for (Method_decl c : expr.getMethod_decl()) {
+				cantMain = cantMain + c.accept(this);
+			}
 		return cantMain;
 	}
 
 	@Override
 	public Integer visit(Method_decl expr) {
-		if (expr.getId().equals("main")) {
-			if (expr.getParam_decl().size()==0){
+		if (expr.getParam_decl() == null)
+			if (expr.getId().equals("main")) 
 				return 1;
-			} else {
-				return 0;
-			}
-		} else {
-			return 0;
-		}
+			
+		return 0;
 	}
+
 	
 	@Override
 	public Integer visit(Field_decl expr) {

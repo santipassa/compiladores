@@ -4,6 +4,7 @@ class main {
 	}
 	integer read_int() extern;
 	void print(bool s) extern;
+		
 	void main() {
 		integer y;
 		y = read_int();

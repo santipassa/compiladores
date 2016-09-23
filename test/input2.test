@@ -1,8 +1,14 @@
 class main {
-	
+		
 	integer identifi_454cador;
+	integer x;	
+	integer y;	
 	bool iden;
 	void id;
 	float id[5];
-
+	void main(){}
+	void sumar(integer x, integer y){
+		integer z;
+		z=x+y;
+	}
 }
