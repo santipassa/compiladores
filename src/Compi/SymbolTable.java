@@ -5,12 +5,6 @@ public class SymbolTable{
 	AST ast;
 	String obj;
 
-	public SymbolTable(Program a){
-		ast = a;
-		obj = "Program";
-	}
-
-
 	public SymbolTable(Class_decl a){
 		ast = a;
 		obj = "Class";
@@ -31,6 +25,11 @@ public class SymbolTable{
 		obj = "Name";
 	}	
 
+	public SymbolTable(Param_decl a){
+		ast = a;
+		obj = "Param_decl";
+	}
+
 	public SymbolTable(Body a){
 		ast = a;
 		obj = "Body";
@@ -46,10 +45,7 @@ public class SymbolTable{
 		obj = "Statement";
 	}	
 
-	public SymbolTable(Param_decl a){
-		ast = a;
-		obj = "Param_decl";
-	}	
+		
 
 	public boolean equals(String x){
 		return (this.ast.getId() == x);

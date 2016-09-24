@@ -17,12 +17,13 @@ public class TableLevel{
 	}
 
 	//buscar en la list el nombre 
-	public boolean searchSymbol(String x){
+	public Type searchSymbol(String x){
 		if (!list.isEmpty())
 			for (SymbolTable t :list)
-				if (t.equals(x))
-					return true;	
-		return false;
+				if (t.equals(x)){
+					return t.ast.getType();						
+				}
+		return null;
 	}
 
 }

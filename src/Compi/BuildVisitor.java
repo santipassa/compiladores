@@ -16,12 +16,12 @@ public class BuildVisitor implements ASTVisitor<String> {
 		stack = new LinkedList<TableLevel>();
 	}
 
-	public boolean searchSymbol(String x){
+	public Type searchSymbol(String x){
 		if (!stack.isEmpty())
 			for (TableLevel t :stack)
 				if (t.searchSymbol(x))
 					return true;	
-		return false;
+		return null;
 	}
 
 	public void push(TableLevel x){
@@ -76,7 +76,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	@Override
 	public String visit(Name expr) {
-		return " ";
+		return "";
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 			expr.getBlock().accept(this);
 		}
 		
-		return "" ;
+		return "";
 	}
 
 	@Override
@@ -127,33 +127,11 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	}	
 
-	
-
-	@Override
-	public String visit(Param_decl expr) {
-		return "";
-	}
-
-	@Override
-	public String visit(Literal_boolean expr) {
-		return expr.accept(this);
-	}
-
-	@Override
-	public String visit(Literal_float expr) {
-		return expr.accept(this);
-	}
-
-	@Override
-	public String visit(Literal_integer expr) {
-		return expr.accept(this);
-	}
-
 	@Override
 	public String visit(Location expr) {
 		if (!this.searchSymbol(expr.getId()))
 			return "Error: variable no definida";
-		return ""; //llamo al buscar 
+		return ""; 
 
 	}
 
@@ -161,13 +139,12 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Method_call_expr expr) {
 		if (!this.searchSymbol(expr.getId()))
 			return "Error: metodo no definido";
-		return ""; //obtengo el nombre del metodo y llamo al buscar de esta q llama a table
-
+		return ""; 
 	}
 
 	@Override
 	public String visit(Unary_op expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 
@@ -180,6 +157,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	@Override
 	public String visit(Statement_asig expr) {
+		expr.getLocation().accept();
 		return "";
 	}
 
@@ -225,6 +203,26 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	@Override
 	public String visit(Statement_while expr) {
+		return "";
+	}
+
+	@Override
+	public String visit(Param_decl expr) {
+		return "";		
+	}
+
+	@Override
+	public String visit(Literal_boolean expr) {
+		return "";
+	}
+
+	@Override
+	public String visit(Literal_float expr) {
+		return "";
+	}
+
+	@Override
+	public String visit(Literal_integer expr) {
 		return "";
 	}
 		/*private List<Error> errors;
