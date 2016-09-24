@@ -25,4 +25,13 @@ public class Bin_op extends Expr {
 		return expr2;
 	}
 	
+	public boolean typeOk(Type x){
+		if (operacion == "+" || operacion == "-" || operacion == "*" || operacion == "/" || operacion == "%" || 
+			operacion == "<" || operacion == ">" || operacion == "<=" || operacion == ">=" || operacion == "!=")
+			return (x.toString == "integer" || x.toString == "float");
+		if (operacion == "==")
+			return (x.toString == "integer" || x.toString == "float" || x.toString == "boolean");
+		if (operacion == "!" || operacion == "||" || operacion == "&&")
+			return (x.toString == "boolean"); 
+	}
 }

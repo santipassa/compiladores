@@ -34,4 +34,10 @@ public class Method_decl extends AST {
 	public java.util.LinkedList<Param_decl> getParam_decl(){
 		return param_declList;
 	}
+	public Body getBody(){
+		return body;
+	}
+	public Type getType(){
+		return type;
+	}
 }

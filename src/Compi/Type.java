@@ -14,4 +14,8 @@ public class Type {
 		return this.tipo;
 	}
 
+	public boolean equals(Type x){
+		return this.tipo == x.tipo;
+	}
+
 }

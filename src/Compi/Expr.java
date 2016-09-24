@@ -12,4 +12,12 @@ public abstract class Expr extends AST {
 		this.type = t;
 	}
 	
+	public Expr getExpr(){
+		return expr;
+	}
+
+	public void setExpr(Expr x){
+		expr = x;
+	}
+
 }

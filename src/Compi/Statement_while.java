@@ -10,12 +10,28 @@ public class Statement_while extends Statement{
 		this.expr= e;
 		setLineNumber(n);
 		this.stat=s;
-
+		setId("while");
 	}
 
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
+	}
+
+	public Expr getExpr(){
+		return expr;
+	}
+
+	public void setExpr(Expr x){
+		expr1 = x;
+	}
+
+	public Statement getStatement(){
+		return stat;
+	}
+
+	public void setStatement(Statement x){
+		stat = x;
 	}
 
 }

@@ -9,7 +9,8 @@ public class Statement_asig extends Statement{
 		this.location=l;
 		this.asign_op=a;
 		this.expr=e;
-		}
+		setId("asig");
+	}
 
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
