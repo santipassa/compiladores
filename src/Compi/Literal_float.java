@@ -2,7 +2,7 @@ package Compi;
 
 public class Literal_float extends Expr {
 
-	float literal_float;
+	private float literal_float;
 
 	public Literal_float(float f){
 		setType(new Type("float"));

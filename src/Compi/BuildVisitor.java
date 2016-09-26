@@ -10,234 +10,208 @@ import java.util.LinkedList;
 // String checker, concrete visitor 
 public class BuildVisitor implements ASTVisitor<String> {
 
-	LinkedList<TableLevel> stack;
+	private LinkedList<TableLevel> stack;
+	private LinkedList<ErrorCompi> errors;
 
 	public BuildVisitor(){
 		stack = new LinkedList<TableLevel>();
+		errors = new LinkedList<ErrorCompi>();
 	}
 
-	public Type searchSymbol(String x){
-		if (!stack.isEmpty())
-			for (TableLevel t :stack)
-				if (t.searchSymbol(x))
-					return true;	
-		return null;
-	}
-
-	public void push(TableLevel x){
+	private void createLevel(TableLevel x){
 		stack.add(x);
 	}
 
-	public void pop(){
+	private void closeLevel(){
 		stack.removeLast();
-
 	}
 
-	@Override
+	private boolean searchSymbol(Expr x){	
+		return (stack.get(2).searchSymbol(x) || stack.get(1).searchSymbol(x));
+	}
+
+	private void addError(AST a, String desc) {
+		errors.add(new ErrorCompi(a.getLineNumber(), a.getId()+" "+desc));
+	}
+
+	public LinkedList<ErrorCompi> getErrors() {
+		return errors;
+	}
+
+	// 1° level
 	public String visit(Program expr) {
 		TableLevel x = new TableLevel();
+		this.createLevel(x);
 		if (expr.getClasses() != null)
 			for (Class_decl c :expr.getClasses()){
-				x.setSymbol(new SymbolTable(c));
+				x.setSymbol(new SymbolTable(c.getId(), c.getField_decl(), c.getMethod_decl()));
 				c.accept(this);
 			}
-		this.push(x);
 		return "";
 	}
 
-	@Override
+	// 2° level
 	public String visit(Class_decl expr) {
 		TableLevel x = new TableLevel();
-		this.push(x);
+		this.createLevel(x);
 		if (expr.getField_decl() != null)
 			for (Field_decl c :expr.getField_decl()){
-				x.setSymbol(new SymbolTable(c));
 				c.accept(this);
 			}
 		if (expr.getMethod_decl() != null)
 			for (Method_decl c :expr.getMethod_decl()){
-				x.setSymbol(new SymbolTable(c));
 				c.accept(this);
 			}
-		
+		this.closeLevel();
 		return "";
 	}
 
-	@Override
 	public String visit(Field_decl expr) {
-		TableLevel x = stack.getLast();
 		if (expr.getName() != null)
-			for (Name c :expr.getName())
-				x.setSymbol(new SymbolTable(c));
-		
-
+			for (Name c :expr.getName()){
+				SymbolTable aux = new SymbolTable(c.getId(), expr.getType().toString());
+				if (stack.getLast().search(aux))	// Repeated checking
+					this.addError(c, "Redefined");
+				stack.getLast().setSymbol(aux);
+			}
 		return "";		
 	}
 
-	@Override
 	public String visit(Name expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Method_decl expr) {
-		TableLevel x = stack.getLast();
+		SymbolTable aux = new SymbolTable(expr.getId(), expr.getType().toString(), true);
+		if (stack.getLast().search(aux))	// Repeated checking
+			this.addError(expr, "Redefined");
+		stack.getLast().setSymbol(aux);
 		if (expr.getParam_decl() != null)
 			for (Param_decl c : expr.getParam_decl())
-				x.setSymbol(new SymbolTable(c));
-
+				c.accept(this);
+		expr.getBody().accept(this);
 		return "";
 	}
 
-	@Override
+	public String visit(Param_decl expr) {
+		stack.getLast().setSymbol(new SymbolTable(expr.getId(), expr.getType().toString()));
+		return "";		
+	}
+
 	public String visit(Body expr) {
-		if (!(expr.isExtern())){
-			TableLevel x = new TableLevel();
-			x.setSymbol(new SymbolTable(expr.getBlock()));
-			this.push(x); 
+		if (!(expr.isExtern()))
 			expr.getBlock().accept(this);
-		}
-		
 		return "";
 	}
 
-	@Override
+	// 3° level
 	public String visit(Block expr) {
 		TableLevel x = new TableLevel();
-		this.push(x);
+		this.createLevel(x);
 		if (expr.getField_decl() != null)
 			for (Field_decl c :expr.getField_decl()){
-				x.setSymbol(new SymbolTable(c));
 				c.accept(this);
 			}
 		if (expr.getStatement() != null)
 			for (Statement c :expr.getStatement()){
-				x.setSymbol(new SymbolTable(c));
 				c.accept(this);
 			}
-		
+		this.closeLevel();
 		return "";
 	}
 
-	@Override
-	public String visit(Bin_op expr) {
-		expr.getExpr1().accept(this);		
-		expr.getExpr2().accept(this);
+	public String visit(Statement_asig expr) {
+		expr.getLocation().accept(this);
+		expr.getExpr().accept(this);
 		return "";
+	}
 
-	}	
-
-	@Override
 	public String visit(Location expr) {
-		if (!this.searchSymbol(expr.getId()))
-			return "Error: variable no definida";
+		if (!this.searchSymbol(expr))
+			this.addError(expr, "Undefined");
+		else{
+			if (expr.isObjectCall())	// x.color;
+				if (!expr.getType().isObject())	// int x;	
+					this.addError(expr, "It is not an object");
+				else {	// Auto x;
+				}
+			else
+				if (expr.isArray())
+					expr.getExpr().accept(this);
+		}
 		return ""; 
-
 	}
 
-	@Override
+	public String visit(Asign_op expr) {
+		return "";
+	}
+
 	public String visit(Method_call_expr expr) {
-		if (!this.searchSymbol(expr.getId()))
+		if (!this.searchSymbol(expr))
 			return "Error: metodo no definido";
 		return ""; 
 	}
 
-	@Override
 	public String visit(Unary_op expr) {
 		return "";
 	}
 
+	public String visit(Bin_op expr) {
+		expr.getExpr1().accept(this);		
+		expr.getExpr2().accept(this);
+		return "";
+	}	
 
-	@Override
 	public String visit(Method_call expr) {
-		if (!this.searchSymbol(expr.getId()))
-			return "Error: metodo no definido";
 		return "";
 	}
 
-	@Override
-	public String visit(Statement_asig expr) {
-		expr.getLocation().accept();
-		return "";
-	}
-
-	@Override
 	public String visit(Statement_break expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_continue expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_expr expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_for expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_if expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_ifelse expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_semicolon expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_void expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Statement_while expr) {
 		return "";
 	}
 
-	@Override
-	public String visit(Param_decl expr) {
-		return "";		
-	}
-
-	@Override
 	public String visit(Literal_boolean expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Literal_float expr) {
 		return "";
 	}
 
-	@Override
 	public String visit(Literal_integer expr) {
 		return "";
 	}
-		/*private List<Error> errors;
-
-	private void addError(AST a, String desc) {
-		errors.add(new Error(a.getLineNumber(), a.getColumnNumber(), desc));
-	}
-
-	public List<Error> getErrors() {
-		return errors;
-	}
-
-	public void setErrors(List<Error> errors) {
-		this.errors = errors;
-	}*/
-
 
 }

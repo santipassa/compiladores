@@ -1,20 +1,24 @@
 package Compi;
 
-
 public class Statement_expr extends Statement{
-
-	Expr expr;
+	private Expr expr;
 
 	public Statement_expr(Expr e, int n){
-		this.expr=e;
+		setExpr(e);
 		setLineNumber(n);
+		setId("expr");
+	}
 
+	public Expr getExpr(){
+		return expr;
+	}
+
+	public void setExpr(Expr x){
+		expr = x;
 	}
 
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
-
-
 }

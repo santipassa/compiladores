@@ -13,25 +13,26 @@ class Class_decl extends AST {
 		setId(id);
 		setLineNumber(numeroLinea);
 	}
+
 	public Class_decl(String id,int numeroLinea){
 		field_declList = null;
 		method_declList = null;
 		setId(id);
 		setLineNumber(numeroLinea);
 	}
+
 	public Class_decl(String id,LinkedList<Field_decl> f,int numeroLinea){
 		this.field_declList=f;
 		setId(id);
 		setLineNumber(numeroLinea);
 	}
+
 	public Class_decl(String id,int numeroLinea,LinkedList<Method_decl> m){
 		this.method_declList=m;
 		setId(id);
 		setLineNumber(numeroLinea);
 	}
 	
-
-
 	public void addMethod_decl(Method_decl m){
 		method_declList.add(m);
 	}

@@ -1,58 +1,51 @@
 package Compi;
 
-public class SymbolTable{
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedList;
 
-	AST ast;
-	String obj;
+public class SymbolTable {
 
-	public SymbolTable(Class_decl a){
-		ast = a;
-		obj = "Class";
+	private String id;
+	private String type;
+	private boolean isMethod;
+	private LinkedList<Field_decl> field_declList;
+	private LinkedList<Method_decl> method_declList;
+
+	// classes
+	public SymbolTable(String id, LinkedList<Field_decl> field_declList, LinkedList<Method_decl> method_declList){
+		this.id = id;
+		this.isMethod = false;
+		this.field_declList = field_declList;
+		this.method_declList = method_declList;
 	}	
 
-	public SymbolTable(Field_decl a){
-		ast = a;
-		obj = "Field_decl";
+	// methods
+	public SymbolTable(String id, String type, boolean isMethod){
+		this.id = id;
+		this.type = type;
+		this.isMethod = isMethod;
 	}	
 
-	public SymbolTable(Method_decl a){
-		ast = a;
-		obj = "Method_decl";
-	}	
-
-	public SymbolTable(Name a){
-		ast = a;
-		obj = "Name";
-	}	
-
-	public SymbolTable(Param_decl a){
-		ast = a;
-		obj = "Param_decl";
+	// declarations
+	public SymbolTable(String id, String type){
+		this.id = id;
+		this.type = type;
+		this.isMethod = false;
 	}
 
-	public SymbolTable(Body a){
-		ast = a;
-		obj = "Body";
+	public String getId(){
+		return id;
+	}
+
+	public String getTypeString(){
+		return type;
 	}	
 
-	public SymbolTable(Block a){
-		ast = a;
-		obj = "Block";
-	}	
-
-	public SymbolTable(Statement a){
-		ast = a;
-		obj = "Statement";
-	}	
-
-		
-
-	public boolean equals(String x){
-		return (this.ast.getId() == x);
-	}	
-
-
-
+	public boolean equals(SymbolTable x){
+		return (this.id == x.id && this.type == x.type && this.isMethod == x.isMethod);
+	}
+}
 
 	//public Boolean getMethod(){
 	//	return this.isMethod;
@@ -62,7 +55,3 @@ public class SymbolTable{
 	//	this.isMethod=b;
 	//}
 
-
-
-
-}

@@ -2,30 +2,47 @@ package Compi;
 
 import java.util.LinkedList;
 
-public class Location extends Expr{
+public class Location extends Expr {
 
-	LinkedList<String> param_id;
+	private boolean isArray;
+	private LinkedList<String> param_id;
 
 	public Location(String i, int n){
 		setId(i);
-		setLineNumber(n);	
-
+		setLineNumber(n);
+		isArray = false;
 	}
+
 	public Location(String i, LinkedList<String> pi, int n){
 		setId(i);
 		this.param_id=pi;
 		setLineNumber(n);	
+		isArray = false;
 	}
+
+	// Array location
 	public Location(String i, Expr e, int n){
 		setId(i);
-		this.expr=e;
+		setExpr(e);
 		setLineNumber(n);	
+		isArray = true;
 	}
+
+	// Array location
 	public Location(String i, LinkedList<String> pi, Expr e, int n){
 		setId(i);
 		this.param_id=pi;
-		this.expr=e;
-		setLineNumber(n);	
+		setExpr(e);
+		setLineNumber(n);
+		isArray = true;	
+	}
+
+	public boolean isArray(){
+		return isArray;
+	}
+
+	public boolean isObjectCall(){
+		return (param_id != null);
 	}
 
 	@Override

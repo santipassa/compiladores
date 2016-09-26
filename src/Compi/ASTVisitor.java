@@ -3,6 +3,7 @@ package Compi;
 // Abstract visitor
 public interface ASTVisitor<T> {
 
+	T visit(Asign_op x);
 	T visit(Bin_op x);
 	T visit(Field_decl x);
 	T visit(Name x);

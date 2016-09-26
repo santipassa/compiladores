@@ -168,6 +168,11 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 	public String visit(Statement_while expr) {
 		return expr.accept(this);
 	}
+
+	public String visit(Asign_op expr) {
+		return "";
+	}
+
 	/*private List<Error> errors;
 
 	private void addError(AST a, String desc) {

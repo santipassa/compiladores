@@ -1,8 +1,8 @@
 package Compi;
 
 public class Body extends AST{
-	Block block;
-	boolean extern;
+	private Block block;
+	private boolean extern;
 	
 	public Body(Block b){
 		this.block=b;
@@ -14,17 +14,17 @@ public class Body extends AST{
 		setLineNumber(n);
 	}
 
-	@Override
-	public <T> T accept(ASTVisitor<T> v) {
-		return v.visit(this);
-	}
-
 	public boolean isExtern(){
 		return extern;
 	}
 
 	public Block getBlock(){
 		return block;
+	}
+
+	@Override
+	public <T> T accept(ASTVisitor<T> v) {
+		return v.visit(this);
 	}
 
 }

@@ -3,8 +3,8 @@ package Compi;
 import java.util.LinkedList;
 
 public class Field_decl extends AST {
-	Type type;
-	LinkedList<Name> list_names;
+	private Type type;
+	private LinkedList<Name> list_names;
 
 	public Field_decl(Type t,LinkedList<Name> l, int numeroLinea){
 		this.type=t;
@@ -20,6 +20,10 @@ public class Field_decl extends AST {
 		this.type=t;
 	}
 
+	public LinkedList<Name> getName(){
+		return list_names;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
@@ -29,10 +33,5 @@ public class Field_decl extends AST {
 	public String toString() {
 		return type.toString() +" ";
 	}
-
-	public LinkedList<Name> getName(){
-		return list_names;
-	}
-
-
+	
 }

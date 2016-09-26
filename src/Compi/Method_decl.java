@@ -1,9 +1,9 @@
 package Compi;
 
 public class Method_decl extends AST {	
-	Type type;
-	Body body;
-	java.util.LinkedList<Param_decl> param_declList;
+	private Type type;
+	private Body body;
+	private java.util.LinkedList<Param_decl> param_declList;
 
 	public Method_decl(Type t,String id,Body b,int n){
 		this.type=t;
@@ -20,6 +20,18 @@ public class Method_decl extends AST {
 		setLineNumber(n);
 	}	
 
+	public java.util.LinkedList<Param_decl> getParam_decl(){
+		return param_declList;
+	}
+	
+	public Body getBody(){
+		return body;
+	}
+
+	public Type getType(){
+		return type;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
@@ -30,8 +42,4 @@ public class Method_decl extends AST {
 		return "\n"+type.toString() +" "+ getId();
 	}
 
-
-	public java.util.LinkedList<Param_decl> getParam_decl(){
-		return param_declList;
-	}
 }
