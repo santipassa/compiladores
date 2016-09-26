@@ -34,7 +34,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 /* macros */
 num = [0-9]+
 alpha = [a-zA-Z]
-id = [a-z][a-z0-9_]*
+id = [a-zA-Z][a-zA-Z0-9_]*
 real = ([0-9]+"."[0-9]+)
 whitespace = [\t \n]+
 comentariounalinea =  "//".*[\n]
