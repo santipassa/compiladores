@@ -8,7 +8,4 @@ public class Asign_op{
 		this.tipo=s;
 	}
 
-	
-
-
 }

@@ -1,14 +1,27 @@
+class perro {
+	bool raza;	
+}
+
+class auto {
+	integer iden;
+}
 class main {
 		
-	integer identifi_454cador;
-	integer x;	
-	integer y;	
+	float identifi_454cador;
 	bool iden;
-	void id;
+	bool id;
 	float id[5];
+	integer z;
 	void main(){}
-	void sumar(integer x, integer y){
-		integer z;
+
+	void sumar(){}
+	
+	void sumar(bool x, integer y){
+		auto b;
+		integer a;
+		b.iden = 1;
+		main();
+		a = sumar()+suma();
 		z=x+y;
 	}
 }

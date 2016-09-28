@@ -24,6 +24,13 @@ public class Field_decl extends AST {
 		return list_names;
 	}
 
+	public Name containsName(Name x){
+		for (Name n :list_names){
+			return n;
+		}
+		return null;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

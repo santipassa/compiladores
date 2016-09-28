@@ -16,15 +16,20 @@ public static void main(String args[]) throws Exception {
 		Program prog;
 		prog = (Program)sym.value;
     	//ASTVisitor printv = new PrettyPrintVisitor();
-    	ASTVisitor build = new BuildVisitor();
+    	BuildVisitor build = new BuildVisitor();
     	ASTVisitor mainVisitor = new MainVisitor();
     	Integer cantMain = (Integer)mainVisitor.visit(prog);
     	if (cantMain != 1){
-    		System.out.println("Programa incorrecto debe haber una clase main, con un metodo main");
+    		//System.out.println("Programa incorrecto debe haber una clase main, con un metodo main");
     	} else {
-            System.out.println("Programa correcto, clase main con metodo main");
+            //System.out.println("Programa correcto, clase main con metodo main");
         } 
-    	System.out.println(prog.accept(build));
+    	prog.accept(build);
+        if (build.getErrors().isEmpty())
+            System.out.println("No hay errores en el BUILD");
+        else
+            for (ErrorCompi e: build.getErrors())
+                System.out.println(e.toString());
  
     }
 

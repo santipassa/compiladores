@@ -9,7 +9,7 @@ public class Type {
 	}
 	
 	public boolean isObject(){
-		return (tipo!="integer" && tipo!="float" && tipo!="void" && tipo!="boolean");
+		return (tipo!="integer" && tipo!="float" && tipo!="void" && tipo!="bool");
 	}
 
 	@Override

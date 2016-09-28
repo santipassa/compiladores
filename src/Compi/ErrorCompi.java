@@ -8,4 +8,8 @@ public class ErrorCompi {
 		this.lineNumber = lineNumber;
 		this.description = description;
 	}
+
+	public String toString(){
+		return lineNumber+"   "+description;
+	}
 }

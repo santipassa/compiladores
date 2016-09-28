@@ -1,6 +1,7 @@
 class main {
 	
 	float add(){
+		integer i;
 		for i=0, i {i = mas;}
 	}
 	void main (){}
