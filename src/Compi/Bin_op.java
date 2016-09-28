@@ -38,5 +38,8 @@ public class Bin_op extends Expr {
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
+	public String getOp(){
+		return operacion;
+	}
 
 }

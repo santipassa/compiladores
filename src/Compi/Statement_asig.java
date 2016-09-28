@@ -25,4 +25,8 @@ public class Statement_asig extends Statement{
 		return v.visit(this);
 	}
 
+	public Asign_op getAsign_op(){
+		return asign_op;
+	}
+
 }
