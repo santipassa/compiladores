@@ -5,7 +5,7 @@ class main {
 	integer read_int() extern;
 	void print(bool s) extern;
 		
-	void main() {
+	void main(bool y) {
 		integer y;
 		y = read_int();
 		y = inc(y);

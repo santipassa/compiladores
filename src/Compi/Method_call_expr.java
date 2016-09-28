@@ -4,13 +4,13 @@ import java.util.LinkedList;
 
 public class Method_call_expr extends Expr {
 
-	private String firstId;
 	private LinkedList<Expr> param_expr;
-	private LinkedList<String> param_id; 
+	private String param_id; // object.param_id()
+	private Type type_param; // tipo del .param_id()
 
-	public Method_call_expr(String i, LinkedList<Expr> pe, LinkedList<String> pi, int n){
+
+	public Method_call_expr(String i, LinkedList<Expr> pe, String pi, int n){
 		setId(i);
-		firstId = i;
 		this.param_expr=pe;
 		this.param_id=pi;
 		setLineNumber(n);	
@@ -18,22 +18,27 @@ public class Method_call_expr extends Expr {
 	}
 	public Method_call_expr(String i, int n){
 		setId(i);
-		firstId = i;
 		setLineNumber(n);	
 	}
-	public Method_call_expr(String i, LinkedList<String> pi, int n){
+	public Method_call_expr(String i, String pi, int n){
 		setId(i);
-		firstId = i;
 		this.param_id=pi;
 		setLineNumber(n);	
 
 	}
 	public Method_call_expr(String i, int n, LinkedList<Expr> pe){
 		setId(i);
-		firstId = i;
 		this.param_expr=pe;
 		setLineNumber(n);	
 
+	}
+
+	public void setParamType(Type x){
+		type_param = x;
+	}
+
+	public Type getParamType(){
+		return type_param;
 	}
 
 	@Override

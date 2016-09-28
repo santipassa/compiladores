@@ -23,6 +23,10 @@ public class Name extends AST {
 		return isArray;
 	}
 
+	public boolean equals(Name x){
+		return (this.getId().compareTo(x.getId())==0);
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

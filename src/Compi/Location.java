@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class Location extends Expr {
 
 	private boolean isArray;
-	private LinkedList<String> param_id;
+	private String id_param; // object.id_param
 
 	public Location(String i, int n){
 		setId(i);
@@ -13,9 +13,9 @@ public class Location extends Expr {
 		isArray = false;
 	}
 
-	public Location(String i, LinkedList<String> pi, int n){
+	public Location(String i, String pi, int n){
 		setId(i);
-		this.param_id=pi;
+		this.id_param=pi;
 		setLineNumber(n);	
 		isArray = false;
 	}
@@ -29,9 +29,9 @@ public class Location extends Expr {
 	}
 
 	// Array location
-	public Location(String i, LinkedList<String> pi, Expr e, int n){
+	public Location(String i, String pi, Expr e, int n){
 		setId(i);
-		this.param_id=pi;
+		this.id_param=pi;
 		setExpr(e);
 		setLineNumber(n);
 		isArray = true;	
@@ -41,8 +41,16 @@ public class Location extends Expr {
 		return isArray;
 	}
 
+	public void setIsArray(boolean x){
+		isArray = x;
+	}
+
 	public boolean isObjectCall(){
-		return (param_id != null);
+		return (id_param != null);
+	}
+
+	public String getParamId(){
+		return id_param;
 	}
 
 	@Override

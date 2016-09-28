@@ -23,14 +23,14 @@ public class Bin_op extends Expr {
 	public boolean typeOk(Type x){
 		
 		if (operacion == "+" || operacion == "-" || operacion == "*" || operacion == "/" || operacion == "%" || 
-			operacion == "<" || operacion == ">" || operacion == "<=" || operacion == ">=" || operacion == "!=")
+			operacion == "<" || operacion == ">" || operacion == "<=" || operacion == ">=")
 			return (x.toString() == "integer" || x.toString() == "float");
 		
-		if (operacion == "==")
-			return (x.toString() == "integer" || x.toString() == "float" || x.toString() == "boolean");
+		if (operacion == "==" || operacion == "!=")
+			return (x.toString() == "integer" || x.toString() == "float" || x.toString() == "bool");
 		
 		if (operacion == "!" || operacion == "||" || operacion == "&&")
-			return (x.toString() == "boolean"); 
+			return (x.toString() == "bool"); 
 		return false;
 	}
 

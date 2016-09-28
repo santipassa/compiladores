@@ -8,6 +8,7 @@ public class SymbolTable {
 
 	private String id;
 	private String type;
+	private boolean isArray;
 	private boolean isMethod;
 	private LinkedList<Field_decl> field_declList;
 	private LinkedList<Method_decl> method_declList;
@@ -34,6 +35,13 @@ public class SymbolTable {
 		this.isMethod = false;
 	}
 
+	public SymbolTable(String id, boolean isArray, String type){
+		this.id = id;
+		this.type = type;
+		this.isMethod = false;
+		this.isArray = isArray;
+	}
+
 	public String getId(){
 		return id;
 	}
@@ -42,8 +50,20 @@ public class SymbolTable {
 		return type;
 	}	
 
+	public boolean getIsArray(){
+		return isArray;
+	}
+
+	public boolean getIsMethod(){
+		return isMethod;
+	}
+
+	public LinkedList<Field_decl> getField_declList(){
+		return field_declList;
+	}
+
 	public boolean equals(SymbolTable x){
-		return (this.id == x.id && this.type == x.type && this.isMethod == x.isMethod);
+		return (this.id.compareTo(x.id)==0);
 	}
 }
 
