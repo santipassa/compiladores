@@ -1,12 +1,19 @@
-public class Label{
-	private int line;
+package Compi;
+public class Label extends AST{
 
-	public Label(int l){
-		line=n;
+	private String typeLBL;
+
+	public Label(String t){
+	
+		typeLBL=t;
 	}
 	public String toString(){
-		return "LBL"+line;
+		return typeLBL;
 	}
 
+	
+	public <T> T accept(ASTVisitor<T> v){
+		return null;
+	}
 
 }

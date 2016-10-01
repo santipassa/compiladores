@@ -30,7 +30,10 @@ public static void main(String args[]) throws Exception {
         else
             for (ErrorCompi e: build.getErrors())
                 System.out.println(e.toString());
- 
+            /*
+        ASTVisitor iCodeVisitor = new IntermediateCodeVisitor();
+        iCodeVisitor.visit(prog);
+        */
     }
 
     public void syntax_error(Symbol sym){ 
