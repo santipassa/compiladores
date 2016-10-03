@@ -30,10 +30,13 @@ public static void main(String args[]) throws Exception {
         else
             for (ErrorCompi e: build.getErrors())
                 System.out.println(e.toString());
-            /*
-        ASTVisitor iCodeVisitor = new IntermediateCodeVisitor();
+            
+        IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
         iCodeVisitor.visit(prog);
-        */
+        java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
+        for(IntermediateCode i : l ){
+            System.out.println(i.toString());
+        }
     }
 
     public void syntax_error(Symbol sym){ 

@@ -2,22 +2,20 @@ package Compi;
 
 import java.util.LinkedList;
 public class IntermediateCodeVisitor implements ASTVisitor<AST>{
-	 LinkedList<IntermediateCode> list;
+	 public LinkedList<IntermediateCode> list;
 	 int temporalCounter = 0;
 	 int ifCounter = 0;
-	 /*
-		IntermediateCode constructor
-		"OPERATOR",op1 AST,op2 AST,result AST
-
-	 */
+	 int whileCounter = 0;
+	
+	public LinkedList<IntermediateCode> getList(){
+		return list;
+	}
 	public IntermediateCodeVisitor(){
 		list=new LinkedList<IntermediateCode>();
 	}
 
-	
-	
-
 	public AST visit(Asign_op x){
+		
 		return null;
 	}
 
@@ -99,12 +97,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Class_decl x){
-		for (Field_decl f : x.getField_decl()) {
-			f.accept(this);
-		}
-		for (Method_decl md : x.getMethod_decl()) {
-			md.accept(this);
-		}
+		if (x.getField_decl() != null)
+			for (Field_decl f : x.getField_decl()) {
+				f.accept(this);
+			}
+		if (x.getMethod_decl() != null)
+			for (Method_decl md : x.getMethod_decl()) {
+				md.accept(this);
+			}
 		return null;
 	}
 
@@ -145,8 +145,9 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Program x){
-		for(Class_decl c : x.getClasses())
-	 		c.accept(this);
+		if (x.getClasses() != null)
+			for(Class_decl c : x.getClasses())
+	 			c.accept(this);
 	 	return null;
 	}
 	public AST visit(Unary_op x){
@@ -202,14 +203,28 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Statement_for x){
-		
+		Location evalCota = new Location("cota",0);
+		Location i = new Location("i",0);
+		i.setId(x.getId());
+		AST exp1 = x.getExpr1().accept(this);
+		AST exp2 = x.getExpr2().accept(this);
+		list.add(new IntermediateCode("ASIGN",exp1,null,i));
+		list.add(new IntermediateCode("ASIGN",exp2,null,evalCota));
+		list.add(new IntermediateCode("LBLFOR" + whileCounter,null,null,null));
+		list.add(new IntermediateCode("JMPF",evalCota,i,new Label("LBLFORFIN" + whileCounter)));
+		x.getStatement().accept(this);
+		list.add(new IntermediateCode("INC",null,null,i));
+		list.add(new IntermediateCode("JMP",null,null, new Label("LBLFOR" + whileCounter)));
+		list.add(new IntermediateCode("LBLFORFIN" + whileCounter,null,null,null));
+		whileCounter++;
 		return null;
+		
 	}
 	
 	public AST visit(Statement_if x){
-	
+		
 		AST cond = x.getExpr().accept(this);
-		list.add(new IntermediateCode("JMPF",cond,null,new Label("LBLIF"+ifCounter))) ;
+		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLIF"+ifCounter))) ;
 		x.getStatement().accept(this);
 		list.add(new IntermediateCode("LBLIF"+ifCounter,null,null,null)) ;
 		ifCounter++;
@@ -218,7 +233,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Statement_ifelse x){
 	
 		AST cond= x.getExpr().accept(this);
-		list.add(new IntermediateCode("JMPF",cond,null,new Label("LBLELSE"+ifCounter)));
+		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLELSE"+ifCounter)));
 		x.getStatement1().accept(this);
 		list.add(new IntermediateCode("JMP",null,null,new Label("LBLFIN"+ifCounter)));
 		list.add(new IntermediateCode("LBLELSE"+ifCounter,null,null,null));
@@ -237,7 +252,16 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Statement_while x){
+		
+		list.add(new IntermediateCode("LBLWHILE" + whileCounter,null,null,null));
+		AST cond = x.getExpr().accept(this);
+		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLWHILEFIN" + whileCounter)));
+		x.getStatement().accept(this);
+		list.add(new IntermediateCode("JMP",null,null, new Label("LBLWHILE" + whileCounter)));
+		list.add(new IntermediateCode("LBLWHILEFIN" + whileCounter,null,null,null));
+		whileCounter++;
 		return null;
+
 	}
 	
 }
