@@ -34,8 +34,9 @@ public static void main(String args[]) throws Exception {
         IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
         iCodeVisitor.visit(prog);
         java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
+        System.out.println("======IMPRIMIENDO CODIGO INTERMEDIO======");
         for(IntermediateCode i : l ){
-            System.out.println(i.toString());
+            System.out.println(i.toString()+"\n");
         }
     }
 

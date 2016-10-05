@@ -23,6 +23,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		Location tmp = new Location("TMP"+temporalCounter,temporalCounter);
 		temporalCounter++;
 		if(x.getOp()=="+"){
+			System.out.println("--->"+list.size());
 			list.add(new IntermediateCode("SUM",x.getExpr1().accept(this),x.getExpr2().accept(this),tmp));
 		}
 		if(x.getOp()=="-"){
@@ -70,7 +71,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Field_decl x){
 		if (x.getName() != null)
 			for (Name n : x.getName()) {
-					n.accept(this);                                                              
+					list.add(new IntermediateCode("RESERVE",n.accept(this),null,null));                                                              
 			} 
 		return null;
 	}
@@ -124,22 +125,22 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Literal_boolean x){
-		list.add(new IntermediateCode("RESERVE",x,null,null));
-		return null;
+		
+		return x;
 	}
 	
 	public AST visit(Literal_float x){
-		list.add(new IntermediateCode("RESERVE",x,null,null));
-		return null;
+		
+		return x;
 	}
 	
 	public AST visit(Literal_integer x){
-		list.add(new IntermediateCode("RESERVE",x,null,null));
-		return null;
+		
+		return x;
 	}
 	
 	public AST visit(Location x){
-		return null;
+		return x;
 	}
 	
 	public AST visit(Method_call_expr x){
@@ -166,7 +167,18 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Block x){
-		
+		if(x.getField_decl()!=null){
+			for(Field_decl f : x.getField_decl()){
+				f.accept(this);
+				System.out.println("declaracion");
+			}
+		}
+		if(x.getStatement()!=null){
+			for(Statement s : x.getStatement()){
+				s.accept(this);
+				System.out.println("statement");
+			}
+		}
 		return null;
 	}
 

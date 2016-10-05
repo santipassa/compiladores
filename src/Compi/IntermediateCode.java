@@ -13,7 +13,15 @@ public class IntermediateCode{
 		this.result=result;
 	}
 	public String toString(){
-		return operator+" "+op1.toString()+" "+op2.toString()+" "+result.toString();
+		return operator+" "+getStr(op1)+" "+getStr(op2)+" "+getStr(result);
+	}
+
+	private String getStr(AST op){
+		if(op!=null){
+			return op.toString();
+		}else{
+			return "null";
+		}
 	}
 
 
