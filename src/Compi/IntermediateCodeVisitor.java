@@ -68,9 +68,10 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 
 	public AST visit(Field_decl x){
-		for (Name n : x.getName()) {
-				n.accept(this);                                                              
-		} 
+		if (x.getName() != null)
+			for (Name n : x.getName()) {
+					n.accept(this);                                                              
+			} 
 		return null;
 	}
 
@@ -111,8 +112,9 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Method_decl x){
-		list.add(new IntermediateCode("METH"+x.getId(),null,null,null) );
-		x.getBody().accept(this);
+		if (x.getParam_decl() != null)
+			list.add(new IntermediateCode("METH"+x.getId(),null,null,null) );
+			x.getBody().accept(this);
 		return null;
 
 	}
@@ -164,6 +166,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Block x){
+		
 		return null;
 	}
 
