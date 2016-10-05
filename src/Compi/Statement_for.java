@@ -11,7 +11,7 @@ public class Statement_for extends Statement{
 		this.expr2=e1;
 		this.stat=s;
 		setLineNumber(n);
-		setId("for");
+		
 	}
 
 	public Expr getExpr1(){
