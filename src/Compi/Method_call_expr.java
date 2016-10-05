@@ -45,5 +45,7 @@ public class Method_call_expr extends Expr {
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
-
+	public String toString(){
+		return "";
+	}
 }	

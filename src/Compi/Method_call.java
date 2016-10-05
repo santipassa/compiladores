@@ -36,6 +36,12 @@ public class Method_call extends Statement {
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
-
+	public String toString(){
+		String res ="";
+		for(Expr e : param_expr){
+			res+=e.toString();
+		}
+		return res;
+	}
 
 }

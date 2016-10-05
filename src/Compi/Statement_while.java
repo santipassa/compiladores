@@ -31,5 +31,7 @@ public class Statement_while extends Statement{
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
-	
+	public String toString(){
+		return "while("+expr.toString()+"){"+stat.toString()+"}";
+	}
 }

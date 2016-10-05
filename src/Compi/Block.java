@@ -39,5 +39,16 @@ public class Block extends Statement{
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
+	public String toString(){
+		String res="";
+		for(Field_decl f : field_declList){
+			res+=f.toString();
+		}
+
+		for(Statement s : statement_List){
+			res+=s.toString();
+		}
+		return res;
+	}
 
 }

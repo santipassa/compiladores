@@ -41,5 +41,8 @@ public class Bin_op extends Expr {
 	public String getOp(){
 		return operacion;
 	}
+	public String toString(){
+		return expr1.toString()+operacion+expr2.toString();
+	}
 
 }

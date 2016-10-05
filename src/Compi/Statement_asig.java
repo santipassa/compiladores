@@ -28,5 +28,8 @@ public class Statement_asig extends Statement{
 	public Asign_op getAsign_op(){
 		return asign_op;
 	}
+	public String toString(){
+		return location.toString()+asign_op.toString()+expr.toString();
+	}
 
 }

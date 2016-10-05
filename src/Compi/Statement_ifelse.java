@@ -41,5 +41,10 @@ public class Statement_ifelse extends Statement{
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
+	public String toString(){
+		String res="";
+		res="if("+expr.toString()+"){"+stat1.toString()+"}else{"+stat2.toString()+"}";
+		return res;
+	}
 
 }
