@@ -7,64 +7,70 @@ import java.util.LinkedList;
 public class SymbolTable {
 
 	private String id;
-	private String type;
 	private boolean isArray;
 	private boolean isMethod;
-	private LinkedList<Field_decl> field_declList;
-	private LinkedList<Method_decl> method_declList;
+	private Type type;
+	private AST ast;
 
-	// classes
-	public SymbolTable(String id, LinkedList<Field_decl> field_declList, LinkedList<Method_decl> method_declList){
+	public SymbolTable(String id, AST ast){
 		this.id = id;
 		this.isMethod = false;
-		this.field_declList = field_declList;
-		this.method_declList = method_declList;
+		this.isArray = false;
+		this.ast = ast;
 	}	
 
-	// methods
-	public SymbolTable(String id, String type, boolean isMethod){
+	public SymbolTable(String id, Type type, AST ast){
 		this.id = id;
 		this.type = type;
+		this.isMethod = false;
+		this.isArray = false;
+		this.ast = ast;
+	}	
+
+	public SymbolTable(String id, boolean isMethod, AST ast){
+		this.id = id;
+		this.isArray = false;
 		this.isMethod = isMethod;
+		this.ast = ast;
 	}	
 
-	// declarations
-	public SymbolTable(String id, String type){
-		this.id = id;
-		this.type = type;
-		this.isMethod = false;
-	}
-
-	public SymbolTable(String id, boolean isArray, String type){
+	public SymbolTable(String id, Type type, boolean isArray, AST ast){
 		this.id = id;
 		this.type = type;
 		this.isMethod = false;
 		this.isArray = isArray;
+		this.ast = ast;
 	}
 
 	public String getId(){
 		return id;
 	}
 
-	public String getTypeString(){
-		return type;
-	}	
-
-	public boolean getIsArray(){
+	public boolean isArray(){
 		return isArray;
 	}
 
-	public boolean getIsMethod(){
+	public boolean isMethod(){
 		return isMethod;
 	}
 
-	public LinkedList<Field_decl> getField_declList(){
-		return field_declList;
+	public AST getAst(){
+		return ast;
+	}
+
+	public Type getType(){
+		return type;
 	}
 
 	public boolean equals(SymbolTable x){
+		if (this.isMethod && x.isMethod)
+			return (this.id.compareTo(x.id)==0);
+		if (this.isArray && x.isArray)
+			return (this.id.compareTo(x.id)==0);
+
 		return (this.id.compareTo(x.id)==0);
 	}
+
 }
 
 	//public Boolean getMethod(){

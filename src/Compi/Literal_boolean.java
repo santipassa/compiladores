@@ -5,7 +5,7 @@ public class Literal_boolean extends Expr {
 	private boolean literal_bool;
 
 	public Literal_boolean(boolean b){
-		setType(new Type("boolean"));
+		setType(new Type("bool"));
 		literal_bool = b;
 	}
 

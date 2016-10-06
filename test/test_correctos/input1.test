@@ -1,27 +1,29 @@
+//test_for01
 class main{
 
 integer A[5] ;
-float B[56];
+float B [56];
 bool C[10];
 
 integer pruArreglos(integer b, integer c ){
         integer i;
         A[0] = 2; 
-        
-         
-        for i = 0 , (-10 + 11 * 2) { //ok cicla 12 veces
+
+        for i = 5 , i *10 { //semanticamente correcto
                A[i] = i + 2;
         }
-        return A[1];
 
         
+        return A[1];
+ 
+                
 }
 
-void printI(integer i)extern;
+void printf(integer f)extern;
 
 integer main(){
 
-    printI( pruArreglos( 4,8 ));
+    printf(pruArreglos(4,8));
     
     return 1;
     

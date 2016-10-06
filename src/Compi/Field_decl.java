@@ -24,11 +24,24 @@ public class Field_decl extends AST {
 		return list_names;
 	}
 
-	public Name containsName(Name x){
-		for (Name n :list_names){
-			return n;
-		}
+	public Type getAttributeType(String id){
+		if (list_names==null)
+			return null;
+		else
+			for (Name n: list_names)
+				if (n.equals(id))
+					return type;
 		return null;
+	}
+
+	public boolean getAttributeIsArray(String id){
+		if (list_names==null)
+			return false;
+		else
+			for (Name n: list_names)
+				if (n.equals(id))
+					return n.isArray();
+		return false;
 	}
 
 	@Override

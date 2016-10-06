@@ -20,6 +20,10 @@ public class Statement_asig extends Statement{
 		return expr;
 	}
 
+	public Asign_op getAsign_op(){
+		return asign_op;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

@@ -8,4 +8,8 @@ public class Asign_op{
 		this.tipo=s;
 	}
 
+	public String toString(){
+		return tipo;
+	}
+
 }

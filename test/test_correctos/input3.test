@@ -1,3 +1,4 @@
+//test_for03
 class main{
 
 integer A[5] ;
@@ -7,22 +8,21 @@ bool C[10];
 integer pruArreglos(integer b, integer c ){
         integer i;
         A[0] = 2; 
-
-        for i = 5 , i *10 { //semanticamente correcto
+        
+        
+        for i = 5 , -10 { //semanticamente correcto aunq no termina ese ciclo
                A[i] = i + 2;
         }
+        return A[1];
 
         
-        return A[1];
- 
-                
 }
 
-void printf(integer f)extern;
+void printI(integer i) extern;
 
 integer main(){
 
-    printf(pruArreglos(4,8 ));
+    printI( pruArreglos(4,8 ));
     
     return 1;
     

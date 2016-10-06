@@ -32,6 +32,12 @@ public class Method_decl extends AST {
 		return type;
 	}
 
+	public Type getMethodType(String id){
+		if (this.getId().compareTo(id)==0)
+			return type;
+		return null;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

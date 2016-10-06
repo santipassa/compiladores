@@ -49,6 +49,37 @@ class Class_decl extends AST {
 		return method_declList;
 	}
 
+	public Type getAttributeType(String id){
+		if (field_declList == null)
+			return null;
+		else
+			for (Field_decl f: field_declList)
+				if (f.getAttributeType(id)!=null)
+					return f.getType();
+		return null;
+	}
+
+
+	public Type getMethodType(String id){
+		if (method_declList == null)
+			return null;
+		else
+			for (Method_decl m: method_declList)
+				if (m.getMethodType(id)!=null)
+					return m.getType();
+		return null;
+	}
+
+	public boolean getAttributeIsArray(String id){
+		if (field_declList == null)
+			return false;
+		else
+			for (Field_decl f: field_declList)
+				if (f.getAttributeIsArray(id))
+					return true;
+		return false;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

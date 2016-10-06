@@ -9,6 +9,20 @@ public class Unary_op extends Expr {
 		setLineNumber(n);
 	}
 	
+	public boolean typeOk(Type x){		
+		if (operacion == "!")
+			return (x.toString() == "bool");
+		if (operacion == "-")	
+			return (x.toString() == "integer" || x.toString() == "float");
+		return false;
+	}
+
+	public Type inferType(Type x){
+		if (operacion == "!")
+			return new Type("bool");
+		return x;
+	}
+
 	public String getOperacion(){
 		return operacion;
 	}

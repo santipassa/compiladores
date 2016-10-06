@@ -1,16 +1,19 @@
+//test_clases02
 class persona{
    integer edad;
-   boolean femenino;
+   bool femenino;
 
-   void persona(integer e, boolean f){
+   void persona(integer e, bool f){
        edad = e;
        femenino = f;
+       return;
    }
 
 
-   void persona(){
+   void persona2(){
        edad = 0;
        femenino = false; //por defecto es hombre.
+      return;
    }
 
    integer getEdad( ){
@@ -19,7 +22,7 @@ class persona{
    }
 
   
-   boolean esHombre(){
+   bool esHombre(){
       if (!femenino){
           return true;
       }
@@ -48,16 +51,14 @@ class main{
         y = 7;
 
         clara.persona(y,true);
-        juan.persona();
+        juan.persona2();
  
-
-        if(clara.esHombre(){
+        if(clara.esHombre()){
            clara.incrementarEdad();
         }else{
           printI(clara.getEdad());
         }
         
-        c = 8.0;
         y = clara.edad; 
         printI(y); 
         return;

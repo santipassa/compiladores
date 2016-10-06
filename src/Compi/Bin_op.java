@@ -19,6 +19,10 @@ public class Bin_op extends Expr {
 	public Expr getExpr2(){
 		return expr2;
 	}
+
+	public String getOperacion(){
+		return operacion;
+	}
 	
 	public boolean typeOk(Type x){
 		
@@ -31,7 +35,19 @@ public class Bin_op extends Expr {
 		
 		if (operacion == "!" || operacion == "||" || operacion == "&&")
 			return (x.toString() == "bool"); 
+
+		if (operacion == "%")
+			return (x.toString() == "integer");
+		
 		return false;
+	}
+
+	public Type inferType(Type x){
+		if (operacion == "<" || operacion == ">" || operacion == "<=" || operacion == ">=" ||
+			operacion == "==" || operacion == "!=" ||operacion == "!" || operacion == "||" || 
+			operacion == "&&")
+			return new Type("bool");
+		return x;
 	}
 
 	@Override

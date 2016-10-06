@@ -19,12 +19,12 @@ echo "=====================================\n"
 echo "============EJECUTANDO===============\n"
 echo "=====================================\n"
 
-cd test/
+cd test/test_correctos
 I=$(ls | wc -l)
 
-cd ../bin/
+cd ../../bin/
 for var in $(seq $I)
 do
 	echo "TEST $var"
-	java -cp .:../lib/java-cup-11b-runtime.jar Compi.Main ../test/input$var.test	 
+	java -cp .:../lib/java-cup-11b-runtime.jar Compi.Main ../test/test_correctos/input$var.test	 
 done

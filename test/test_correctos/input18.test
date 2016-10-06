@@ -1,3 +1,4 @@
+//test_metodos02
 class test{
    float c;
 
@@ -30,7 +31,7 @@ class test{
         
         c = 8.0;
         y = alo2(y); 
-        alo(false, (3)*y); 
+        alo(false, (3)+y); 
         return;
    }
 

@@ -23,8 +23,8 @@ public class Name extends AST {
 		return isArray;
 	}
 
-	public boolean equals(Name x){
-		return (this.getId().compareTo(x.getId())==0);
+	public boolean equals(String x){
+		return (this.getId().compareTo(x)==0);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class Type {
 	}
 
 	public boolean equals(Type x){
-		return this.tipo == x.tipo;
+		return this.tipo.compareTo(x.tipo)==0;
 	}
 
 }

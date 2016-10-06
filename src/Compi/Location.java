@@ -49,7 +49,7 @@ public class Location extends Expr {
 		return (id_param != null);
 	}
 
-	public String getParamId(){
+	public String getId_param(){
 		return id_param;
 	}
 

@@ -14,6 +14,14 @@ public class Param_decl extends AST {
 		return this.type;
 	}
 
+	public boolean equals(Param_decl x){
+		return (this.getId().compareTo(x.getId())==0 && this.type.equals(x.getType()));
+	}
+
+	public boolean compare(Expr e){
+		return (this.type.equals(e.getType()));
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
