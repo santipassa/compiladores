@@ -21,4 +21,7 @@ public class Statement_expr extends Statement{
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
+	public String toString(){
+		return expr.toString();
+	}
 }

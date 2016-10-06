@@ -57,5 +57,8 @@ public class Location extends Expr {
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
+	public String toString(){
+		return this.getId();
+	}
 
 }

@@ -29,4 +29,8 @@ public class Statement_asig extends Statement{
 		return v.visit(this);
 	}
 
+	public String toString(){
+		return location.toString()+asign_op.toString()+expr.toString();
+	}
+
 }

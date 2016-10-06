@@ -11,4 +11,8 @@ public class Statement_semicolon extends Statement{
 		return v.visit(this);
 	}
 
+	public String toString(){
+		return ";";
+	}
+
 }

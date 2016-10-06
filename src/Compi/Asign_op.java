@@ -12,4 +12,8 @@ public class Asign_op{
 		return tipo;
 	}
 
+	public String getTipo(){
+		return tipo;
+	}
+
 }

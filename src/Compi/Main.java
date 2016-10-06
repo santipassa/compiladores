@@ -33,8 +33,18 @@ public static void main(String args[]) throws Exception {
             System.out.println("Build Errors");
             for (ErrorCompi e: build.getErrors())
                 System.out.println(e.toString());
+
         }
  
+
+            
+        IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
+        iCodeVisitor.visit(prog);
+        java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
+        System.out.println("======IMPRIMIENDO CODIGO INTERMEDIO======");
+        for(IntermediateCode i : l ){
+            System.out.println(i.toString()+"\n");
+        }
     }
 
     public void syntax_error(Symbol sym){ 

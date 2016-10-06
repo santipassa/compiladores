@@ -26,5 +26,11 @@ public class Body extends AST{
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
 	}
+	public String toString(){
+		if(extern)
+			return "extern";
+		else
+			return block.toString();
+	}
 
 }

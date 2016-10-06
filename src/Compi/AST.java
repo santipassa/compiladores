@@ -28,6 +28,7 @@ public abstract class AST {
 	public void setId(String x) {
 		id = x;
 	}
-
+	public abstract String toString();
+	
 	public abstract <T> T accept(ASTVisitor<T> v);
 }
