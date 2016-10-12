@@ -23,6 +23,9 @@ public class IntermediateCode{
 			return "null";
 		}
 	}
+	public String getOperator(){
+		return this.operator;
+	}
 
 
 

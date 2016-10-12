@@ -1,4 +1,4 @@
-package Compi;
+ package Compi;
 
 import java.util.LinkedList;
 public class IntermediateCodeVisitor implements ASTVisitor<AST>{
@@ -75,7 +75,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Field_decl x){
 		if (x.getName() != null)
 			for (Name n : x.getName()) {
-					list.add(new IntermediateCode("RESERVE",n.accept(this),null,null));                                                              
+					list.add(new IntermediateCode("RESERVE",n.accept(this),null,null));  //inicializar variabble                                                            
 			} 
 		return null;
 	}
