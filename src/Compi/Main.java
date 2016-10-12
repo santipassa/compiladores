@@ -2,6 +2,7 @@ package Compi;
 
 import java_cup.runtime.*;
 import java.util.LinkedList;
+import java.io.*;
 
 public class Main{
 
@@ -42,13 +43,16 @@ public static void main(String args[]) throws Exception {
  
 
             
-        // IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
-        // iCodeVisitor.visit(prog);
-        // java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
-        // System.out.println("======IMPRIMIENDO CODIGO INTERMEDIO======");
-        // for(IntermediateCode i : l ){
-        //     System.out.println(i.toString()+"\n");
-        // }
+         IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
+         iCodeVisitor.visit(prog);
+         java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
+         String c = "";
+         for(IntermediateCode i : l ){
+             c=c+"\n"+i.toString()+"\n";
+         }
+         PrintWriter out = new PrintWriter("/home/santiago/Escritorio/intermediate.ctds");
+         out.println(c);
+         out.close();
     }
 
     public void syntax_error(Symbol sym){ 

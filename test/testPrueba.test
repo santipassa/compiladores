@@ -2,10 +2,13 @@ class main {
 		
 	void main() {
 		integer y;
-		y = y+1;
-		if (y == 1)
-			y=y+1;
-		else
-			y=y+3;
+		y=1;
+		while(y<3){
+			while(true){
+				break;
+			}
+			y=121;
+		}
+		return;
 	}
 }
