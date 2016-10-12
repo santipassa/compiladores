@@ -10,7 +10,7 @@ integer pruif(integer b, integer c ){
 	if(b){ // Error la expresion debe ser de tipo bool
 		res[0] = 1 - c;         
         }
-        if ( i = true ){ //ERROr la asignacion no retorna valor
+        if ( i == true ){ //ERROr la asignacion no retorna valor
            res [1] += 4.3;   
         }
         else{

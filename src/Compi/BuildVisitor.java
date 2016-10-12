@@ -30,10 +30,10 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	// Busca el location, y lo retorna
 	// Se busca en los niveles en el orden de la pila
-	private SymbolTable searchSymbol(String x){
+	private SymbolTable searchSymbol(String x, boolean isMethod){
 		SymbolTable sym;
 		for (int i=stack.size()-1; i>0; i--){
-			sym = stack.get(i).searchSymbol(x);
+			sym = stack.get(i).searchSymbol(x, isMethod);
 			if (sym!=null)
 				return sym; 	
 		}
@@ -52,9 +52,13 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Program expr) {
 		TableLevel x = new TableLevel();
 		this.createLevel(x);
+		SymbolTable class_decl;
 		if (expr.getClasses() != null)
 			for (Class_decl c :expr.getClasses()){
-				x.setSymbol(new SymbolTable(c.getId(), c));
+				class_decl = new SymbolTable(c.getId(), c);
+				if (stack.getLast().search(class_decl))	// Repeated checking
+					this.addError(c, "Redefined");
+				x.setSymbol(class_decl);
 				c.accept(this);
 			}
 		return "";
@@ -82,9 +86,11 @@ public class BuildVisitor implements ASTVisitor<String> {
 		SymbolTable aux;
 		if (expr.getName() != null)
 			for (Name c :expr.getName()){
-				if (c.isArray())
+				if (c.isArray()){
+					if (c.getIntLiteral()<=0)
+						this.addError(c,"[index] must be greater than zero");
 					aux = new SymbolTable(c.getId(), expr.getType(), true, c);
-				else	
+				}else	
 					aux = new SymbolTable(c.getId(), expr.getType(), c);
 				if (stack.getLast().search(aux))	// Repeated checking
 					this.addError(c, "Redefined");
@@ -98,7 +104,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Method_decl expr) {
-		SymbolTable aux = new SymbolTable(expr.getId(), true, expr);
+		SymbolTable aux = new SymbolTable(expr.getId(), true, expr.getType(), expr);
 		if (stack.getLast().search(aux))	// Repeated checking
 			this.addError(expr, "Redefined");
 		stack.getLast().setSymbol(aux);
@@ -150,15 +156,15 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Location expr) {
-		SymbolTable symbol = this.searchSymbol(expr.getId()); 
+		SymbolTable symbol = this.searchSymbol(expr.getId(), false); 
 		if (symbol==null)
 			this.addError(expr, "Undefined");
 		else{
-			if (expr.isObjectCall())	// Si es una llamada a un objeto
-				if (!expr.getType().isObject())	// Si el tipo de la var no es una clase
+			if (expr.isObjectCall()){	// Si es una llamada a un objeto
+				if (!symbol.getType().isObject())	// Si el tipo de la var no es una clase
 					this.addError(expr, "It is not an object");
 				else{
-					SymbolTable sym = this.searchClass(expr.getType().toString());
+					SymbolTable sym = this.searchClass(symbol.getType().toString());
 					if (sym==null) // Si no existe la clase
 						this.addError(expr, " Undefined type");
 					else{
@@ -176,17 +182,21 @@ public class BuildVisitor implements ASTVisitor<String> {
 								if (!attIsArray && !symbol.isArray())
 									expr.setType(attType);
 								else
-									this.addError(expr, "."+expr.getId_param()+" not array");
+									this.addError(expr, "."+expr.getId_param()+" var array");
 						}							
 					}
 				}
-			else
-				if (symbol.isArray()){
+			}else
+				if (symbol.isArray() && expr.isArray()){
 					expr.setType(symbol.getType()); 	
 					expr.getExpr().accept(this);
 				}
-				else
-					expr.setType(symbol.getType());
+				else{
+					if (!symbol.isArray() && !expr.isArray())
+						expr.setType(symbol.getType());
+					else
+						this.addError(expr, " var array");
+				}
 		}
 		return ""; 
 	}
@@ -196,15 +206,18 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Method_call_expr expr) {
-		SymbolTable symbol; 
-		if (expr.isObjectCall()){	// Si es una llamada a un objeto
-			symbol = this.searchSymbol(expr.getId()); // busca en atributos tambien??
-			if (symbol==null)
-				this.addError(expr, "Undefined");
-			else{
+		SymbolTable symbol;
+		if (expr.isObjectCall())
+			symbol = this.searchSymbol(expr.getId(), false); // busca en atributos tambien?? 
+		else
+			symbol = this.searchSymbol(expr.getId(), true);
+		if (symbol==null)
+			this.addError(expr, "Undefined");
+		else{
+			if (expr.isObjectCall()){	// Si es una llamada a un objeto
 				SymbolTable sym = this.searchClass(symbol.getType().toString());
 				if (sym==null) // Si no existe la clase
-					this.addError(expr, " Undefined type");
+					this.addError(expr, " Undefined type");				
 				else{
 					Class_decl class_decl = (Class_decl) sym.getAst();
 					Type methodType = class_decl.getMethodType(expr.getId_param());
@@ -213,17 +226,15 @@ public class BuildVisitor implements ASTVisitor<String> {
 					else
 						expr.setType(methodType);						
 				}
+			}	
+			else{
+				expr.setType(symbol.getType());
 			}
-		}	
-		else{
-			System.out.println("IS VAR LOCATION    "+expr.getId());
-			symbol = this.searchSymbol(expr.getId());
-			expr.setType(symbol.getType());
-		}
 		
-		if (expr.getParam_expr()!=null)
-			for (Expr e: expr.getParam_expr())
-				e.accept(this);
+			if (expr.getParam_expr()!=null)
+				for (Expr e: expr.getParam_expr())
+					e.accept(this);
+		}
 		return ""; 
 	}
 
@@ -239,12 +250,15 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}	
 
 	public String visit(Method_call expr) {
-		SymbolTable symbol; 
-		if (expr.isObjectCall()){	// Si es una llamada a un objeto
-			symbol = this.searchSymbol(expr.getId()); // busca en atributos tambien??
-			if (symbol==null)
-				this.addError(expr, "Undefined");
-			else{
+		SymbolTable symbol;
+		if (expr.isObjectCall())
+			symbol = this.searchSymbol(expr.getId(), false); // busca en atributos tambien?? 
+		else
+			symbol = this.searchSymbol(expr.getId(), true);
+		if (symbol==null)
+			this.addError(expr, "Undefined");
+		else{
+			if (expr.isObjectCall()){	// Si es una llamada a un objeto
 				SymbolTable sym = this.searchClass(symbol.getType().toString());
 				if (sym==null) // Si no existe la clase
 					this.addError(expr, " Undefined type");
@@ -257,17 +271,13 @@ public class BuildVisitor implements ASTVisitor<String> {
 						expr.setClase(methodType.toString());						
 				}
 			}
-		}	
-		else{
-
-			System.out.println("IS VAR LOCATION    "+expr.getId());
-			symbol = this.searchSymbol(expr.getId());
-			expr.setClase(symbol.getType().toString());
+			else{
+				expr.setClase(symbol.getType().toString());
+			}
+			if (expr.getParam_expr()!=null)
+				for (Expr e: expr.getParam_expr())
+					e.accept(this); 
 		}
-		
-		if (expr.getParam_expr()!=null)
-			for (Expr e: expr.getParam_expr())
-				e.accept(this);
 		return ""; 
 	}
 

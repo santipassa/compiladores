@@ -10,6 +10,6 @@ public class ErrorCompi {
 	}
 
 	public String toString(){
-		return lineNumber+"   "+description;
+		return "("+lineNumber+") "+"["+description+"]";
 	}
 }

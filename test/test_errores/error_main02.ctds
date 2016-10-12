@@ -7,7 +7,7 @@ class main{
    }
 
    void main(integer x){ //error no deberia tener parametros el main
-      alo();
+      alo(x);
       return;
    }
 

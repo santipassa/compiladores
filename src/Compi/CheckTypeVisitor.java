@@ -8,6 +8,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 
 	private LinkedList<ErrorCompi> errors;
 	private boolean whileOrFor;
+	private Type methodType;
 	private LinkedList<Method_decl> method_list;
 
 	public CheckTypeVisitor() {		
@@ -17,7 +18,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 	}
 
 	private void addError(AST a, String desc) {
-		errors.add(new ErrorCompi(a.getLineNumber(), a.getId()+" "+desc));
+		errors.add(new ErrorCompi(a.getLineNumber(), "'"+a.getId()+"' "+desc));
 	}
 
 	public LinkedList<ErrorCompi> getErrors() {
@@ -32,9 +33,10 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 				return false;
 			else
 				if (param.size()==expr.size()){
-					for (int i=0; i<param.size(); i++)
-						if (!param.get(i).compare(expr.get(i)))
+					for (int i=0; i<param.size(); i++){
+						if (!param.get(i).getType().equals(expr.get(i).getType()))
 							return false;
+					}
 					return true;
 				}
 				else
@@ -64,14 +66,13 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 	
 	public Type visit(Method_decl m) {
 		method_list.add(m);
+		methodType = m.getType();
 		if (!(m.getBody().isExtern())){
 			Type aux = m.getBody().accept(this);
 			if (aux==null){
-				this.addError(m, "return");
+				this.addError(m, "not found return"); // exigimos un return en bloque principal del metodo
 				return null;
 			}
-			if (!aux.equals(m.getType()))
-				this.addError(m, "Expected "+m.getType().toString()+" not "+aux.toString());
 		}
 		return null;
 	}
@@ -116,7 +117,10 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 	}
 
 	public Type visit(Statement_expr expr) {
-		return expr.getExpr().accept(this);
+		Type returnType = expr.getExpr().accept(this);
+		if (!methodType.equals(returnType))
+			this.addError(expr, "Expected "+methodType.toString()+" not "+returnType.toString());
+		return returnType;
 	}
 
 	public Type visit(Statement_for expr) {
@@ -187,7 +191,8 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 		Type expr2 = expr.getExpr2().accept(this);
 		if (!(expr1.equals(expr2) && expr.typeOk(expr1)))
 			this.addError(expr, "Error: "+expr1.toString()+expr.getOperacion()+expr2.toString());
-		return expr.inferType(expr1);
+		expr.setType(expr.inferType(expr1));
+		return expr.getType();
 	}	
 	
 	public Type visit(Param_decl expr) {
@@ -207,6 +212,12 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 	}
 
 	public Type visit(Location expr) {
+		if (expr.isArray()){
+			expr.getExpr().accept(this);
+			Type type = new Type("integer");
+			if (!(expr.getExpr().getType().equals(type)))
+				this.addError(expr, "["+expr.getExpr().getType()+"]"+" expected integer");
+		}
 		return expr.getType();
 	}
 
@@ -218,7 +229,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 			for (Method_decl m: method_list)
 				if (m.getId().compareTo(expr.getId())==0)
 					if (!this.paramCheck(expr.getParam_expr(), m.getParam_decl()))
-						this.addError(expr, " Undefined (params)");
+						this.addError(expr, " Illegal parameters");
 		return expr.getType();
 	}
 
@@ -226,7 +237,8 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 		Type expr1 = expr.getExpr().accept(this);
 		if (!expr.typeOk(expr1))
 			this.addError(expr, "Error: "+expr.getOperacion()+expr1.toString());
-		return expr.inferType(expr1);
+		expr.setType(expr.inferType(expr1));
+		return expr.getType();
 	}
 
 	public Type visit(Name expr) {
@@ -241,7 +253,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 			for (Method_decl m: method_list)
 				if (m.getId().compareTo(expr.getId())==0)
 					if (!this.paramCheck(expr.getParam_expr(), m.getParam_decl()))
-						this.addError(expr, " Undefined (params)");
+						this.addError(expr, " Illegal parameters");
 		return null;
 	}
 

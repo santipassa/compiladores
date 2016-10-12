@@ -18,33 +18,37 @@ public static void main(String args[]) throws Exception {
 
     	BuildVisitor build = new BuildVisitor();
         CheckTypeVisitor type = new CheckTypeVisitor();
-    	ASTVisitor mainVisitor = new MainVisitor();
-    	
-        Integer cantMain = (Integer)mainVisitor.visit(prog);
+    	MainVisitor mainVisitor = new MainVisitor();
     	
         prog.accept(build);
         if (build.getErrors().isEmpty()){
-            System.out.println("Type Errors");
+            System.out.println("**BUILD correcto");
             prog.accept(type);
-            if (!type.getErrors().isEmpty())
+            if (type.getErrors().isEmpty()){
+                System.out.println("**TYPE correcto");
+                prog.accept(mainVisitor);
+                if (mainVisitor.getErrors().isEmpty())
+                    System.out.println("**MAIN correcto");
+                else
+                    for (ErrorCompi e: mainVisitor.getErrors())
+                        System.out.println(e.toString());
+            }
+            else    
                 for (ErrorCompi e: type.getErrors())
                     System.out.println(e.toString());    
-        }else{
-            System.out.println("Build Errors");
+        }else
             for (ErrorCompi e: build.getErrors())
                 System.out.println(e.toString());
-
-        }
  
 
             
-        IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
-        iCodeVisitor.visit(prog);
-        java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
-        System.out.println("======IMPRIMIENDO CODIGO INTERMEDIO======");
-        for(IntermediateCode i : l ){
-            System.out.println(i.toString()+"\n");
-        }
+        // IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
+        // iCodeVisitor.visit(prog);
+        // java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
+        // System.out.println("======IMPRIMIENDO CODIGO INTERMEDIO======");
+        // for(IntermediateCode i : l ){
+        //     System.out.println(i.toString()+"\n");
+        // }
     }
 
     public void syntax_error(Symbol sym){ 

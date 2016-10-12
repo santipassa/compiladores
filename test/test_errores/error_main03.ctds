@@ -7,7 +7,7 @@ class main{
    }
 
    void Main(){ //error el metodo main es todo con minúscula
-      alo();
+      alo(2);
       return;
    }
 

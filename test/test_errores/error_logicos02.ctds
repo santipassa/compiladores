@@ -8,7 +8,7 @@ float promedio (float nota1, float nota2, float nota3){
 	if ((nota1 > nota2) && (nota3 > nota2)){
 		return (nota1 + nota3)/2.0;
 	}
-	if ((nota2 > nota 3) && (nota3 > nota1)){
+	if ((nota2 > nota3) && (nota3 > nota1)){
 		return (nota3 + nota2)/2.0;
 	}
 	if (!(nota1 == nota2) || (nota1 != nota3) || !(nota2) ){ //ERROR ! tiene q tomar arg de tipo bool

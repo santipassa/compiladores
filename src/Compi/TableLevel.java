@@ -41,11 +41,12 @@ public class TableLevel{
 	}
 
 	//buscar en la list el nombre 
-	public SymbolTable searchSymbol(String x){
+	public SymbolTable searchSymbol(String x, boolean isMethod){
 		if (!list.isEmpty())
 			for (SymbolTable t :list){
 				if (t.getId().compareTo(x)==0){
-					return t;						
+					if (t.isMethod()==isMethod)
+						return t;						
 				}
 			}
 		return null;

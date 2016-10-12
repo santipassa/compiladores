@@ -27,8 +27,9 @@ public class SymbolTable {
 		this.ast = ast;
 	}	
 
-	public SymbolTable(String id, boolean isMethod, AST ast){
+	public SymbolTable(String id, boolean isMethod, Type type, AST ast){
 		this.id = id;
+		this.type = type;
 		this.isArray = false;
 		this.isMethod = isMethod;
 		this.ast = ast;

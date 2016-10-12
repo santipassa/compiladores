@@ -11,12 +11,10 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 	
 	@Override
 	public String visit(Program expr) {
-		String conc;
-		conc = " -------------\n";
+		String conc = "";
 		if (expr.getClasses() != null)
 			for (Class_decl c :expr.getClasses())
-				conc = c.accept(this)+conc;
-
+				conc = conc+c.accept(this);
 		return conc;
 	}
 

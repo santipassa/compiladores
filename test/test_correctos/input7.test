@@ -28,7 +28,7 @@ integer main(){
      B[0] = -2.6;
      C[2] = !((4 < 6)) ;
      C[3] = ( 5 >= A[ 7 -(3+3) ]) || true ;
-     printI(pruArreglos(4, (8 * 6) / (7 % 2) ));
+     printI(pruArreglos(4, (8 * 6) / (7 % 2)));
      printB(C[1]==false); 
      printF(3.5 + 4.0);    
      return 1;

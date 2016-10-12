@@ -23,6 +23,10 @@ public class Name extends AST {
 		return isArray;
 	}
 
+	public int getIntLiteral(){
+		return int_literal;
+	}
+
 	public boolean equals(String x){
 		return (this.getId().compareTo(x)==0);
 	}

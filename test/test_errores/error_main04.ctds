@@ -7,7 +7,7 @@ class mainDDDDD{ //error el metodo main tine q ester en una clase llamada main
    }
 
    void main(){ 
-      alo();
+      alo(4);
       return;
    }
 

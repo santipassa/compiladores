@@ -6,7 +6,18 @@ import java.util.LinkedList;
 
 public class MainVisitor implements ASTVisitor<Integer>{
 
-	public MainVisitor(){
+	private LinkedList<ErrorCompi> errors;
+
+	public MainVisitor() {		
+		errors = new LinkedList<ErrorCompi>();
+	}
+
+	private void addError(AST a, String desc) {
+		errors.add(new ErrorCompi(a.getLineNumber(), "'"+a.getId()+"' "+desc));
+	}
+
+	public LinkedList<ErrorCompi> getErrors() {
+		return errors;
 	}
 
 	public Integer visit(Program expr) {
@@ -15,6 +26,8 @@ public class MainVisitor implements ASTVisitor<Integer>{
 			for (Class_decl c : expr.getClasses())
 				if (c.getId().equals("main"))
 					cantMain = cantMain + c.accept(this);
+		if (cantMain!=1)
+			this.addError(expr, "No cumple el requisito de tener un unico main con un metodo main");
 		return cantMain;
 	}
 
