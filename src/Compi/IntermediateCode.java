@@ -27,6 +27,17 @@ public class IntermediateCode{
 		return this.operator;
 	}
 
+	public AST getOp1(){
+		return this.op1;
+	}
+
+	public AST getOp2(){
+		return this.op2;
+	}
+
+	public AST getResult(){
+		return this.result;
+	}
 
 
 

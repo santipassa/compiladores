@@ -361,9 +361,13 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Literal_float expr) {
 		return "";
 	}
-
 	public String visit(Literal_integer expr) {
 		return "";
+	}
+
+	public int getOffset(){
+		return offset;
+
 	}
 
 }

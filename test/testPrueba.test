@@ -1,14 +1,10 @@
 class main {
 		
 	void main() {
-		integer y;
-		y=1;
-		while(y<3){
-			while(true){
-				break;
-			}
-			y=121;
-		}
-		return;
+		integer y;		
+		y=y-1;
+
+		
+		
 	}
 }

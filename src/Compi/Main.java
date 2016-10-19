@@ -23,6 +23,7 @@ public static void main(String args[]) throws Exception {
     	PrettyPrintVisitor pretty = new PrettyPrintVisitor();
 
         prog.accept(build);
+        int maxOffset=build.getOffset();
         if (build.getErrors().isEmpty()){
             System.out.println("**BUILD correcto");
             prog.accept(type);
@@ -43,15 +44,19 @@ public static void main(String args[]) throws Exception {
                 System.out.println(e.toString());
  
         //prog.accept(pretty);
-            
-         IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
+          System.out.println("ULTIMO OFFSET"+maxOffset);  
+         IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor(maxOffset);
          iCodeVisitor.visit(prog);
          java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
          String c = "";
+         AssemblerGenerator asm = new AssemblerGenerator();
+         System.out.println("--------ASSEMBLER GENERADO:--------");   
+         System.out.println(asm.readList(l));
+         
          for(IntermediateCode i : l ){
              c=c+"\n"+i.toString()+"\n";
          }
-         PrintWriter out = new PrintWriter("/home/claudio/Escritorio/intermediate.ctds");
+         PrintWriter out = new PrintWriter("/home/santiago/Escritorio/intermediate.ctds");
          out.println(c);
          out.close();
     }
