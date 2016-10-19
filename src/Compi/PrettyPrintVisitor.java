@@ -14,157 +14,173 @@ public class PrettyPrintVisitor implements ASTVisitor<String> {
 		String conc = "";
 		if (expr.getClasses() != null)
 			for (Class_decl c :expr.getClasses())
-				conc = conc+c.accept(this);
-		return conc;
+				c.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Class_decl expr) {
-		String conc;
-		conc = expr.toString();
-
 		if (expr.getField_decl() != null)
 			for (Field_decl c :expr.getField_decl())
-				conc = conc+c.accept(this);
+				c.accept(this);
 
 		if (expr.getMethod_decl() != null)
 			for (Method_decl c :expr.getMethod_decl())
-				conc = conc+c.accept(this);
+				c.accept(this);
 
-		return conc;
+		return "";
 	}
 
 	@Override
 	public String visit(Field_decl expr) {
-		String conc;
-		conc = expr.toString();
-
 		for (Name c :expr.getName())
-			conc = conc + c.accept(this);
-
-		return conc+"\n";		
+			c.accept(this);
+		return "";		
 	}
 
 	@Override
 	public String visit(Name expr) {
-		return expr.toString();
+		System.out.println(expr.getId()+" var "+expr.getOffset());
+		return "";
 	}
 
 	@Override
 	public String visit(Method_decl expr) {
-		String conc;
-		conc = expr.toString();
-
 		if (expr.getParam_decl() != null)
 			for (Param_decl c :expr.getParam_decl())
-				conc = conc + c.accept(this);
-
-		return conc+"\n";
+				c.accept(this);
+		expr.getBody().accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Param_decl expr) {
-		return expr.toString();
+		System.out.println(expr.getId()+" param "+expr.getOffset());
+		return "";
 	}
 
 	@Override
 	public String visit(Bin_op expr) {
-		return expr.accept(this);		
+		return "";		
 	}	
 
 	@Override
 	public String visit(Body expr) {
-		return expr.accept(this);
+		if (!(expr.isExtern()))
+			expr.getBlock().accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Literal_boolean expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Literal_float expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Literal_integer expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Location expr) {
-		return expr.accept(this);
+		System.out.println(expr.getId()+" loc "+expr.getOffset());
+		return "";
 	}
 
 	@Override
 	public String visit(Method_call_expr expr) {
-		return expr.accept(this);
+		if (expr.getParam_expr()!=null)
+			for (Expr e: expr.getParam_expr())
+				System.out.println(e.getId()+" call "+e.getOffset());
+		return "";
 	}
 
 	@Override
 	public String visit(Unary_op expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Block expr) {
-		return expr.accept(this);
+		if (expr.getField_decl() != null)
+			for (Field_decl c :expr.getField_decl()){
+				c.accept(this);
+			}
+		if (expr.getStatement() != null)
+			for (Statement c :expr.getStatement()){
+				c.accept(this);
+			}
+		return "";
 	}
 
 	@Override
 	public String visit(Method_call expr) {
-		return expr.accept(this);
+		if (expr.getParam_expr()!=null)
+			for (Expr e: expr.getParam_expr())
+				System.out.println(e.getId()+" call "+e.getOffset());
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_asig expr) {
-		return expr.accept(this);
+		expr.getLocation().accept(this);
+		expr.getExpr().accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_break expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_continue expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_expr expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_for expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_if expr) {
-		return expr.accept(this);
+		expr.getExpr().accept(this);
+		expr.getStatement().accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_ifelse expr) {
-		return expr.accept(this);
+		expr.getExpr().accept(this);
+		expr.getStatement1().accept(this);
+		expr.getStatement2().accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_semicolon expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_void expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	@Override
 	public String visit(Statement_while expr) {
-		return expr.accept(this);
+		return "";
 	}
 
 	public String visit(Asign_op expr) {

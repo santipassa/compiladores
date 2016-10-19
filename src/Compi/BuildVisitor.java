@@ -9,10 +9,12 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	private LinkedList<TableLevel> stack;
 	private LinkedList<ErrorCompi> errors;
+	private int offset;
 
 	public BuildVisitor(){
 		stack = new LinkedList<TableLevel>();
 		errors = new LinkedList<ErrorCompi>();
+		offset = -4;
 	}
 
 	private void createLevel(TableLevel x){
@@ -90,8 +92,13 @@ public class BuildVisitor implements ASTVisitor<String> {
 					if (c.getIntLiteral()<=0)
 						this.addError(c,"[index] must be greater than zero");
 					aux = new SymbolTable(c.getId(), expr.getType(), true, c);
-				}else	
+					c.setOffset(offset);
+					offset-=4*c.getIntLiteral();
+				}else{	
 					aux = new SymbolTable(c.getId(), expr.getType(), c);
+					c.setOffset(offset);
+					offset-=4;
+				}
 				if (stack.getLast().search(aux))	// Repeated checking
 					this.addError(c, "Redefined");
 				stack.getLast().setSymbol(aux);
@@ -120,6 +127,8 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Param_decl expr) {
+		expr.setOffset(offset);
+		offset-=4;
 		if (expr.getType().isObject())	
 			if (this.searchClass(expr.getType().toString())==null) 
 				this.addError(expr, " Undefined type");	
@@ -156,7 +165,8 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Location expr) {
-		SymbolTable symbol = this.searchSymbol(expr.getId(), false); 
+		SymbolTable symbol = this.searchSymbol(expr.getId(), false);
+		int offset_decl; 
 		if (symbol==null)
 			this.addError(expr, "Undefined");
 		else{
@@ -174,19 +184,33 @@ public class BuildVisitor implements ASTVisitor<String> {
 							this.addError(expr, "."+expr.getId_param()+" Undefined");
 						else{
 							boolean attIsArray = class_decl.getAttributeIsArray(expr.getId_param());
+							offset_decl = class_decl.getOffset(expr.getId_param());
 							if (attIsArray && symbol.isArray()){
 								expr.setType(attType);
+								expr.setOffset(offset_decl);
 								expr.getExpr().accept(this);
 							}
 							else
-								if (!attIsArray && !symbol.isArray())
+								if (!attIsArray && !symbol.isArray()){
 									expr.setType(attType);
+									expr.setOffset(offset_decl);
+								}
 								else
 									this.addError(expr, "."+expr.getId_param()+" var array");
 						}							
 					}
 				}
-			}else
+			}else{
+				if (symbol.getAst() instanceof Name){
+					Name n = (Name) symbol.getAst();
+					offset_decl = n.getOffset();
+					expr.setOffset(offset_decl);
+				}else{
+					Param_decl n = (Param_decl) symbol.getAst();
+					offset_decl = n.getOffset();
+					expr.setOffset(offset_decl);
+				}
+
 				if (symbol.isArray() && expr.isArray()){
 					expr.setType(symbol.getType()); 	
 					expr.getExpr().accept(this);
@@ -197,6 +221,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 					else
 						this.addError(expr, " var array");
 				}
+			}
 		}
 		return ""; 
 	}
@@ -208,7 +233,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Method_call_expr expr) {
 		SymbolTable symbol;
 		if (expr.isObjectCall())
-			symbol = this.searchSymbol(expr.getId(), false); // busca en atributos tambien?? 
+			symbol = this.searchSymbol(expr.getId(), false); 
 		else
 			symbol = this.searchSymbol(expr.getId(), true);
 		if (symbol==null)
@@ -232,8 +257,9 @@ public class BuildVisitor implements ASTVisitor<String> {
 			}
 		
 			if (expr.getParam_expr()!=null)
-				for (Expr e: expr.getParam_expr())
+				for (Expr e: expr.getParam_expr()){
 					e.accept(this);
+				}
 		}
 		return ""; 
 	}
@@ -252,7 +278,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Method_call expr) {
 		SymbolTable symbol;
 		if (expr.isObjectCall())
-			symbol = this.searchSymbol(expr.getId(), false); // busca en atributos tambien?? 
+			symbol = this.searchSymbol(expr.getId(), false); 
 		else
 			symbol = this.searchSymbol(expr.getId(), true);
 		if (symbol==null)

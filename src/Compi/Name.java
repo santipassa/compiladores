@@ -4,6 +4,7 @@ public class Name extends AST {
 
 	private int int_literal;
 	private boolean isArray;
+	private int offset;
 	
 	public Name(String i,int n){
 		setId(i);
@@ -29,6 +30,14 @@ public class Name extends AST {
 
 	public boolean equals(String x){
 		return (this.getId().compareTo(x)==0);
+	}
+
+	public void setOffset(int offset){
+		this.offset = offset;
+	}
+
+	public int getOffset(){
+		return this.offset;
 	}
 
 	@Override

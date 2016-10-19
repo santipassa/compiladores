@@ -36,6 +36,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 					for (int i=0; i<param.size(); i++){
 						if (!param.get(i).getType().equals(expr.get(i).getType()))
 							return false;
+						expr.get(i).setOffset(param.get(i).getOffset());	
 					}
 					return true;
 				}

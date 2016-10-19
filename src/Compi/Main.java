@@ -20,7 +20,8 @@ public static void main(String args[]) throws Exception {
     	BuildVisitor build = new BuildVisitor();
         CheckTypeVisitor type = new CheckTypeVisitor();
     	MainVisitor mainVisitor = new MainVisitor();
-    	
+    	PrettyPrintVisitor pretty = new PrettyPrintVisitor();
+
         prog.accept(build);
         if (build.getErrors().isEmpty()){
             System.out.println("**BUILD correcto");
@@ -41,7 +42,7 @@ public static void main(String args[]) throws Exception {
             for (ErrorCompi e: build.getErrors())
                 System.out.println(e.toString());
  
-
+        //prog.accept(pretty);
             
          IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor();
          iCodeVisitor.visit(prog);
@@ -50,7 +51,7 @@ public static void main(String args[]) throws Exception {
          for(IntermediateCode i : l ){
              c=c+"\n"+i.toString()+"\n";
          }
-         PrintWriter out = new PrintWriter("/home/santiago/Escritorio/intermediate.ctds");
+         PrintWriter out = new PrintWriter("/home/claudio/Escritorio/intermediate.ctds");
          out.println(c);
          out.close();
     }

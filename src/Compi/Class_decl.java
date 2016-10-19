@@ -80,6 +80,13 @@ class Class_decl extends AST {
 		return false;
 	}
 
+	public int getOffset(String id){
+		for (Field_decl f: field_declList)
+			if (f.searchName(id))
+				return f.getOffset(id);
+		return 0;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

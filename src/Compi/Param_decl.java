@@ -3,6 +3,7 @@ package Compi;
 public class Param_decl extends AST {
 
 	private Type type;
+	private int offset;
 
 	public Param_decl(String i,Type t,int n){
 		setId(i);
@@ -16,6 +17,14 @@ public class Param_decl extends AST {
 
 	public boolean equals(Param_decl x){
 		return (this.getId().compareTo(x.getId())==0 && this.type.equals(x.getType()));
+	}
+
+	public void setOffset(int offset){
+		this.offset = offset;
+	}
+
+	public int getOffset(){
+		return this.offset;
 	}
 
 	@Override

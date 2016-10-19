@@ -1,5 +1,5 @@
 public class AssemblerGenerator{
-	LinkedList<String> textSegment = new LinkedList<String>();
+	/*LinkedList<String> textSegment = new LinkedList<String>();
 	LinkedList<String> dataSegment = new LinkedList<String>();
 
 	public String readList(LinkedList<IntermediateCode> l){
@@ -29,6 +29,6 @@ public class AssemblerGenerator{
 
 
 
-	}
+	}*/
 
 }

@@ -44,6 +44,20 @@ public class Field_decl extends AST {
 		return false;
 	}
 
+	public boolean searchName(String id){
+		for (Name n: list_names)
+			if (n.equals(id))
+				return true;
+		return false;
+	}
+
+	public int getOffset(String id){
+		for (Name n: list_names)
+			if (n.equals(id))
+				return n.getOffset();
+		return 0;
+	}
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);
