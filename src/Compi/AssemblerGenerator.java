@@ -197,7 +197,6 @@ public class AssemblerGenerator{
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1;
-		String op2;
 		try{
 			int op1Int = Integer.parseInt(op1Expr.toString());
 			op1 = "$"+op1Int;
@@ -209,6 +208,71 @@ public class AssemblerGenerator{
 		result="mov "+op1+","+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
+	public String asignmas(IntermediateCode i){
+		Expr op1Expr = (Expr) i.getOp1();
+		Expr resultExpr = (Expr) i.getResult();  
+		String result;
+		String op1;
+		try{
+			int op1Int = Integer.parseInt(op1Expr.toString());
+			op1 = "$"+op1Int;
+		}catch(Exception e){
+
+			op1=op1Expr.getOffset()+"(%rbp)";
+		}
+		result=result+"add "+op1+", "+resultExpr.getOffset()+"(%rbp)\n";
+		return result;
+	}
+	public String asignmenos(IntermediateCode i){
+		Expr op1Expr = (Expr) i.getOp1();
+		Expr resultExpr = (Expr) i.getResult();  
+		String result;
+		String op1;
+		try{
+			int op1Int = Integer.parseInt(op1Expr.toString());
+			op1 = "$"+op1Int;
+		}catch(Exception e){
+
+			op1=op1Expr.getOffset()+"(%rbp)";
+		}
+
+		result= "mov "+op1+", %eax\n";
+		result=result+"sub "+resultExpr.getOffset()+"(%rbp), %eax\n";
+		result= "mov  %eax, "+resultExpr.getOffset()+"(%rbp)";
+		return result;
+	}
+
+	public String jmp(IntermediateCode i){
+		Label lblTojump = (Label) i.getResult();
+
+		result= "jmp ."+lblTojump.toString();
+		
+		return result;
+	}
+	public String inc(IntermediateCode i){
+		Location var = (Location) i.getResult();
+
+		result= "inc "+var.getOffset()+"(%rbp)";
+		
+		return result;
+	}
+	public String mdecl(IntermediateCode i){
+		Label lbl = (Label) i.getResult();
+
+		result= "."+lbl.toString()+":";
+		
+		return result;
+	}
+
+	public String lbl(IntermediateCode i){
+		Label lbl = (Label) i.getResult();
+
+		result= "."+lbl.toString()+":";
+		
+		return result;
+	}
+
+
 
 
 
