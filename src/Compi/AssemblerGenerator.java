@@ -192,7 +192,23 @@ public class AssemblerGenerator{
 		result=result+"imul "+op2+", "+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
+	public String asign(IntermediateCode i){
+		Expr op1Expr = (Expr) i.getOp1();
+		Expr resultExpr = (Expr) i.getResult();  
+		String result;
+		String op1;
+		String op2;
+		try{
+			int op1Int = Integer.parseInt(op1Expr.toString());
+			op1 = "$"+op1Int;
+		}catch(Exception e){
 
+			op1=op1Expr.getOffset()+"(%rbp)";
+		}
+
+		result="mov "+op1+","+resultExpr.getOffset()+"(%rbp)\n";
+		return result;
+	}
 
 
 
