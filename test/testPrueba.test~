@@ -2,9 +2,10 @@ class main {
 		
 	void main() {
 		integer y;		
-		y=y+1;
-
+		y=y-1;
+		return;
 		
 		
 	}
 }
+

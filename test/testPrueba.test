@@ -4,7 +4,10 @@ class main {
 		integer y;		
 		y=y-1;
 
+		y=y;
+		return;
 		
 		
 	}
 }
+

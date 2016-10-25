@@ -17,6 +17,22 @@ public class AssemblerGenerator{
 			case "MUL":
 				res=res+mul(i);
 				break;
+			case "ASIGN":
+				res=res+asign(i);
+				break;
+
+			case "LBL":
+				res=res+lbl(i);
+				break;
+			case "JMP":
+				res=res+jmp(i);
+				break;
+			case "ASIGNMAS":
+				res=res+asignmas(i);
+				break;
+			case "ASIGNMENOS":
+				res=res+asignmenos(i);
+				break;
 			/*case "DIV":
 				res=res+div(i);
 				break;
@@ -108,172 +124,103 @@ public class AssemblerGenerator{
 
 
 	public String sum(IntermediateCode i){
-		Expr op1Expr = (Expr) i.getOp1();
-		Expr op2Expr = (Expr) i.getOp2();
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		String op1;
-		String op2;
-		try{
-			int op1Int = Integer.parseInt(op1Expr.toString());
-			op1 = "$"+op1Int;
-		}catch(Exception e){
-
-			op1=op1Expr.getOffset()+"(%rbp)";
-		}
-
-		try{
-			int op2Int = Integer.parseInt(op2Expr.toString());
-			op2 = "$"+op2Int;
-		}catch(Exception e){
-
-			op2=op2Expr.getOffset()+"(%rbp)";
-		}
-
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
 		result="mov "+op1+","+resultExpr.getOffset()+"(%rbp)\n";
 		result=result+"add "+op2+", "+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
-
-
-
 	}
 	public String res(IntermediateCode i){
-		Expr op1Expr = (Expr) i.getOp1();
-		Expr op2Expr = (Expr) i.getOp2();
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		String op1;
-		String op2;
-		try{
-			int op1Int = Integer.parseInt(op1Expr.toString());
-			op1 = "$"+op1Int;
-		}catch(Exception e){
-
-			op1=op1Expr.getOffset()+"(%rbp)";
-		}
-
-		try{
-			int op2Int = Integer.parseInt(op2Expr.toString());
-			op2 = "$"+op2Int;
-		}catch(Exception e){
-
-			op2=op2Expr.getOffset()+"(%rbp)";
-		}
-
-		result="mov "+op1+","+resultExpr.getOffset()+"(%rbp)\n";
-		result=result+"sub "+resultExpr.getOffset()+", "+op2+"(%rbp)\n";
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		result="mov "+op2+","+resultExpr.getOffset()+"(%rbp)\n";
+		result=result+"sub "+op1+", "+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
 
 	public String mul(IntermediateCode i){
-		Expr op1Expr = (Expr) i.getOp1();
-		Expr op2Expr = (Expr) i.getOp2();
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		String op1;
-		String op2;
-		try{
-			int op1Int = Integer.parseInt(op1Expr.toString());
-			op1 = "$"+op1Int;
-		}catch(Exception e){
-
-			op1=op1Expr.getOffset()+"(%rbp)";
-		}
-
-		try{
-			int op2Int = Integer.parseInt(op2Expr.toString());
-			op2 = "$"+op2Int;
-		}catch(Exception e){
-
-			op2=op2Expr.getOffset()+"(%rbp)";
-		}
-
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
 		result="mov "+op1+","+resultExpr.getOffset()+"(%rbp)\n";
 		result=result+"imul "+op2+", "+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
 	public String asign(IntermediateCode i){
-		Expr op1Expr = (Expr) i.getOp1();
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		String op1;
-		try{
-			int op1Int = Integer.parseInt(op1Expr.toString());
-			op1 = "$"+op1Int;
-		}catch(Exception e){
-
-			op1=op1Expr.getOffset()+"(%rbp)";
-		}
-
+		String op1 = getAsmOp(i.getOp1());
 		result="mov "+op1+","+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
 	public String asignmas(IntermediateCode i){
-		Expr op1Expr = (Expr) i.getOp1();
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		String op1;
-		try{
-			int op1Int = Integer.parseInt(op1Expr.toString());
-			op1 = "$"+op1Int;
-		}catch(Exception e){
-
-			op1=op1Expr.getOffset()+"(%rbp)";
-		}
-		result=result+"add "+op1+", "+resultExpr.getOffset()+"(%rbp)\n";
+		String op1 = getAsmOp(i.getOp1());
+		result="add "+op1+", "+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
 	public String asignmenos(IntermediateCode i){
-		Expr op1Expr = (Expr) i.getOp1();
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		String op1;
-		try{
-			int op1Int = Integer.parseInt(op1Expr.toString());
-			op1 = "$"+op1Int;
-		}catch(Exception e){
-
-			op1=op1Expr.getOffset()+"(%rbp)";
-		}
-
+		String op1 = getAsmOp(i.getOp1());
 		result= "mov "+op1+", %eax\n";
 		result=result+"sub "+resultExpr.getOffset()+"(%rbp), %eax\n";
-		result= "mov  %eax, "+resultExpr.getOffset()+"(%rbp)";
+		result= result+"mov  %eax, "+resultExpr.getOffset()+"(%rbp)\n";
 		return result;
 	}
 
 	public String jmp(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
-
-		result= "jmp ."+lblTojump.toString();
+		String result;
+		result= "jmp ."+lblTojump.toString()+"\n";
 		
 		return result;
 	}
 	public String inc(IntermediateCode i){
 		Location var = (Location) i.getResult();
-
-		result= "inc "+var.getOffset()+"(%rbp)";
+		String result;
+		result= "inc "+var.getOffset()+"(%rbp)\n";
 		
 		return result;
 	}
 	public String mdecl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
-
-		result= "."+lbl.toString()+":";
+		String result;
+		result= "."+lbl.toString()+":\n";
 		
 		return result;
 	}
 
 	public String lbl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
-
-		result= "."+lbl.toString()+":";
+		String result;
+		result= "."+lbl.toString()+":\n";
 		
 		return result;
 	}
 
+	public String getAsmOp(AST a){
+		if(a instanceof Literal_integer){
+			return "$"+a.toString();
 
-
-
-
+		}else if(a instanceof Location){
+			Location l = (Location)a;
+			return l.getOffset()+"(%rbp)";
+		}
+		return "";
+	}
+	public String jmpf(IntermediateCode i){
+		Label lblTojump = (Label) i.getResult();
+		String result;
+		result="cmp "+getAsmOp(i.getOp1)", 1"
+		result= "jne ."+lblTojump.toString()+"\n";
+		
+		return result;
+	} 
 }

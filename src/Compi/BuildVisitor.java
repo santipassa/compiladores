@@ -118,9 +118,11 @@ public class BuildVisitor implements ASTVisitor<String> {
 	// 3° level
 		TableLevel x = new TableLevel();
 		this.createLevel(x);
-		if (expr.getParam_decl() != null)
+		if (expr.getParam_decl() != null){
+			offset = 8;
 			for (Param_decl c : expr.getParam_decl())
 				c.accept(this);
+		}
 		expr.getBody().accept(this);
 		this.closeLevel();
 		return "";
@@ -128,7 +130,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	public String visit(Param_decl expr) {
 		expr.setOffset(offset);
-		offset-=4;
+		offset+=4;
 		if (expr.getType().isObject())	
 			if (this.searchClass(expr.getType().toString())==null) 
 				this.addError(expr, " Undefined type");	
@@ -144,6 +146,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	// create one level for each block
 	public String visit(Block expr) {
+		offset = -4;
 		TableLevel x = new TableLevel();
 		this.createLevel(x);
 		if (expr.getField_decl() != null)

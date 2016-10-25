@@ -27,8 +27,8 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 	public AST visit(Bin_op x){
 		Location tmp = new Location("TMP"+temporalCounter,temporalCounter);
-		maxOffset-=4;
 		tmp.setOffset(maxOffset);
+		maxOffset-=4;
 		temporalCounter++;
 		if(x.getOp()=="+"){
 			list.add(new IntermediateCode("SUM",x.getExpr1().accept(this),x.getExpr2().accept(this),tmp));
@@ -88,12 +88,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		
 		if(x.isArray()){
 			tmp = new Location("TMPARRAY"+temporalCounter,temporalCounter);
+			tmp.setOffset(maxOffset);
 			maxOffset-=4;
-		tmp.setOffset(maxOffset);
+		
 		}else{
 			tmp = new Location("TMP"+temporalCounter,temporalCounter);
+			tmp.setOffset(maxOffset);
 			maxOffset-=4;
-		tmp.setOffset(maxOffset);
+		
 		}
 		temporalCounter++;
 		return tmp;
@@ -126,6 +128,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		if (x.getParam_decl() != null)
 			list.add(new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId())) );
 			x.getBody().accept(this);
+			list.add(new IntermediateCode("RET",null,null,null));
 		return null;
 
 	}
@@ -154,6 +157,8 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Method_call_expr x){
+		
+		
 		return null;
 	}
 	
@@ -166,8 +171,9 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Unary_op x){
 	
 			Location tmp = new Location("TMP"+temporalCounter,temporalCounter);
+			tmp.setOffset(maxOffset);
 			maxOffset-=4;
-		tmp.setOffset(maxOffset);
+		
 			temporalCounter++;
 			if(x.getOperacion()=="!"){
 				list.add(new IntermediateCode("NEG",x.getExpr().accept(this),null,tmp));

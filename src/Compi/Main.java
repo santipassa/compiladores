@@ -51,7 +51,7 @@ public static void main(String args[]) throws Exception {
          String c = "";
          AssemblerGenerator asm = new AssemblerGenerator();
          System.out.println("--------ASSEMBLER GENERADO:--------");   
-         System.out.println(asm.readList(l));
+        
          
          for(IntermediateCode i : l ){
              c=c+"\n"+i.toString()+"\n";
@@ -59,6 +59,11 @@ public static void main(String args[]) throws Exception {
          PrintWriter out = new PrintWriter("/home/santiago/Escritorio/intermediate.ctds");
          out.println(c);
          out.close();
+
+         
+         PrintWriter out2 = new PrintWriter("/home/santiago/Escritorio/assembler.s");
+         out2.println(asm.readList(l));
+         out2.close();
     }
 
     public void syntax_error(Symbol sym){ 
