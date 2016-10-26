@@ -76,10 +76,6 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 
 	public AST visit(Field_decl x){
-		if (x.getName() != null)
-			for (Name n : x.getName()) {
-					list.add(new IntermediateCode("RESERVE",n.accept(this),null,null));  //inicializar variabble                                                            
-			} 
 		return null;
 	}
 
@@ -125,10 +121,9 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Method_decl x){
-		if (x.getParam_decl() != null)
 			list.add(new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId())) );
 			x.getBody().accept(this);
-			list.add(new IntermediateCode("RET",null,null,null));
+			list.add(new IntermediateCode("ENDMETH",null,null,null));
 		return null;
 
 	}
