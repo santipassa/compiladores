@@ -4,6 +4,8 @@ public class Statement_for extends Statement{
 	private Expr expr1;
 	private Expr expr2;
 	private Statement stat;
+	private int offset;
+	private Type type;
 
 	public Statement_for(String i, Expr e, Expr e1, Statement s, int n){
 		setId(i);
@@ -36,6 +38,22 @@ public class Statement_for extends Statement{
 
 	public void setStatement(Statement x){
 		stat = x;
+	}
+
+	public void setOffset(int offset){
+		this.offset = offset;
+	}
+
+	public int getOffset(){
+		return this.offset;
+	}
+
+	public Type getType(){
+		return type;
+	}
+
+	public void setType(Type x){
+		type = x;
 	}
 
 	@Override

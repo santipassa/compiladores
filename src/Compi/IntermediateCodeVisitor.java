@@ -125,10 +125,10 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Method_decl x){
-		if (x.getParam_decl() != null)
-			list.add(new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId())) );
-			x.getBody().accept(this);
-			list.add(new IntermediateCode("RET",null,null,null));
+		maxOffset = x.getOffset();
+		list.add(new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId())) );
+		x.getBody().accept(this);
+		list.add(new IntermediateCode("RET",null,null,null));
 		return null;
 
 	}
@@ -240,8 +240,10 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Statement_for x){
 		whileCounter++;
 		Location evalCota = new Location("cota",0);
-		Location i = new Location("i",0);
-		i.setId(x.getId());
+		evalCota.setOffset(maxOffset);
+		maxOffset-=4;
+		Location i = new Location(x.getId(),0);
+		i.setOffset(x.getOffset());
 		AST exp1 = x.getExpr1().accept(this);
 		AST exp2 = x.getExpr2().accept(this);
 		list.add(new IntermediateCode("ASIGN",exp1,null,i));

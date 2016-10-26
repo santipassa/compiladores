@@ -218,7 +218,7 @@ public class AssemblerGenerator{
 	public String jmpf(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
-		result="cmp "+getAsmOp(i.getOp1)", 1"
+		result="cmp "+getAsmOp(i.getOp1())+", 1";
 		result= "jne ."+lblTojump.toString()+"\n";
 		
 		return result;

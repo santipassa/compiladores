@@ -124,8 +124,9 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 	}
 
 	public Type visit(Statement_for expr) {
-		if (!(expr.getExpr1().accept(this).equals(expr.getExpr2().accept(this)) && 
-				expr.getExpr1().accept(this).toString().compareTo("integer")==0))
+		if (!((expr.getExpr1().accept(this).equals(expr.getExpr2().accept(this)) && 
+				expr.getExpr1().accept(this).toString().compareTo("integer")==0) && 
+				(expr.getType().toString().compareTo("integer")==0)))
 			this.addError(expr, "Expected integer");
 		whileOrFor = true;
 		expr.getStatement().accept(this);
