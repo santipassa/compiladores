@@ -4,6 +4,7 @@ public class Method_decl extends AST {
 	private Type type;
 	private Body body;
 	private java.util.LinkedList<Param_decl> param_declList;
+	private int offset;
 
 	public Method_decl(Type t,String id,Body b,int n){
 		this.type=t;
@@ -36,6 +37,14 @@ public class Method_decl extends AST {
 		if (this.getId().compareTo(id)==0)
 			return type;
 		return null;
+	}
+
+	public void setOffset(int offset){
+		this.offset = offset;
+	}
+
+	public int getOffset(){
+		return this.offset;
 	}
 
 	@Override

@@ -124,6 +124,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 				c.accept(this);
 		}
 		expr.getBody().accept(this);
+		expr.setOffset(offset);
 		this.closeLevel();
 		return "";
 	}
@@ -324,6 +325,10 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Statement_for expr) {
+		SymbolTable sym = searchSymbol(expr.getId(), false);
+		expr.setType(sym.getType());
+		Name ast = (Name) sym.getAst();
+		expr.setOffset(ast.getOffset());
 		expr.getExpr1().accept(this);
 		expr.getExpr2().accept(this);
 		expr.getStatement().accept(this);
