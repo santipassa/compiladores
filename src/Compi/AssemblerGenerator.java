@@ -1,8 +1,10 @@
 package Compi;
 import java.util.LinkedList;
+//import java.util.*;
 public class AssemblerGenerator{
 	LinkedList<String> textSegment = new LinkedList<String>();
 	LinkedList<String> dataSegment = new LinkedList<String>();
+	
 
 	public String readList(LinkedList<IntermediateCode> l){
         String res="";
@@ -40,7 +42,12 @@ public class AssemblerGenerator{
 			case "ENDMETH":
 				res=res+endmeth(i);
 				break;
+
+			case "RETURNMETH":
+				res=res+returnMeth(i);
+				break;
 			}
+
 		}
 	return res;
 	}
@@ -116,7 +123,7 @@ public class AssemblerGenerator{
 	public String mdecl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
 		String result;
-		result= "."+lbl.toString()+":\n";
+		result= "."+lbl.toString()+":\n"+prologo(i.getOffset());
 		
 		return result;
 	}
@@ -152,5 +159,17 @@ public class AssemblerGenerator{
 		}
 		return "";
 	}
-
+	
+	private String prologo(int offset){
+		String prologo = "pushl %ebp\nmovl %esp,%ebp\nsubl $"+Math.abs(offset)+", %esp\n";
+		return prologo;
+	}
+	
+	public String returnMeth(IntermediateCode i){
+		Expr resultExpr = (Expr) i.getResult();  
+		String result;
+		result="mov "+resultExpr.getOffset()+"(%ebp), %eax\n";
+		return result;
+	}
+	
 }

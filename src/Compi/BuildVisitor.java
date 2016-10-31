@@ -139,6 +139,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 		}
 		expr.getBody().accept(this);
 		expr.setOffset(offset);
+		
 		this.resetOffset();
 		this.closeLevel();
 		return "";

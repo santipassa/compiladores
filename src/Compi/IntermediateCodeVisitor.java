@@ -5,15 +5,17 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	 public LinkedList<IntermediateCode> list;
 	 public LinkedList<Label> lblentrada;
 	 public LinkedList<Label> lblsalida;
-	 int temporalCounter = 0;
+	 int temporalCounter;
 	 int ifCounter = 0;
 	 int whileCounter = 0;
 	 int maxOffset;
 	
 	public LinkedList<IntermediateCode> getList(){
 		return list;
+		
 	}
 	public IntermediateCodeVisitor(int maxOffset){
+		temporalCounter=0;
 		list=new LinkedList<IntermediateCode>();
 		lblsalida = new LinkedList<Label>();
 		lblentrada = new LinkedList<Label>();
@@ -122,10 +124,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 	public AST visit(Method_decl x){
 		maxOffset = x.getOffset();
-		System.out.println("Offset!: "+ maxOffset);
-		list.add(new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId())) );
+		temporalCounter=0;
+		IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId()));
+		list.add(methodDecl);
 		x.getBody().accept(this);
-		list.add(new IntermediateCode("ENDMETH",null,null,null));
+		
+		IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
+		methodDecl.setOffset(maxOffset);
+		list.add(endMeth);
 
 		return null;
 
@@ -230,8 +236,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Statement_expr x){
-	
-		x.getExpr().accept(this);
+		list.add(new IntermediateCode("RETURNMETH",null,null,x.getExpr().accept(this)));
 		return null;
 	}
 	

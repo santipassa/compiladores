@@ -6,6 +6,7 @@ public class IntermediateCode{
 	AST op1;
 	AST op2;
 	AST result;
+	int offset;
 	public IntermediateCode(String operator,AST op1, AST op2,AST result){
 		this.operator=operator;
 		this.op1=op1;
@@ -38,7 +39,12 @@ public class IntermediateCode{
 	public AST getResult(){
 		return this.result;
 	}
-
+	public void setOffset(int offset){
+		this.offset=offset;
+	}
+	public int getOffset(){
+		return this.offset;
+	}
 
 
 
