@@ -44,7 +44,7 @@ public static void main(String args[]) throws Exception {
                 System.out.println(e.toString());
  
         //prog.accept(pretty);
-          System.out.println("ULTIMO OFFSET"+maxOffset);  
+        //System.out.println("ULTIMO OFFSET"+maxOffset);  
          IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor(maxOffset);
          iCodeVisitor.visit(prog);
          java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();
@@ -56,12 +56,12 @@ public static void main(String args[]) throws Exception {
          for(IntermediateCode i : l ){
              c=c+"\n"+i.toString()+"\n";
          }
-         PrintWriter out = new PrintWriter("/home/santiago/Escritorio/intermediate.ctds");
+         PrintWriter out = new PrintWriter("/home/claudio/Escritorio/intermediate.ctds");
          out.println(c);
          out.close();
 
          
-         PrintWriter out2 = new PrintWriter("/home/santiago/Escritorio/assembler.s");
+         PrintWriter out2 = new PrintWriter("/home/claudio/Escritorio/assembler.s");
          out2.println(asm.readList(l));
          out2.close();
     }

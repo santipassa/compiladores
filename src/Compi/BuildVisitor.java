@@ -17,6 +17,18 @@ public class BuildVisitor implements ASTVisitor<String> {
 		offset = -4;
 	}
 
+	private void resetOffset(){
+		offset = -4;
+	}
+
+	private void incOffset(){
+		offset = offset-4;
+	}
+
+	private void incOffset(int count){
+		offset = offset-4*count;
+	}
+
 	private void createLevel(TableLevel x){
 		stack.add(x);
 	}
@@ -92,16 +104,18 @@ public class BuildVisitor implements ASTVisitor<String> {
 					if (c.getIntLiteral()<=0)
 						this.addError(c,"[index] must be greater than zero");
 					aux = new SymbolTable(c.getId(), expr.getType(), true, c);
-					c.setOffset(offset);
-					offset-=4*c.getIntLiteral();
+					this.incOffset(c.getIntLiteral());
+					c.setOffset(offset);	// El fin del arreglo.
 				}else{	
 					aux = new SymbolTable(c.getId(), expr.getType(), c);
 					c.setOffset(offset);
-					offset-=4;
+					this.incOffset();
 				}
-				if (stack.getLast().search(aux))	// Repeated checking
+				if (stack.getLast().search(aux)){	// Repeated checking
 					this.addError(c, "Redefined");
-				stack.getLast().setSymbol(aux);
+				}else{
+					stack.getLast().setSymbol(aux);
+				}
 			}
 		return "";		
 	}
@@ -119,19 +133,20 @@ public class BuildVisitor implements ASTVisitor<String> {
 		TableLevel x = new TableLevel();
 		this.createLevel(x);
 		if (expr.getParam_decl() != null){
-			offset = 8;
+			this.offset = 8;
 			for (Param_decl c : expr.getParam_decl())
 				c.accept(this);
 		}
 		expr.getBody().accept(this);
 		expr.setOffset(offset);
+		this.resetOffset();
 		this.closeLevel();
 		return "";
 	}
 
 	public String visit(Param_decl expr) {
 		expr.setOffset(offset);
-		offset+=4;
+		this.incOffset();
 		if (expr.getType().isObject())	
 			if (this.searchClass(expr.getType().toString())==null) 
 				this.addError(expr, " Undefined type");	
@@ -140,6 +155,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Body expr) {
+		this.resetOffset();
 		if (!(expr.isExtern()))
 			expr.getBlock().accept(this);
 		return "";
@@ -147,7 +163,6 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	// create one level for each block
 	public String visit(Block expr) {
-		offset = -4;
 		TableLevel x = new TableLevel();
 		this.createLevel(x);
 		if (expr.getField_decl() != null)

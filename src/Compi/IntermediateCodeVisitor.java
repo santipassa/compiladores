@@ -121,8 +121,8 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Method_decl x){
-
 		maxOffset = x.getOffset();
+		System.out.println("Offset!: "+ maxOffset);
 		list.add(new IntermediateCode("MDECL",null,null,new Label("METH"+x.getId())) );
 		x.getBody().accept(this);
 		list.add(new IntermediateCode("ENDMETH",null,null,null));
