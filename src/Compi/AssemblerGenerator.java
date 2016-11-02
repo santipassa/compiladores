@@ -195,6 +195,7 @@ public class AssemblerGenerator{
 
 
 	public String getAsmOp(AST a){
+		//faltan los literals boolean y flotantes (hay que ver como se tratan)
 		if(a instanceof Literal_integer){
 			return "$"+a.toString();
 
