@@ -2,9 +2,8 @@ package Compi;
 import java.util.LinkedList;
 //import java.util.*;
 public class AssemblerGenerator{
-	LinkedList<String> textSegment = new LinkedList<String>();
-	LinkedList<String> dataSegment = new LinkedList<String>();
-	
+	int countLabel=0;
+
 
 	public String readList(LinkedList<IntermediateCode> l){
         String res="";
@@ -18,6 +17,9 @@ public class AssemblerGenerator{
 				break;
 			case "MUL":
 				res=res+mul(i);
+				break;
+			case "DIV":
+				res=res+div(i);
 				break;
 			case "ASIGN":
 				res=res+asign(i);
@@ -46,6 +48,38 @@ public class AssemblerGenerator{
 			case "RETURNMETH":
 				res=res+returnMeth(i);
 				break;
+			case "CALL":
+				res=res+call(i);
+				break;
+
+			case "JMPF":
+				res=res+jmpf(i);
+				break;
+			case "IGUAL":
+				res=res+igual(i);
+				break;
+			
+			case "ABS":
+				res=res+abs(i);
+				break;
+			case "MAY":
+				res=res+may(i);
+				break;
+			case "MEN":
+				res=res+men(i);
+				break;
+			case "MAYI":
+				res=res+mayi(i);
+				break;
+			case "MENI":
+				res=res+meni(i);
+				break;
+			case "AND":
+				res=res+and(i);
+				break;
+			case "OR":
+				res=res+or(i);
+				break;
 			}
 
 		}
@@ -58,8 +92,10 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="mov "+op1+","+resultExpr.getOffset()+"(%ebp)\n";
-		result=result+"add "+op2+", "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+","+"%eax\n";
+		result=result+"movl "+op2+","+"%ebx\n";
+		result=result+"addl %eax, %ebx\n";
+		result=result+"movl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 	public String res(IntermediateCode i){
@@ -67,9 +103,9 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="mov "+op2+",%eax\n";
-		result=result+"sub "+op1+",%eax\n";
-		result=result+"mov %eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op2+",%eax\n";
+		result=result+"subl "+op1+",%eax\n";
+		result=result+"movl %eax, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 
@@ -78,61 +114,68 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="mov "+op1+","+resultExpr.getOffset()+"(%ebp)\n";
-		result=result+"imul "+op2+", "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+","+"(%eax)\n";
+		result=result+"imull "+op2+", (%eax)\n";
+		result=result+"%eax, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
+
+	public String div(IntermediateCode i){
+		Expr resultExpr = (Expr) i.getResult();  
+		String result;
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		result="movl "+op1+","+"(%eax)\n";
+		result=result+"cltd\n";
+		result=result+"idivl "+op2+"\n";
+		result=result+"%eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		return result;
+	}
+
 	public String asign(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
-		result="mov "+op1+","+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+", %eax\n";
+		result=result+"movl %eax, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 	public String asignmas(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
-		result="add "+op1+", "+resultExpr.getOffset()+"(%ebp)\n";
+		result="addl "+op1+", "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 	public String asignmenos(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
-		result= "mov "+op1+", %eax\n";
-		result=result+"sub "+resultExpr.getOffset()+"(%ebp), %eax\n";
-		result= result+"mov  %eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result= "movl "+op1+", %eax\n";
+		result=result+"subl "+resultExpr.getOffset()+"(%ebp), %eax\n";
+		result= result+"movl  %eax, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 
 	public String jmp(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
-		result= "jmp ."+lblTojump.toString()+"\n";
-		
+		result= "jmp ."+lblTojump.toString()+"\n";	
 		return result;
 	}
-	public String inc(IntermediateCode i){
-		Location var = (Location) i.getResult();
-		String result;
-		result= "inc "+var.getOffset()+"(%ebp)\n";
-		
-		return result;
-	}
+
 	public String mdecl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
 		String result;
-		result= "."+lbl.toString()+":\n"+prologo(i.getOffset());
-		
+		result= ".globl "+lbl.toString()+"\n.type "+ lbl.toString()+", @function\n";
+		result= result+lbl.toString()+":\n"+prologo(i.getOffset());	
 		return result;
 	}
 
 	public String lbl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
 		String result;
-		result= "."+lbl.toString()+":\n";
-		
+		result= "."+lbl.toString()+":\n";	
 		return result;
 	}
 
@@ -141,9 +184,9 @@ public class AssemblerGenerator{
 		String result;
 		result="cmp "+getAsmOp(i.getOp1())+", 1\n";
 		result= result+"jne ."+lblTojump.toString()+"\n";
-		
 		return result;
 	} 
+
 	public String endmeth(IntermediateCode i){
 		return "leave\nret\n";
 	}
@@ -156,6 +199,9 @@ public class AssemblerGenerator{
 		}else if(a instanceof Location){
 			Location l = (Location)a;
 			return l.getOffset()+"(%ebp)";
+		}else if(a instanceof Registro){
+			Registro r = (Registro)a;
+			return r.toString();
 		}
 		return "";
 	}
@@ -168,8 +214,178 @@ public class AssemblerGenerator{
 	public String returnMeth(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		result="mov "+resultExpr.getOffset()+"(%ebp), %eax\n";
+		result="movl "+resultExpr.getOffset()+"(%ebp), %eax\n";
+		return result;
+	}
+	public String call(IntermediateCode i){
+		Label lblTojump = (Label) i.getResult();
+		String result;
+		result="call "+lblTojump.toString()+"\n";
 		return result;
 	}
 	
+	public String igual(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		result="cmpl "+op1+", "+op2+"\n";
+		String lbl1= ".L"+countLabel;
+		result= result+"je "+lbl1+"\n";
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl2+"\n";
+		result= result+lbl1+":\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl2+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String may(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		result="cmp "+op1+", "+op2+"\n";
+		String lbl1= ".L"+countLabel;
+		result= result+"jg "+lbl1+"\n";
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl2+"\n";
+		result= result+lbl1+":\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl2+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String men(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		result="cmp "+op1+", "+op2+"\n";
+		String lbl1= ".L"+countLabel;
+		result= result+"jl "+lbl1+"\n";
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl2+"\n";
+		result= result+lbl1+":\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl2+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String mayi(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		result="cmp "+op1+", "+op2+"\n";
+		String lbl1= ".L"+countLabel;
+		result= result+"jge "+lbl1+"\n";
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl2+"\n";
+		result= result+lbl1+":\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl2+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String meni(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		result="cmp "+op1+", "+op2+"\n";
+		String lbl1= ".L"+countLabel;
+		result= result+"jle "+lbl1+"\n";
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl2+"\n";
+		result= result+lbl1+":\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl2+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String and(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		String lbl1= ".L"+countLabel;
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		countLabel++;
+		String lbl3= ".L"+countLabel;
+		result="cmp "+op1+", "+"$1\n";
+		result= result+"je "+lbl1+"\n";
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl3+"\n";
+		result= result+lbl1+":\n";
+		result= result+"cmp "+op2+", "+"$1\n";
+		result= result+"je "+lbl2+"\n";
+		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl3+"\n";
+		result= result+lbl2+":\n";
+		result=result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl3+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String or(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		String op1 = getAsmOp(i.getOp1());
+		String op2 = getAsmOp(i.getOp2());
+		String result;
+		String lbl1= ".L"+countLabel;
+		countLabel++;
+		String lbl2= ".L"+countLabel;
+		countLabel++;
+		String lbl3= ".L"+countLabel;
+		result="cmp "+op1+", "+"$1\n";
+		result= result+"jne "+lbl1+"\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl3+"\n";
+		result= result+lbl1+":\n";
+		result= result+"cmp "+op2+", "+"$1\n";
+		result= result+"jne "+lbl2+"\n";
+		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
+		result= result+"jmp "+lbl3+"\n";
+		result= result+lbl2+":\n";
+		result=result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
+		result= result+lbl3+":\n";
+		countLabel++;
+		return result;
+	}
+
+	public String abs(IntermediateCode i){
+		Location loc = (Location) i.getResult();
+		AST op1 = i.getOp1();
+		String result;
+
+		if(op1 instanceof Literal_integer){
+			String opstr=op1.toString();
+			result="movl $-"+opstr+","+loc.getOffset()+"(%ebp)\n";
+		}else{
+			Location op1Loc = (Location) i.getOp1();
+			result="movl "+op1Loc.getOffset()+"(%ebp),"+loc.getOffset()+"(%ebp)\n";
+			result=result+"negl "+loc.getOffset()+"(%ebp)\n";
+		}
+		
+		return result;
+	}
+
 }
