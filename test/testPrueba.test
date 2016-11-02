@@ -1,15 +1,14 @@
 
 class main {
 
-	bool pro(){
-		return true;
+	integer pro(){
+		return 1;
 	}
 
 	integer main() {
 		integer y;
-		y=12;
-		y=y+1;
-		pro();
+		y=2;
+		y=y+pro();
 		return y;
 		
 	}

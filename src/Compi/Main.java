@@ -56,12 +56,13 @@ public static void main(String args[]) throws Exception {
          for(IntermediateCode i : l ){
              c=c+"\n"+i.toString()+"\n";
          }
-         PrintWriter out = new PrintWriter("/home/claudio/Escritorio/intermediate.ctds");
+         String home="/home/spassalacqua/";
+         PrintWriter out = new PrintWriter(home+"Escritorio/intermediate.ctds");
          out.println(c);
          out.close();
 
          
-         PrintWriter out2 = new PrintWriter("/home/claudio/Escritorio/assembler.s");
+         PrintWriter out2 = new PrintWriter(home+"Escritorio/assembler.s");
          out2.println(asm.readList(l));
          out2.close();
     }

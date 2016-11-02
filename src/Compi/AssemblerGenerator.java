@@ -1,10 +1,10 @@
 package Compi;
 import java.util.LinkedList;
-//import java.util.*;
 public class AssemblerGenerator{
 	int countLabel=0;
-
-
+	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	/* PELIGROOOOOOO!!!!!! NO USAR NUNCA EL EAX, SOLO LO USA EL RETORNO DE UN METODO, USAR DESDE EBX EN ADELANTE */
+	/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 	public String readList(LinkedList<IntermediateCode> l){
         String res="";
 		for(IntermediateCode i : l){
@@ -92,10 +92,10 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="movl "+op1+","+"%eax\n";
-		result=result+"movl "+op2+","+"%ebx\n";
-		result=result+"addl %eax, %ebx\n";
-		result=result+"movl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+","+"%ebx\n";
+		result=result+"movl "+op2+","+"%ecx\n";
+		result=result+"addl %ebx, %ecx\n";
+		result=result+"movl %ecx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 	public String res(IntermediateCode i){
@@ -103,9 +103,9 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="movl "+op2+",%eax\n";
-		result=result+"subl "+op1+",%eax\n";
-		result=result+"movl %eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op2+",%ebx\n";
+		result=result+"subl "+op1+",%ebx\n";
+		result=result+"movl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 
@@ -114,9 +114,9 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="movl "+op1+","+"(%eax)\n";
-		result=result+"imull "+op2+", (%eax)\n";
-		result=result+"%eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+", %ebx\n";
+		result=result+"imull "+op2+", %ebx\n";
+		result=result+"%ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 
@@ -125,10 +125,12 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="movl "+op1+","+"(%eax)\n";
+		result="movl %eax,%ebx\n"; //guardo el viejo eax esto es por las dudas si antes hubo una llamada a metodo.
+		result="movl "+op1+",%eax\n";
 		result=result+"cltd\n";
 		result=result+"idivl "+op2+"\n";
 		result=result+"%eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl %ebx,%eax\n"; //restauro el viejo eax
 		return result;
 	}
 
@@ -136,8 +138,8 @@ public class AssemblerGenerator{
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
-		result="movl "+op1+", %eax\n";
-		result=result+"movl %eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+", %ebx\n";
+		result=result+"movl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 	public String asignmas(IntermediateCode i){
@@ -151,9 +153,9 @@ public class AssemblerGenerator{
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
-		result= "movl "+op1+", %eax\n";
-		result=result+"subl "+resultExpr.getOffset()+"(%ebp), %eax\n";
-		result= result+"movl  %eax, "+resultExpr.getOffset()+"(%ebp)\n";
+		result= "movl "+op1+", %ebx\n";
+		result=result+"subl "+resultExpr.getOffset()+"(%ebp), %ebx\n";
+		result= result+"movl  %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 
@@ -214,7 +216,7 @@ public class AssemblerGenerator{
 	public String returnMeth(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
-		result="movl "+resultExpr.getOffset()+"(%ebp), %eax\n";
+		result="movl "+ getAsmOp(resultExpr)+", %eax\n";
 		return result;
 	}
 	public String call(IntermediateCode i){
@@ -381,8 +383,9 @@ public class AssemblerGenerator{
 			result="movl $-"+opstr+","+loc.getOffset()+"(%ebp)\n";
 		}else{
 			Location op1Loc = (Location) i.getOp1();
-			result="movl "+op1Loc.getOffset()+"(%ebp),"+loc.getOffset()+"(%ebp)\n";
-			result=result+"negl "+loc.getOffset()+"(%ebp)\n";
+			result="movl "+op1Loc.getOffset()+"(%ebp), %ebx\n";
+			result=result+"negl %ebx\n";
+			result=result+"movl %ebx, "+loc.getOffset()+"(%ebp)\n";
 		}
 		
 		return result;
