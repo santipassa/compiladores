@@ -190,7 +190,8 @@ public class AssemblerGenerator{
 	private String jmpf(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
-		result="cmp "+getAsmOp(i.getOp1())+", 1\n";
+		result="movl $1, %ebx";
+		result="cmpl "+getAsmOp(i.getOp1())+", %ebx \n";
 		result= result+"jne ."+lblTojump.toString()+"\n";
 		return result;
 	} 
@@ -239,7 +240,8 @@ public class AssemblerGenerator{
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
 		String result;
-		result="cmpl "+op1+", "+op2+"\n";
+		result="movl "+op2+", %ebx\n";
+		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
 		result= result+"je "+lbl1+"\n";
 		countLabel++;
@@ -258,7 +260,8 @@ public class AssemblerGenerator{
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
 		String result;
-		result="cmp "+op1+", "+op2+"\n";
+		result="movl "+op2+", %ebx\n";
+		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
 		result= result+"jg "+lbl1+"\n";
 		countLabel++;
@@ -277,7 +280,8 @@ public class AssemblerGenerator{
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
 		String result;
-		result="cmp "+op1+", "+op2+"\n";
+		result="movl "+op2+", %ebx\n";
+		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
 		result= result+"jl "+lbl1+"\n";
 		countLabel++;
@@ -296,7 +300,8 @@ public class AssemblerGenerator{
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
 		String result;
-		result="cmp "+op1+", "+op2+"\n";
+		result="movl "+op2+", %ebx\n";
+		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
 		result= result+"jge "+lbl1+"\n";
 		countLabel++;
@@ -315,7 +320,8 @@ public class AssemblerGenerator{
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
 		String result;
-		result="cmp "+op1+", "+op2+"\n";
+		result="movl "+op2+", %ebx\n";
+		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
 		result= result+"jle "+lbl1+"\n";
 		countLabel++;
@@ -339,12 +345,12 @@ public class AssemblerGenerator{
 		String lbl2= ".L"+countLabel;
 		countLabel++;
 		String lbl3= ".L"+countLabel;
-		result="cmp "+op1+", "+"$1\n";
+		result="cmpl "+op1+", "+"$1\n";
 		result= result+"je "+lbl1+"\n";
 		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
 		result= result+"jmp "+lbl3+"\n";
 		result= result+lbl1+":\n";
-		result= result+"cmp "+op2+", "+"$1\n";
+		result= result+"cmpl "+op2+", "+"$1\n";
 		result= result+"je "+lbl2+"\n";
 		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
 		result= result+"jmp "+lbl3+"\n";
@@ -365,12 +371,12 @@ public class AssemblerGenerator{
 		String lbl2= ".L"+countLabel;
 		countLabel++;
 		String lbl3= ".L"+countLabel;
-		result="cmp "+op1+", "+"$1\n";
+		result="cmpl "+op1+", "+"$1\n";
 		result= result+"jne "+lbl1+"\n";
 		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
 		result= result+"jmp "+lbl3+"\n";
 		result= result+lbl1+":\n";
-		result= result+"cmp "+op2+", "+"$1\n";
+		result= result+"cmpl "+op2+", "+"$1\n";
 		result= result+"jne "+lbl2+"\n";
 		result= result+"movl $1, "+loc.getOffset()+"(%ebp)\n";
 		result= result+"jmp "+lbl3+"\n";
