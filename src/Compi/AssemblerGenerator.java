@@ -2,6 +2,8 @@ package Compi;
 import java.util.LinkedList;
 public class AssemblerGenerator{
 	int countLabel=0;
+	//imprime eax al finalizar cada metodo para ver que devuelve al finalizar.
+	boolean debugMode = true;
 	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	/* PELIGROOOOOOO!!!!!! NO USAR NUNCA EL EAX, SOLO LO USA EL RETORNO DE UN METODO, USAR DESDE EBX EN ADELANTE */
 	/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -169,7 +171,8 @@ public class AssemblerGenerator{
 	public String mdecl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
 		String result;
-		result= ".globl "+lbl.toString()+"\n.type "+ lbl.toString()+", @function\n";
+		result=debugMode?printEaxBegin(lbl.toString()):"\n";
+		result= result+".globl "+lbl.toString()+"\n.type "+ lbl.toString()+", @function\n";
 		result= result+lbl.toString()+":\n"+prologo(i.getOffset());	
 		return result;
 	}
@@ -190,7 +193,8 @@ public class AssemblerGenerator{
 	} 
 
 	public String endmeth(IntermediateCode i){
-		return "leave\nret\n";
+		String result = debugMode?printEaxEnd():"\n";
+		return result+"leave\nret\n";
 	}
 
 
@@ -391,5 +395,13 @@ public class AssemblerGenerator{
 		
 		return result;
 	}
+	public String printEaxEnd(){
+		String result="movl	%eax, 4(%esp)\nmovl	$.LC0, (%esp)\ncall	printf\n";
+		return result;
 
+	}
+	public String printEaxBegin(String methodName){
+		String result=".LC0:\n.string	\"EAX VALUE FROM "+methodName+" %i\\n\"\n";
+		return result;
+	}
 }

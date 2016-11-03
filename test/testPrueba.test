@@ -1,16 +1,10 @@
 
 class main {
-
-	integer pro(){
-		return 1;
-	}
-
 	integer main() {
 		integer y;
 		y=2;
-		y=y+pro();
+		y=y+1;
 		return y;
-		
 	}
 
 	

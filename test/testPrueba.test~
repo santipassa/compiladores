@@ -1,11 +1,13 @@
+
 class main {
-		
-	void main() {
-		integer y;		
-		y=y-1;
-		return;
-		
-		
+	integer main() {
+		integer y;
+		y=2;
+		y=y+1;
+		return y;
 	}
+
+	
+	
 }
 
