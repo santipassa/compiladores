@@ -2,6 +2,8 @@ package Compi;
 import java.util.LinkedList;
 public class AssemblerGenerator{
 	int countLabel=0;
+	int countLabelsForDebug=0;
+	boolean isMain = false;
 	//imprime eax al finalizar cada metodo para ver que devuelve al finalizar.
 	boolean debugMode = true;
 	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
@@ -89,7 +91,7 @@ public class AssemblerGenerator{
 	}
 
 
-	public String sum(IntermediateCode i){
+	private String sum(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
@@ -100,7 +102,7 @@ public class AssemblerGenerator{
 		result=result+"movl %ecx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
-	public String res(IntermediateCode i){
+	private String res(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
@@ -111,7 +113,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String mul(IntermediateCode i){
+	private String mul(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
@@ -122,7 +124,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String div(IntermediateCode i){
+	private String div(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
@@ -136,7 +138,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String asign(IntermediateCode i){
+	private String asign(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
@@ -144,14 +146,14 @@ public class AssemblerGenerator{
 		result=result+"movl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
-	public String asignmas(IntermediateCode i){
+	private String asignmas(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		result="addl "+op1+", "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
-	public String asignmenos(IntermediateCode i){
+	private String asignmenos(IntermediateCode i){
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
@@ -161,30 +163,31 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String jmp(IntermediateCode i){
+	private String jmp(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
 		result= "jmp ."+lblTojump.toString()+"\n";	
 		return result;
 	}
 
-	public String mdecl(IntermediateCode i){
+	private String mdecl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
 		String result;
-		result=debugMode?printEaxBegin(lbl.toString()):"\n";
+		isMain = lbl.toString().equals("main");
+		result=(debugMode && isMain)?printEaxBegin(lbl.toString()):"\n";
 		result= result+".globl "+lbl.toString()+"\n.type "+ lbl.toString()+", @function\n";
 		result= result+lbl.toString()+":\n"+prologo(i.getOffset());	
 		return result;
 	}
 
-	public String lbl(IntermediateCode i){
+	private String lbl(IntermediateCode i){
 		Label lbl = (Label) i.getResult();
 		String result;
 		result= "."+lbl.toString()+":\n";	
 		return result;
 	}
 
-	public String jmpf(IntermediateCode i){
+	private String jmpf(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
 		result="cmp "+getAsmOp(i.getOp1())+", 1\n";
@@ -192,13 +195,13 @@ public class AssemblerGenerator{
 		return result;
 	} 
 
-	public String endmeth(IntermediateCode i){
-		String result = debugMode?printEaxEnd():"\n";
+	private String endmeth(IntermediateCode i){
+		String result = (debugMode && isMain )?printEaxEnd():"\n";
 		return result+"leave\nret\n";
 	}
 
 
-	public String getAsmOp(AST a){
+	private String getAsmOp(AST a){
 		//faltan los literals boolean y flotantes (hay que ver como se tratan)
 		if(a instanceof Literal_integer){
 			return "$"+a.toString();
@@ -218,20 +221,20 @@ public class AssemblerGenerator{
 		return prologo;
 	}
 	
-	public String returnMeth(IntermediateCode i){
-		Expr resultExpr = (Expr) i.getResult();  
+	private String returnMeth(IntermediateCode i){
+		AST resultExpr = i.getResult();  
 		String result;
 		result="movl "+ getAsmOp(resultExpr)+", %eax\n";
 		return result;
 	}
-	public String call(IntermediateCode i){
+	private String call(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
 		result="call "+lblTojump.toString()+"\n";
 		return result;
 	}
 	
-	public String igual(IntermediateCode i){
+	private String igual(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -250,7 +253,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String may(IntermediateCode i){
+	private String may(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -269,7 +272,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String men(IntermediateCode i){
+	private String men(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -288,7 +291,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String mayi(IntermediateCode i){
+	private String mayi(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -307,7 +310,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String meni(IntermediateCode i){
+	private String meni(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -326,7 +329,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String and(IntermediateCode i){
+	private String and(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -352,7 +355,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String or(IntermediateCode i){
+	private String or(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
@@ -378,7 +381,7 @@ public class AssemblerGenerator{
 		return result;
 	}
 
-	public String abs(IntermediateCode i){
+	private String abs(IntermediateCode i){
 		Location loc = (Location) i.getResult();
 		AST op1 = i.getOp1();
 		String result;
@@ -395,13 +398,14 @@ public class AssemblerGenerator{
 		
 		return result;
 	}
-	public String printEaxEnd(){
-		String result="movl	%eax, 4(%esp)\nmovl	$.LC0, (%esp)\ncall	printf\n";
+	private String printEaxEnd(){
+		String result="movl	%eax, 4(%esp)\nmovl	$.LC"+countLabelsForDebug+", (%esp)\ncall	printf\n";
+		countLabelsForDebug++;
 		return result;
 
 	}
-	public String printEaxBegin(String methodName){
-		String result=".LC0:\n.string	\"EAX VALUE FROM "+methodName+" %i\\n\"\n";
+	private String printEaxBegin(String methodName){
+		String result=".LC"+countLabelsForDebug+":\n.string	\"EAX VALUE FROM "+methodName+" %i\\n\"\n";
 		return result;
 	}
 }

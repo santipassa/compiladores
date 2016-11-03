@@ -1,10 +1,13 @@
-
 class main {
+	integer myProc(){
+		return 6;
+	}
 	integer main() {
 		integer y;
 		y=2;
 		y=y+1;
-		return y;
+		
+		return myProc();
 	}
 
 	
