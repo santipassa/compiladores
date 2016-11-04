@@ -152,7 +152,8 @@ public class AssemblerGenerator{
 		Expr resultExpr = (Expr) i.getResult();  
 		String result;
 		String op1 = getAsmOp(i.getOp1());
-		result="addl "+op1+", "+resultExpr.getOffset()+"(%ebp)\n";
+		result="movl "+op1+", %ebx\n";
+		result=result + "addl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
 	private String asignmenos(IntermediateCode i){
@@ -265,7 +266,7 @@ public class AssemblerGenerator{
 		result="movl "+op2+", %ebx\n";
 		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
-		result= result+"jg "+lbl1+"\n";
+		result= result+"jl "+lbl1+"\n";
 		countLabel++;
 		String lbl2= ".L"+countLabel;
 		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
@@ -285,7 +286,7 @@ public class AssemblerGenerator{
 		result="movl "+op2+", %ebx\n";
 		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
-		result= result+"jl "+lbl1+"\n";
+		result= result+"jg "+lbl1+"\n";
 		countLabel++;
 		String lbl2= ".L"+countLabel;
 		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
@@ -305,7 +306,7 @@ public class AssemblerGenerator{
 		result="movl "+op2+", %ebx\n";
 		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
-		result= result+"jge "+lbl1+"\n";
+		result= result+"jle "+lbl1+"\n";
 		countLabel++;
 		String lbl2= ".L"+countLabel;
 		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
@@ -325,7 +326,7 @@ public class AssemblerGenerator{
 		result="movl "+op2+", %ebx\n";
 		result=result+"cmpl "+op1+", %ebx\n";
 		String lbl1= ".L"+countLabel;
-		result= result+"jle "+lbl1+"\n";
+		result= result+"jge "+lbl1+"\n";
 		countLabel++;
 		String lbl2= ".L"+countLabel;
 		result= result+"movl $0, "+loc.getOffset()+"(%ebp)\n";
