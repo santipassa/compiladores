@@ -107,8 +107,8 @@ public class AssemblerGenerator{
 		String result;
 		String op1 = getAsmOp(i.getOp1());
 		String op2 = getAsmOp(i.getOp2());
-		result="movl "+op2+",%ebx\n";
-		result=result+"subl "+op1+",%ebx\n";
+		result="movl "+op1+",%ebx\n";
+		result=result+"subl "+op2+",%ebx\n";
 		result=result+"movl %ebx, "+resultExpr.getOffset()+"(%ebp)\n";
 		return result;
 	}
