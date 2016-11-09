@@ -1,32 +1,53 @@
 class main {
 
-/*
-integer factorialFor (){
-	integer limit;
-	integer v;
-	v=5;
-	limit = 15;
-	if ( v > limit) { return -1;}
 
-	else{
-		integer c, fact;
-		c = 0;
-		fact = 1;
-		while (c<v){
-			c = c+1;
-			fact = fact*c;
-		}
-		return fact;
-	}
-	return 1;
-}*/
+integer int2bin(integer d){
+   integer acum, aux, i;
+   acum=0;
+   i=0;
 
-bool eq(integer y,integer x){
-	return x==y;
-} 
+   while (true){
+      if(d>1){               
+        aux = d % 2;   // toma el ultimo digito
+        { integer j;
+          j=0;   
+                            
+          while (true){    // ubica el digito en la posicion que le corresponde
+             if (j<i){
+               aux = aux * 10;  
+               j=j+1;
+               continue;  
+             } 
+             else { break; }
+          }
+         }     			
 
-	bool main() {
-		return eq(4,4);
+          acum=acum +aux;  // resultado parcial 
+          i=i+1;           
+          d=d/2;           // toma el resto del numero decimal
+           continue;  
+       }
+       else { break; }
+      }
+       { integer j;
+         j=0;
+                            
+         while (true){         // ubica el ultimo digito en la posicion que corresponde
+            if (j<i){
+              d = d * 10;
+              j=j+1;
+               continue;  
+            } 
+             else { break; }
+         }   	
+	   }
+	return acum + d;  // resultaod final y retorna
+}
+
+
+
+	integer main() {
+		return int2bin(2);
 	}
 
 	

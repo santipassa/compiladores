@@ -118,7 +118,7 @@ integer int2bin(integer d){
 
    while (true){
       if(d>1){               
-        aux = d % 2;   // toma el ultimo digito
+        aux = d;   // toma el ultimo digito
         { integer j;
           j=0;   
                             
@@ -135,9 +135,9 @@ integer int2bin(integer d){
           acum=acum +aux;  // resultado parcial 
           i=i+1;           
           d=d/2;           // toma el resto del numero decimal
-          // continue;  
+          continue;  
        }
-       // else { break; }
+       else { break; }
       }
        { integer j;
          j=0;
@@ -146,9 +146,9 @@ integer int2bin(integer d){
             if (j<i){
               d = d * 10;
               j=j+1;
-              // continue;  
+              continue;  
             } 
-            // else { break; }
+            else { break; }
          }   	
 	   }
 	return acum + d;  // resultaod final y retorna
@@ -224,7 +224,7 @@ integer main (){
       }
 		print_string(1);
 
-/*		
+
 // test factorial array entero    
         print_string(4);    
         x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
@@ -288,7 +288,7 @@ integer main (){
             i+=1;
 	    }
 		print_string(1);
-*/
+
 // test test    
         print_string(9);    
         test();

@@ -38,6 +38,9 @@ public class AssemblerGenerator{
 			case "DIV":
 				res=res+div(i);
 				break;
+			case "MOD":
+				res=res+mod(i);
+				break;
 			case "ASIGN":
 				res=res+asign(i);
 				break;
@@ -110,7 +113,6 @@ public class AssemblerGenerator{
 		}	
 		Expr resultExpr = (Expr) ast;
 		return resultExpr.getOffset()+"(%ebp)\n";
-		
 	}
 
 	private String sum(IntermediateCode i){
@@ -217,6 +219,7 @@ public class AssemblerGenerator{
 
 	private String endmeth(IntermediateCode i){
 		String result = (debugMode && isMain )?printEaxEnd():"\n";
+
 		return result+"leave\nret\n";
 	}
 
@@ -245,7 +248,7 @@ public class AssemblerGenerator{
 	}
 	
 	private String prologo(int offset){
-		String prologo = "pushl %ebp\nmovl %esp,%ebp\nsubl $"+(Math.abs(offset)-4)+", %esp\n";
+		String prologo = "pushl %ebp\nmovl %esp,%ebp\nsubl $"+(Math.abs(offset))+", %esp\n";
 		return prologo;
 	}
 	
@@ -253,7 +256,8 @@ public class AssemblerGenerator{
 		AST resultExpr = i.getResult();  
 		String result;
 		result=getEdx()+"movl "+ getAsmOp(resultExpr)+", %eax\n";
-		return result;
+		
+		return !isMain?result+"leave\nret\n":result;
 	}
 	private String call(IntermediateCode i){
 		AST op1 = i.getOp1();
@@ -269,12 +273,12 @@ public class AssemblerGenerator{
 
 		String result="";
 		if (params!=null){
-			result = "subl	$"+(params.size()*4)+", %esp\n";
-			int index = 0;
+			// result = "subl	$"+(params.size()*4)+", %esp\n";
+			// int index = 0;
 			String str;
 			for(Expr e : params){
-				result = result+"movl "+getAsmOp(e)+", "+index+"(%esp)\n";
-				index = index +4;
+				result = result+"pushl "+getAsmOp(e)+"\n";//+", "+index+"(%esp)\n";
+				// index = index +4;
 			}
 		}
 
@@ -479,7 +483,7 @@ public class AssemblerGenerator{
 
 	}
 	private String printEaxBegin(String methodName){
-		String result=".LC"+countLabelsForDebug+":\n.string	\"EAX VALUE FROM "+methodName+" %i\\n\"\n";
+		String result=".LC"+countLabelsForDebug+":\n.string	\"EAX VALUE FROM "+methodName+" %d\\n\"\n";
 		return result;
 	}
 }

@@ -1,5 +1,5 @@
 package Compi;
-public class Registro extends AST{
+public class Registro extends Expr{
 
 	private String nombre;
 

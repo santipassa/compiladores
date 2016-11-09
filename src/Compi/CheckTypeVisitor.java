@@ -7,13 +7,13 @@ import java.util.LinkedList;
 public class CheckTypeVisitor implements ASTVisitor<Type> {
 
 	private LinkedList<ErrorCompi> errors;
-	private boolean whileOrFor;
+	private int whileOrFor;
 	private Type methodType;
 	private LinkedList<Method_decl> method_list;
 
 	public CheckTypeVisitor() {		
 		errors = new LinkedList<ErrorCompi>();
-		whileOrFor = false;
+		whileOrFor = 0;
 		method_list = new LinkedList<Method_decl>();
 	}
 
@@ -93,7 +93,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 					ret = c.accept(this); // asumo que las expr son distintas de void
 				else{
 					if (c.getId()=="break" || c.getId()=="continue")
-						if (!whileOrFor)	
+						if (whileOrFor==0)	
 							this.addError(c, "Incorrect definition");	// no se deben definir aca
 					c.accept(this);
 				}
@@ -128,9 +128,9 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 				expr.getExpr1().accept(this).toString().compareTo("integer")==0) && 
 				(expr.getType().toString().compareTo("integer")==0)))
 			this.addError(expr, "Expected integer");
-		whileOrFor = true;
+		whileOrFor++;
 		expr.getStatement().accept(this);
-		whileOrFor = false;
+		whileOrFor--;
 		return null;
 	}
 
@@ -142,7 +142,7 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 		if (aux.getId()=="expr" || aux.getId()=="void")
 			return aux.accept(this);
 		if (aux.getId()=="break" || aux.getId()=="continue")
-			if (!whileOrFor)
+			if (whileOrFor==0)
 				this.addError(aux, "Incorrect definition");		// no se deben definir aca
 		aux.accept(this);
 		return null;
@@ -155,10 +155,10 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 		Statement aux1 = expr.getStatement1();
 		Statement aux2 = expr.getStatement2();
 		if (aux1.getId()=="break" || aux1.getId()=="continue")
-			if (!whileOrFor)
+			if (whileOrFor==0)
 				this.addError(aux1, "Incorrect definition");		// no se deben definir aca
 		if (aux2.getId()=="break" || aux2.getId()=="continue")
-			if (!whileOrFor)
+			if (whileOrFor==0)
 				this.addError(aux2, "Incorrect definition");		// no se deben definir aca
 		Type s1 = aux1.accept(this);
 		Type s2 = aux2.accept(this);
@@ -181,9 +181,9 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 		Type cond = expr.getExpr().accept(this);
 		if (cond.toString().compareTo("bool")!=0)
 			this.addError(expr, "Expected bool, not "+cond.toString());
-		whileOrFor = true;
+		whileOrFor++;
 		expr.getStatement().accept(this);
-		whileOrFor = false;
+		whileOrFor--;
 		return null;
 	}
 

@@ -64,8 +64,10 @@ public class Method_call extends Statement {
 	}
 	public String toString(){
 		String res ="";
-		for(Expr e : param_expr){
-			res+=e.toString();
+		if (param_expr != null){
+			for(Expr e : param_expr){
+				res+=e.toString();
+			}
 		}
 		return res;
 	}

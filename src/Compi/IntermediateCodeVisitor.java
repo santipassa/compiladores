@@ -73,6 +73,10 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		if(x.getOp()=="||"){
 			list.add(new IntermediateCode("OR",x.getExpr1().accept(this),x.getExpr2().accept(this),tmp));
 		}
+
+		if(x.getOp()=="%"){
+			list.add(new IntermediateCode("MOD",x.getExpr1().accept(this),x.getExpr2().accept(this),tmp));
+		}
 		return tmp;
 
 	}
@@ -281,20 +285,21 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	
 	public AST visit(Statement_if x){
 		AST cond = x.getExpr().accept(this);
-		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLIF"+ifCounter))) ;
+		int savedIfCounter=ifCounter;
+		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLIF"+x.getLineNumber()))) ;
 		x.getStatement().accept(this);
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLIF"+ifCounter))) ;
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLIF"+x.getLineNumber()))) ;
 		ifCounter++;
 		return null;
 	}
 	public AST visit(Statement_ifelse x){
 		AST cond= x.getExpr().accept(this);
-		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLELSE"+ifCounter)));
+		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLELSE"+x.getLineNumber())));
 		x.getStatement1().accept(this);
-		list.add(new IntermediateCode("JMP",null,null,new Label("LBLFIN"+ifCounter)));
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLELSE"+ifCounter)));
+		list.add(new IntermediateCode("JMP",null,null,new Label("LBLFIN"+x.getLineNumber())));
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLELSE"+x.getLineNumber())));
 		x.getStatement2().accept(this);
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLFIN"+ifCounter)));
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLFIN"+x.getLineNumber())));
 		ifCounter++;
 		return null;
 	}
