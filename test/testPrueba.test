@@ -47,7 +47,7 @@ integer int2bin(integer d){
 
 
 	integer main() {
-		return int2bin(2);
+		return int2bin(100);
 	}
 
 	

@@ -252,7 +252,7 @@ integer main (){
 		print_string(1);
 
 // test nthprime array entero    
-        print_string(6);    
+       print_string(6);    
         x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
         i = 0;        
         while (i<x){              
@@ -304,6 +304,7 @@ integer main (){
 
         close_input();
         return 1;   
+
 }
 
 }
