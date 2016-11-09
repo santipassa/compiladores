@@ -83,18 +83,9 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 	public AST visit(Name x){
 		Location tmp ;
-		
-		if(x.isArray()){
-			tmp = new Location("TMPARRAY"+temporalCounter,temporalCounter);
-			tmp.setOffset(maxOffset);
-			maxOffset-=4;
-		
-		}else{
-			tmp = new Location("TMP"+temporalCounter,temporalCounter);
-			tmp.setOffset(maxOffset);
-			maxOffset-=4;
-		
-		}
+		tmp = new Location("TMP"+temporalCounter,temporalCounter);
+		tmp.setOffset(maxOffset);
+		maxOffset-=4;
 		temporalCounter++;
 		return tmp;
 	}
@@ -157,12 +148,25 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Location x){
+		if(x.isArray()){
+			list.add(new IntermediateCode("ARRAY", x, x.getExpr().accept(this), null));		
+		}
 		return x;
 	}
 	
 	public AST visit(Method_call_expr x){
-		list.add(new IntermediateCode("CALL",null,null,new Label(x.getId())));
-		 return new Registro("%eax");
+		LinkedList<Expr> params = x.getParam_expr();
+		LinkedList<Expr> acceptParams = new LinkedList<Expr>();
+		if (params!=null){
+			Expr aux;
+			for(Expr e: params){
+				aux = (Expr) e.accept(this);
+				acceptParams.add(aux);
+			}
+			x.setParam_expr(acceptParams);
+		}		
+		list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
+		return new Registro("%eax");
 	}
 	
 	public AST visit(Program x){
@@ -205,7 +209,17 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 	
 	public AST visit(Method_call x){
-		list.add(new IntermediateCode("CALL",null,null,new Label(x.getId())));
+		LinkedList<Expr> params = x.getParam_expr();
+		LinkedList<Expr> acceptParams = new LinkedList<Expr>();
+		if (params!=null){
+			Expr aux;
+			for(Expr e: params){
+				aux = (Expr) e.accept(this);
+				acceptParams.add(aux);
+			}
+			x.setParam_expr(acceptParams);
+		}			
+		list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
 		return null;
 	}
 	
@@ -250,14 +264,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		AST exp2 = x.getExpr2().accept(this);
 		list.add(new IntermediateCode("ASIGN",exp1,null,i));
 		list.add(new IntermediateCode("ASIGN",exp2,null,evalCota));
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLFOR" + whileCounter)));
-		lblentrada.add(new Label("LBLFOR" + whileCounter));
-		list.add(new IntermediateCode("JMPF",evalCota,i,new Label("LBLFORFIN" + whileCounter)));
-		lblsalida.add(new Label("LBLFORFIN" + whileCounter));
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLFOR" + x.getLineNumber())));
+		lblentrada.add(new Label("LBLFOR" + x.getLineNumber()));
+		list.add(new IntermediateCode("JMPF",evalCota,i,new Label("LBLFORFIN" + x.getLineNumber())));
+		lblsalida.add(new Label("LBLFORFIN" + x.getLineNumber()));
 		x.getStatement().accept(this);
 		list.add(new IntermediateCode("SUM",i,new Literal_integer(1),i));
-		list.add(new IntermediateCode("JMP",null,null, new Label("LBLFOR" + whileCounter)));
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLFORFIN" + whileCounter)));
+		list.add(new IntermediateCode("JMP",null,null, new Label("LBLFOR" + x.getLineNumber())));
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLFORFIN" + x.getLineNumber())));
 		lblsalida.removeLast();
 		lblentrada.removeLast();
 		whileCounter--;
@@ -295,14 +309,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	
 	public AST visit(Statement_while x){
 		whileCounter++;
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLWHILE" + whileCounter)));
-		lblentrada.add(new Label("LBLWHILE" + whileCounter));
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLWHILE" + x.getLineNumber())));
+		lblentrada.add(new Label("LBLWHILE" + x.getLineNumber()));
 		AST cond = x.getExpr().accept(this);
-		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLWHILEFIN" + whileCounter)));
-		lblsalida.add(new Label("LBLWHILEFIN" + whileCounter));
+		list.add(new IntermediateCode("JMPF",cond,new Literal_boolean(true),new Label("LBLWHILEFIN" + x.getLineNumber())));
+		lblsalida.add(new Label("LBLWHILEFIN" + x.getLineNumber()));
 		x.getStatement().accept(this);
-		list.add(new IntermediateCode("JMP",null,null, new Label("LBLWHILE" + whileCounter)));
-		list.add(new IntermediateCode("LBL",null,null,new Label("LBLWHILEFIN" + whileCounter)));
+		list.add(new IntermediateCode("JMP",null,null, new Label("LBLWHILE" + x.getLineNumber())));
+		list.add(new IntermediateCode("LBL",null,null,new Label("LBLWHILEFIN" + x.getLineNumber())));
 		whileCounter--;
 		lblsalida.removeLast();
 		lblentrada.removeLast();

@@ -105,7 +105,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 						this.addError(c,"[index] must be greater than zero");
 					aux = new SymbolTable(c.getId(), expr.getType(), true, c);
 					this.incOffset(c.getIntLiteral());
-					c.setOffset(offset);	// El fin del arreglo.
+					c.setOffset(offset+4);	// El fin del arreglo.
 				}else{	
 					aux = new SymbolTable(c.getId(), expr.getType(), c);
 					c.setOffset(offset);
@@ -147,7 +147,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 
 	public String visit(Param_decl expr) {
 		expr.setOffset(offset);
-		this.incOffset();
+		this.incOffset(-1);
 		if (expr.getType().isObject())	
 			if (this.searchClass(expr.getType().toString())==null) 
 				this.addError(expr, " Undefined type");	

@@ -53,6 +53,11 @@ public class Method_call extends Statement {
 		return param_expr;
 	}
 
+	public void setParam_expr(LinkedList<Expr> param_expr){
+		this.param_expr = param_expr;
+	}
+
+
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {
 		return v.visit(this);

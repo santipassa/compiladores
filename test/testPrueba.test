@@ -1,12 +1,32 @@
 class main {
-	integer main() {
-		integer i;
-		integer m;
-		i=4;
-		m=2;
-		i=i*m;
-		return i;
-		
+
+/*
+integer factorialFor (){
+	integer limit;
+	integer v;
+	v=5;
+	limit = 15;
+	if ( v > limit) { return -1;}
+
+	else{
+		integer c, fact;
+		c = 0;
+		fact = 1;
+		while (c<v){
+			c = c+1;
+			fact = fact*c;
+		}
+		return fact;
+	}
+	return 1;
+}*/
+
+bool eq(integer y,integer x){
+	return x==y;
+} 
+
+	bool main() {
+		return eq(4,4);
 	}
 
 	
