@@ -155,9 +155,10 @@ public class AssemblerGenerator{
 		result="movl %eax,%ebx\n"; //guardo el viejo eax esto es por las dudas si antes hubo una llamada a metodo.
 		result=getEdx()+"movl "+op1+",%eax\n";
 		result=result+"cltd\n";
-		result=result+getEdx()+"idivl "+op2+"\n";
-		result=result+getEdx()+"%eax, "+resultLocation(i.getResult());
-		result="movl %ebx,%eax\n"; //restauro el viejo eax
+		result=result+"movl "+op2+",%ecx\n";
+		result=result+getEdx()+"idivl %ecx\n";
+		result=result+getEdx()+"movl %eax, "+resultLocation(i.getResult());
+		result=result+"movl %ebx,%eax\n"; //restauro el viejo eax
 		return result;
 	}
 
