@@ -9,6 +9,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	 int ifCounter = 0;
 	 int whileCounter = 0;
 	 int maxOffset;
+	 private String className; // auxiliar
 	
 	public LinkedList<IntermediateCode> getList(){
 		return list;
@@ -110,6 +111,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			}
 		if (x.getMethod_decl() != null)
 			for (Method_decl md : x.getMethod_decl()) {
+				className=x.getId();
 				md.accept(this);
 			}
 		return null;
@@ -120,7 +122,12 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Method_decl x){
 		maxOffset = x.getOffset();
 		temporalCounter=0;
-		IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(x.getId()));
+		String id;
+		if (x.getId().compareTo("main")!=0)
+			id = className+x.getId();
+		else
+			id = x.getId();
+		IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(id));
 		list.add(methodDecl);
 		x.getBody().accept(this);
 		
@@ -168,8 +175,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 				acceptParams.add(aux);
 			}
 			x.setParam_expr(acceptParams);
-		}		
-		list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
+		}
+		String id;
+		if (x.isObjectCall())
+			id = x.getType().toString()+x.getId_param();
+		else{
+			id = x.getType().toString()+x.getId();		
+		}
+		list.add(new IntermediateCode("CALL", x, null, new Label(id)));
 		return new Registro("%eax");
 	}
 	

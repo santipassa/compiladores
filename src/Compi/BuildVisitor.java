@@ -221,25 +221,25 @@ public class BuildVisitor implements ASTVisitor<String> {
 					}
 				}
 			}else{
-				if (symbol.getAst() instanceof Name){
+				if (symbol.getAst() instanceof Name){ // si es una variable
 					Name n = (Name) symbol.getAst();
 					offset_decl = n.getOffset();
 					expr.setOffset(offset_decl);
 				}else{
-					Param_decl n = (Param_decl) symbol.getAst();
+					Param_decl n = (Param_decl) symbol.getAst(); // si es un parametro
 					offset_decl = n.getOffset();
 					expr.setOffset(offset_decl);
 				}
 
-				if (symbol.isArray() && expr.isArray()){
+				if (symbol.isArray() && expr.isArray()){ // si ambas son arreglos  
 					expr.setType(symbol.getType()); 	
 					expr.getExpr().accept(this);
 				}
 				else{
-					if (!symbol.isArray() && !expr.isArray())
+					if (!symbol.isArray() && !expr.isArray()) // si ambas no son arreglos
 						expr.setType(symbol.getType());
 					else
-						this.addError(expr, " var array");
+						this.addError(expr, " var array"); // si no coincide la variable declarada con la usada
 				}
 			}
 		}
@@ -253,9 +253,9 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Method_call_expr expr) {
 		SymbolTable symbol;
 		if (expr.isObjectCall())
-			symbol = this.searchSymbol(expr.getId(), false); 
+			symbol = this.searchSymbol(expr.getId(), false); // busco que este definida la instancia
 		else
-			symbol = this.searchSymbol(expr.getId(), true);
+			symbol = this.searchSymbol(expr.getId(), true); // busco que este definido el metodo
 		if (symbol==null)
 			this.addError(expr, "Undefined");
 		else{
@@ -276,7 +276,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 				expr.setType(symbol.getType());
 			}
 		
-			if (expr.getParam_expr()!=null)
+			if (expr.getParam_expr()!=null) // tratamiento de parametros
 				for (Expr e: expr.getParam_expr()){
 					e.accept(this);
 				}

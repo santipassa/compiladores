@@ -1,56 +1,17 @@
-class main {
-
-
-integer int2bin(integer d){
-   integer acum, aux, i;
-   acum=0;
-   i=0;
-
-   while (true){
-      if(d>1){               
-        aux = d % 2;   // toma el ultimo digito
-        { integer j;
-          j=0;   
-                            
-          while (true){    // ubica el digito en la posicion que le corresponde
-             if (j<i){
-               aux = aux * 10;  
-               j=j+1;
-               continue;  
-             } 
-             else { break; }
-          }
-         }     			
-
-          acum=acum +aux;  // resultado parcial 
-          i=i+1;           
-          d=d/2;           // toma el resto del numero decimal
-           continue;  
-       }
-       else { break; }
-      }
-       { integer j;
-         j=0;
-                            
-         while (true){         // ubica el ultimo digito en la posicion que corresponde
-            if (j<i){
-              d = d * 10;
-              j=j+1;
-               continue;  
-            } 
-             else { break; }
-         }   	
-	   }
-	return acum + d;  // resultaod final y retorna
+class aux{
+    bool get(){
+      return true;
+    }
 }
 
+class main{
 
-
-	integer main() {
-		return int2bin(100);
+  integer main(){
+    aux a;
+    bool b;
+    b = a.get();
+    return 0;
 	}
-
-	
 	
 }
 

@@ -241,7 +241,6 @@ public class AssemblerGenerator{
 
 
 	private String getAsmOp(AST a){
-		//faltan los literals boolean y flotantes (hay que ver como se tratan)
 		if(a instanceof Literal_integer){
 			return "$"+a.toString();
 
@@ -252,7 +251,7 @@ public class AssemblerGenerator{
 			else
 				return l.getOffset()+"(%ebp)";
 		}else if(a instanceof Literal_boolean){
-			if (a.toString().compareTo("True")==0)
+			if (a.toString().compareTo("true")==0)
 				return "$1";
 			else 
 				return "$0";
