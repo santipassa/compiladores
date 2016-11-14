@@ -6,7 +6,9 @@ public class Method_call extends Statement {
 
 	private LinkedList<Expr> param_expr;
 	private String id_param; // object.id_param()
-	private String clase; // 
+	private Type type; // Tipo del id_param()
+	private String claseContenedora;
+	private boolean isExtern;
 
 	public Method_call(String i, LinkedList<Expr> pe, String pi, int n){
 		setId(i);
@@ -33,12 +35,20 @@ public class Method_call extends Statement {
 
 	}
 
-	public String getClase(){
-		return clase;
+	public void setIsExtern(boolean isExtern){
+		this.isExtern=isExtern;
 	}
 
-	public void setClase(String clase){
-		this.clase = clase;
+	public boolean isExtern(){
+		return isExtern;
+	}
+
+	public Type getType(){
+		return this.type;
+	}
+
+	public void setType(Type type){
+		this.type = type;
 	}
 
 	public String getId_param(){
@@ -57,6 +67,13 @@ public class Method_call extends Statement {
 		this.param_expr = param_expr;
 	}
 
+	public void setClaseContenedora(String claseContenedora){
+		this.claseContenedora=claseContenedora;
+	}
+
+	public String getClaseContenedora(){
+		return this.claseContenedora;
+	}
 
 	@Override
 	public <T> T accept(ASTVisitor<T> v) {

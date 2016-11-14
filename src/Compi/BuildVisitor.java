@@ -10,6 +10,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	private LinkedList<TableLevel> stack;
 	private LinkedList<ErrorCompi> errors;
 	private int offset;
+	private String className;
 
 	public BuildVisitor(){
 		stack = new LinkedList<TableLevel>();
@@ -90,6 +91,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 			}
 		if (expr.getMethod_decl() != null)
 			for (Method_decl c :expr.getMethod_decl()){
+				className = expr.getId();
 				c.accept(this);
 			}
 		this.closeLevel();
@@ -125,7 +127,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	}
 
 	public String visit(Method_decl expr) {
-		SymbolTable aux = new SymbolTable(expr.getId(), true, expr.getType(), expr);
+		SymbolTable aux = new SymbolTable(expr.getId(), true, expr.getType(), className, expr);
 		if (stack.getLast().search(aux))	// Repeated checking
 			this.addError(expr, "Redefined");
 		stack.getLast().setSymbol(aux);
@@ -266,14 +268,20 @@ public class BuildVisitor implements ASTVisitor<String> {
 				else{
 					Class_decl class_decl = (Class_decl) sym.getAst();
 					Type methodType = class_decl.getMethodType(expr.getId_param());
-					if (methodType==null) // Si el metodo no existe
+					if (methodType==null){ // Si el metodo no existe
 						this.addError(expr, "."+expr.getId_param()+" Undefined");
-					else
+					}
+					else{
 						expr.setType(methodType);						
+						expr.setClaseContenedora(class_decl.getId());
+					}
 				}
 			}	
 			else{
 				expr.setType(symbol.getType());
+				Method_decl md = (Method_decl) symbol.getAst();
+				expr.setIsExtern(md.getBody().isExtern());
+				expr.setClaseContenedora(symbol.getClaseContenedora());
 			}
 		
 			if (expr.getParam_expr()!=null) // tratamiento de parametros
@@ -311,14 +319,20 @@ public class BuildVisitor implements ASTVisitor<String> {
 				else{
 					Class_decl class_decl = (Class_decl) sym.getAst();
 					Type methodType = class_decl.getMethodType(expr.getId_param());
-					if (methodType==null) // Si el metodo no existe
+					if (methodType==null){ // Si el metodo no existe
 						this.addError(expr, "."+expr.getId_param()+" Undefined");
-					else
-						expr.setClase(methodType.toString());						
+					}
+					else{
+						expr.setType(methodType);						
+						expr.setClaseContenedora(class_decl.getId());
+					}
 				}
 			}
 			else{
-				expr.setClase(symbol.getType().toString());
+				expr.setType(symbol.getType());
+				Method_decl md = (Method_decl) symbol.getAst();
+				expr.setIsExtern(md.getBody().isExtern());
+				expr.setClaseContenedora(symbol.getClaseContenedora());
 			}
 			if (expr.getParam_expr()!=null)
 				for (Expr e: expr.getParam_expr())

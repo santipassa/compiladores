@@ -6,7 +6,7 @@ public class AssemblerGenerator{
 	int countLabelsForDebug=0;
 	boolean isMain = false;
 	//imprime eax al finalizar cada metodo para ver que devuelve al finalizar.
-	boolean debugMode = true;
+	boolean debugMode = false;
 	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	/* PELIGROOOOOOO!!!!!! NO USAR NUNCA EL EAX, SOLO LO USA EL RETORNO DE UN METODO, USAR DESDE EBX EN ADELANTE */
 	/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -26,6 +26,9 @@ public class AssemblerGenerator{
         String res="";
 		for(IntermediateCode i : l){
             switch (i.getOperator()) {
+            case "NEG":
+            	res=res+neg(i);
+            	break;
 			case "SUM":
 				res=res+sum(i);
 				break;
@@ -224,6 +227,8 @@ public class AssemblerGenerator{
 		return result;
 	}
 
+
+
 	private String jmpf(IntermediateCode i){
 		Label lblTojump = (Label) i.getResult();
 		String result;
@@ -251,10 +256,12 @@ public class AssemblerGenerator{
 			else
 				return l.getOffset()+"(%ebp)";
 		}else if(a instanceof Literal_boolean){
-			if (a.toString().compareTo("true")==0)
+			if (a.toString().equals("True")){
 				return "$1";
-			else 
+			}
+			else{ 
 				return "$0";
+			}
 		}else if(a instanceof Registro){
 			Registro r = (Registro)a;
 			return r.toString();
@@ -476,7 +483,36 @@ public class AssemblerGenerator{
 		
 		return result;
 	}
+	private String neg(IntermediateCode i){
+		AST op1 = i.getOp1();
+		String result;
 
+		if(op1 instanceof Literal_boolean){
+			String opstr=op1.toString();
+			if (getAsmOp(op1)=="$1")
+				opstr="0";
+			else
+				opstr="1";
+			result=getEdx()+"movl $"+opstr+","+resultLocation(i.getResult())+"\n";
+		}else{
+			countLabel=countLabel;
+			String lbl1= ".L"+countLabel;
+			countLabel++;
+			String lbl2= ".L"+countLabel;
+			result=getEdx()+"movl "+getAsmOp(i.getOp1())+", %ebx\n";
+			result=result+"cmpl $1, %ebx\n";
+			result=result+"je "+lbl1+"\n";
+			result=result+"movl $1, %ebx\n";
+			result=result+"jmp "+lbl2+"\n";
+			result=result+lbl1+":\n";
+			result=result+"movl $0, %ebx\n";
+			result=result+lbl2+":\n";
+			result=result+"movl %ebx, "+resultLocation(i.getResult())+"\n";
+			countLabel++;
+		}
+		
+		return result;
+	}
 	private String array(IntermediateCode i){
 		AST loc = i.getOp2();
 		String result;

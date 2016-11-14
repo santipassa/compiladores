@@ -10,6 +10,7 @@ public class SymbolTable {
 	private boolean isArray;
 	private boolean isMethod;
 	private Type type;
+	private String claseContenedora;
 	private AST ast;
 
 	public SymbolTable(String id, AST ast){
@@ -27,11 +28,12 @@ public class SymbolTable {
 		this.ast = ast;
 	}	
 
-	public SymbolTable(String id, boolean isMethod, Type type, AST ast){
+	public SymbolTable(String id, boolean isMethod, Type type, String claseContenedora, AST ast){
 		this.id = id;
 		this.type = type;
 		this.isArray = false;
 		this.isMethod = isMethod;
+		this.claseContenedora = claseContenedora;
 		this.ast = ast;
 	}	
 
@@ -62,6 +64,10 @@ public class SymbolTable {
 	public Type getType(){
 		return type;
 	}
+
+	public String getClaseContenedora(){
+		return claseContenedora;
+	}	
 
 	public boolean equals(SymbolTable x){
 		if (this.isMethod && x.isMethod)

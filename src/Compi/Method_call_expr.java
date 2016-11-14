@@ -6,6 +6,8 @@ public class Method_call_expr extends Expr {
 
 	private LinkedList<Expr> param_expr;
 	private String id_param; // object.param_id()
+	private String claseContenedora;
+	private boolean isExtern;
 
 	public Method_call_expr(String i, LinkedList<Expr> pe, String pi, int n){
 		setId(i);
@@ -31,6 +33,14 @@ public class Method_call_expr extends Expr {
 
 	}
 
+	public void setIsExtern(boolean isExtern){
+		this.isExtern=isExtern;
+	}
+
+	public boolean isExtern(){
+		return isExtern;
+	}
+
 	public String getId_param(){
 		return id_param;
 	}
@@ -45,6 +55,14 @@ public class Method_call_expr extends Expr {
 
 	public void setParam_expr(LinkedList<Expr> param_expr){
 		this.param_expr = param_expr;
+	}
+
+	public void setClaseContenedora(String claseContenedora){
+		this.claseContenedora=claseContenedora;
+	}
+
+	public String getClaseContenedora(){
+		return this.claseContenedora;
 	}
 
 	@Override

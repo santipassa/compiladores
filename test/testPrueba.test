@@ -1,17 +1,31 @@
-class aux{
-    bool get(){
-      return true;
+
+class main {
+  integer nthprime (integer n) {
+    integer i;
+    integer divs;
+    i = 0;
+    divs = 2;
+    n = n +1;
+    while ( n > 0) {
+      bool divides;
+      divides = false;
+      i = i + 1;
+      while ( (! divides) && (divs < i)) {
+       if ( i % divs == 0)
+         { divides = true; }
+       else
+         { divs = divs + 1; }
+      }
+      divs = 2;
+      if ( ! divides)
+        { n = n - 1; }
     }
-}
+    return i;
+  }
 
-class main{
+  integer main (){
+    return nthprime(7);
+  }
 
-  integer main(){
-    aux a;
-    bool b;
-    b = a.get();
-    return 0;
-	}
-	
 }
 

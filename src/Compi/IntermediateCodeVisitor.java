@@ -122,18 +122,20 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Method_decl x){
 		maxOffset = x.getOffset();
 		temporalCounter=0;
-		String id;
-		if (x.getId().compareTo("main")!=0)
-			id = className+x.getId();
-		else
-			id = x.getId();
-		IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(id));
-		list.add(methodDecl);
-		x.getBody().accept(this);
-		
-		IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
-		methodDecl.setOffset(maxOffset);
-		list.add(endMeth);
+		if (!x.getBody().isExtern()){
+			String id;
+			/*if (x.getId().compareTo("main")!=0)
+				id = className+x.getId();
+			else*/
+				id = x.getId();
+			IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(id));
+			list.add(methodDecl);
+			x.getBody().accept(this);
+			
+			IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
+			methodDecl.setOffset(maxOffset);
+			list.add(endMeth);
+		}
 
 		return null;
 
@@ -176,13 +178,18 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			}
 			x.setParam_expr(acceptParams);
 		}
-		String id;
-		if (x.isObjectCall())
-			id = x.getType().toString()+x.getId_param();
-		else{
-			id = x.getType().toString()+x.getId();		
+		/*String id="";
+		if (!x.isExtern()){
+			if (x.isObjectCall())
+				id = x.getClaseContenedora()+x.getId_param();
+			else{
+				id = x.getClaseContenedora()+x.getId();		
+			}
+		}else{
+			id=x.getId();
 		}
-		list.add(new IntermediateCode("CALL", x, null, new Label(id)));
+		list.add(new IntermediateCode("CALL", x, null, new Label(id)));*/
+		list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
 		return new Registro("%eax");
 	}
 	
@@ -236,7 +243,18 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			}
 			x.setParam_expr(acceptParams);
 		}			
-		list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
+		/*String id="";
+		if (!x.isExtern()){
+			if (x.isObjectCall())
+				id = x.getClaseContenedora()+x.getId_param();
+			else{
+				id = x.getClaseContenedora()+x.getId();		
+			}
+		}else{
+			id=x.getId();
+		}
+		list.add(new IntermediateCode("CALL", x, null, new Label(id)));
+		*/list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
 		return null;
 	}
 	

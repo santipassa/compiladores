@@ -23,10 +23,10 @@ cd test/
 I=$(ls | wc -l)
 
 cd ../bin/
-java -cp .:../lib/java-cup-11b-runtime.jar Compi.Main ../test/test_funciones_2016/testCTDS.ctds ../test/test_funciones_2016/libtestCTDS.c
+java -cp .:../lib/java-cup-11b-runtime.jar Compi.Main ../test/test_funciones_2016/testCTDS.ctds
 echo "Ensambling assembler.s ..."
 cd ~/Escritorio
-gcc -m32 assembler.s
+gcc -m32 assembler.s libtestCTDS.c
 echo "Executing a.out ..."
 cd ~/Escritorio
-./a.out > salida.txt
+./a.out
