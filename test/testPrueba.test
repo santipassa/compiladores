@@ -1,29 +1,21 @@
 class main {
-  integer nthprime (integer n) {
-    integer i;
-    integer divs;
-    i = 0;
-    divs = 2;
-    n = n +1;
-    while ( n > 0) {
-      bool divides;
-      divides = false;
-      i = i + 1;
-      while ( (! divides) && (divs < i)) {
-       if ( i % divs == 0)
-         { divides = true; }
-       else
-         { divs = divs + 1; }
-      }
-      divs = 2;
-      if ( ! divides)
-        { n = n - 1; }
-    }
-    return i;
-  }
+  integer potencia(integer m, integer n){
+	integer i;
+	integer acum;
+	acum=1;
+	i=1;
+	while (true){
+		if(i<n || i==n){
+			acum=acum * m;
+			i=i+1;
+		}
+		else { break;}
+	} 
+	return(acum);  
+}
 
   integer main (){
-    return nthprime(7);
+    return potencia(2,5);
   }
 }
 

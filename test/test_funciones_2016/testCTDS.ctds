@@ -196,7 +196,7 @@ void test(){
     mostrar2=nthprimeArray(mostrar);
     print_int(mostrar2);
     
-    aux = potencia(aux,mostrar2);
+    aux = potencia(mostrar2,aux);
     print_int(aux);
     return;
 }
@@ -243,8 +243,30 @@ integer main (){
 		print_string(1);
 
 // test nthprime entero    
-      
+	print_string(5);    
+        x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
+        i = 0;        
+        while (i<x){              
+            integer aux;         
+            aux=get_int(); // lee los datos para invocar a la funcion
+            aux = nthprime(aux);
+            print_int(aux);             
+            i+=1;
+	    }
+		print_string(1);
+
 // test nthprime array entero    
+        print_string(6);    
+        x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
+        i = 0;        
+        while (i<x){              
+            integer aux;         
+            aux=get_int(); // lee los datos para invocar a la funcion
+            aux = nthprimeArray(aux);
+            print_int(aux);             
+            i+=1;
+	    }
+		print_string(1);  
       
 
 // test int2bin entero    
