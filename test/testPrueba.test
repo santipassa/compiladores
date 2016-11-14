@@ -1,56 +1,29 @@
 class main {
-
-
-integer int2bin(integer d){
-   integer acum, aux, i;
-   acum=0;
-   i=0;
-
-   while (true){
-      if(d>1){               
-        aux = d % 2;   // toma el ultimo digito
-        { integer j;
-          j=0;   
-                            
-          while (true){    // ubica el digito en la posicion que le corresponde
-             if (j<i){
-               aux = aux * 10;  
-               j=j+1;
-               continue;  
-             } 
-             else { break; }
-          }
-         }     			
-
-          acum=acum +aux;  // resultado parcial 
-          i=i+1;           
-          d=d/2;           // toma el resto del numero decimal
-           continue;  
-       }
-       else { break; }
+  integer nthprime (integer n) {
+    integer i;
+    integer divs;
+    i = 0;
+    divs = 2;
+    n = n +1;
+    while ( n > 0) {
+      bool divides;
+      divides = false;
+      i = i + 1;
+      while ( (! divides) && (divs < i)) {
+       if ( i % divs == 0)
+         { divides = true; }
+       else
+         { divs = divs + 1; }
       }
-       { integer j;
-         j=0;
-                            
-         while (true){         // ubica el ultimo digito en la posicion que corresponde
-            if (j<i){
-              d = d * 10;
-              j=j+1;
-               continue;  
-            } 
-             else { break; }
-         }   	
-	   }
-	return acum + d;  // resultaod final y retorna
-}
+      divs = 2;
+      if ( ! divides)
+        { n = n - 1; }
+    }
+    return i;
+  }
 
-
-
-	integer main() {
-		return int2bin(100);
-	}
-
-	
-	
+  integer main (){
+    return nthprime(7);
+  }
 }
 

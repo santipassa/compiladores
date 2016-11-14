@@ -84,7 +84,7 @@ integer nthprime (integer n) {
       bool divides;
       divides = false;
       i = i + 1;
-      while ( ! divides && divs < i) {
+      while ( (! divides) && (divs < i)) {
        if ( i % divs == 0)
          { divides = true; }
        else
@@ -118,7 +118,7 @@ integer int2bin(integer d){
 
    while (true){
       if(d>1){               
-        aux = d;   // toma el ultimo digito
+        aux = d % 2 ;   // toma el ultimo digito
         { integer j;
           j=0;   
                             
@@ -239,30 +239,9 @@ integer main (){
 		print_string(1);
 
 // test nthprime entero    
-        print_string(5);    
-        x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
-        i = 0;        
-        while (i<x){              
-            integer aux;         
-            aux=get_int(); // lee los datos para invocar a la funcion
-            aux = nthprime(aux);
-            print_int(aux);             
-            i+=1;
-	    }
-		print_string(1);
-
+      
 // test nthprime array entero    
-       print_string(6);    
-        x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
-        i = 0;        
-        while (i<x){              
-            integer aux;         
-            aux=get_int(); // lee los datos para invocar a la funcion
-            aux = nthprimeArray(aux);
-            print_int(aux);             
-            i+=1;
-	    }
-		print_string(1);
+      
 
 // test int2bin entero    
         print_string(7);    

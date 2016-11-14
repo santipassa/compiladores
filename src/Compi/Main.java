@@ -56,7 +56,7 @@ public static void main(String args[]) throws Exception {
          for(IntermediateCode i : l ){
              c=c+"\n"+i.toString()+"\n";
          }
-         String home="/home/claudio/";
+         String home="/home/camila/";
          PrintWriter out = new PrintWriter(home+"Escritorio/intermediate.ctds");
          out.println(c);
          out.close();

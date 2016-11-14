@@ -120,13 +120,14 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Method_decl x){
 		maxOffset = x.getOffset();
 		temporalCounter=0;
-		IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(x.getId()));
-		list.add(methodDecl);
-		x.getBody().accept(this);
-		
-		IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
-		methodDecl.setOffset(maxOffset);
-		list.add(endMeth);
+		if (!x.getBody().isExtern()){
+			IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(x.getId()));
+			list.add(methodDecl);
+			x.getBody().accept(this);
+			IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
+			methodDecl.setOffset(maxOffset);
+			list.add(endMeth);
+		}
 
 		return null;
 
