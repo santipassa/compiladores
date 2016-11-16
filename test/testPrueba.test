@@ -1,37 +1,21 @@
-class Mult {
-	integer a, b, c;
-	integer mult(integer x, integer y){
-		return x*y;
+
+class main { //ESTE ES UN EJEMPLO DE RECURSIÓN
+  
+integer recu(integer m){
+	integer a;	
+	if (m==0) {
+		return 1;
 	}
-}
-
-class Arit {
-	integer x,y;
-	bool j;
-	integer z;
-	integer add(integer p, integer y){
-		return x+z;
+	else {
+		a=m*recu(m-1);
+		return a;	
 	}
+	return 0;
+  
 }
 
-class main {
-  integer potencia(integer m, integer n){
-	integer i;
-	integer acum;
-	acum=1;
-	i=1;
-	while (true){
-		if(i<n || i==n){
-			acum=acum * m;
-			i=i+1;
-		}
-		else { break;}
-	} 
-	return(acum);  
-}
-
-  integer main (){
-    return potencia(2,5);
+ integer main (){
+    return recu(5);
   }
 
 }

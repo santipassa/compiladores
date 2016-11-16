@@ -185,11 +185,15 @@ integer potencia(integer m, integer n){
 
 // invoca varias funciones
 void test(){
-    integer aux;
+    integer aux,aux1,aux2,mostrar,mostrar2;
     aux = 2; 
-    print_int(gcd(factorial(3),factorial(4)));
-    print_int(nthprimeArray(gcd(factorial(3),factorial(4))));
-    aux = potencia(mostrar2,aux);
+    aux1=factorial(3);
+    aux2=factorial(4);
+    mostrar=gcd(aux1,aux2);
+    print_int(mostrar);
+    mostrar2=nthprimeArray(mostrar);
+    print_int(mostrar2);
+    aux = potencia(aux,mostrar2);
     print_int(aux);
     return;
 }
@@ -198,7 +202,7 @@ void test1(){
     integer aux;
     aux = 2; 
     test();
-	print_int(aux);
+    print_int(aux);
   return;
 }
 
@@ -279,8 +283,10 @@ integer main (){
         x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
         i = 0;        
         while (i<x){              
-            integer aux;// lee los datos para invocar a la funcion
-            aux = gcd(get_int(),get_int());
+            integer aux,aux1,aux2;// lee los datos para invocar a la funcion
+            aux1=get_int();
+            aux2=get_int();
+	    aux = gcd(aux1,aux2);
             print_int(aux);             
             i=i+1;
 	    }
@@ -288,13 +294,13 @@ integer main (){
 
 // test test    
         print_string(9);    
-        // test();
+         test();
 		print_string(1);
 
 
 // test test1    
         print_string(10);    
-        // test1();
+         test1();
 		print_string(1);
 
 
