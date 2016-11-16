@@ -1,5 +1,5 @@
 
-class main { //ESTE ES UN EJEMPLO DE RECURSIÓN
+class A { //ESTE ES UN EJEMPLO DE RECURSIÓN
   
 integer recu(integer m){
 	integer a;	
@@ -7,15 +7,18 @@ integer recu(integer m){
 		return 1;
 	}
 	else {
-		a=m*recu(m-1);
-		return a;	
+		return m*recu(m-1);
+		
 	}
 	return 0;
   
 }
 
+
+class main
  integer main (){
-    return recu(5);
+	A obj;
+	return obj.recu(12);
   }
 
 }
