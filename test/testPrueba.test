@@ -15,13 +15,24 @@ class Arit {
 }
 
 class main {
-	integer main (){
-		Mult a;
-		Arit b;
-		a.a= 10;
-		a.b= 2;
-		return a.mult(a.a, a.b);
-	}
+  integer potencia(integer m, integer n){
+	integer i;
+	integer acum;
+	acum=1;
+	i=1;
+	while (true){
+		if(i<n || i==n){
+			acum=acum * m;
+			i=i+1;
+		}
+		else { break;}
+	} 
+	return(acum);  
+}
+
+  integer main (){
+    return potencia(2,5);
+  }
 
 }
 

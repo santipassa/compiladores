@@ -267,6 +267,7 @@ public class AssemblerGenerator{
 		AST resultExpr = i.getResult();  
 		String result;
 		result=registryInit()+"movl "+ getAsmOp(resultExpr)+", %eax\n";
+		attributeAccess.pollFirst();
 		return !isMain?result+"leave\nret\n":result;
 	}
 	private String call(IntermediateCode i){
@@ -285,13 +286,6 @@ public class AssemblerGenerator{
 			params = mcall.getParam_expr();
 			isObjectCall = mcall.isObjectCall();
 			offsetObject = mcall.getOffsetObject();
-		}
-
-		Integer cantParams;
-		if (params!=null)
-			cantParams = params.size();
-		else{
-			cantParams = 0;
 		}
 
 		String result="";

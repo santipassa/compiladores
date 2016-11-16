@@ -9,7 +9,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public int ifCounter = 0;
 	public int whileCounter = 0;
 	public int maxOffset;
-	private String className; // auxiliar
+	private String className; 
 	private int offsetObject;
 
 	public LinkedList<IntermediateCode> getList(){
@@ -92,13 +92,6 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 
 	public AST visit(Name x){
-		
-		/*Location tmp;
-		tmp = new Location("TMP"+temporalCounter,temporalCounter);
-		tmp.setOffset(maxOffset);
-		maxOffset-=4;
-		temporalCounter++;
-		return tmp;*/
 		return null;
 	}
 	
@@ -112,10 +105,6 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Class_decl x){
-		/*if (x.getField_decl() != null)
-			for (Field_decl f : x.getField_decl()) {
-				f.accept(this);
-			}*/
 		if (x.getMethod_decl() != null)
 			for (Method_decl md : x.getMethod_decl()) {
 				className=x.getId();
@@ -136,17 +125,12 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			else
 				id = x.getId();
 			IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(id));
-			
 			list.add(methodDecl);
-
 			offsetObject=8;
 			if (x.getParam_decl()!=null){
 				offsetObject = offsetObject + x.getParam_decl().size()*4; 
 			}
-			
-			
 			x.getBody().accept(this);
-			
 			IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
 			methodDecl.setOffset(maxOffset);
 			list.add(endMeth);
@@ -177,9 +161,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	
 	public AST visit(Location x){
 		if (x.isAttribute()){
-			if(x.isArray()){
-				// list.add(new IntermediateCode("ATTRIBUTEARRAY", x, x.getExpr().accept(this), null));		
-			}else{
+			if(!x.isArray()){
 				x.setOffsetObject(offsetObject);
 				list.add(new IntermediateCode("ATTRIBUTE", x, null, null));						
 			}
@@ -223,19 +205,18 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	 	return null;
 	}
 	public AST visit(Unary_op x){
+		Location tmp = new Location("TMP"+temporalCounter,temporalCounter);
+		tmp.setOffset(maxOffset);
+		maxOffset-=4;
 	
-			Location tmp = new Location("TMP"+temporalCounter,temporalCounter);
-			tmp.setOffset(maxOffset);
-			maxOffset-=4;
-		
-			temporalCounter++;
-			if(x.getOperacion()=="!"){
-				list.add(new IntermediateCode("NEG",x.getExpr().accept(this),null,tmp));
-			}
-			if(x.getOperacion()=="-"){
-				list.add(new IntermediateCode("ABS",x.getExpr().accept(this),null,tmp));
-			}
-			return tmp;
+		temporalCounter++;
+		if(x.getOperacion()=="!"){
+			list.add(new IntermediateCode("NEG",x.getExpr().accept(this),null,tmp));
+		}
+		if(x.getOperacion()=="-"){
+			list.add(new IntermediateCode("ABS",x.getExpr().accept(this),null,tmp));
+		}
+		return tmp;
 	}
 	
 	public AST visit(Block x){

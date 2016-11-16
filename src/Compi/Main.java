@@ -43,8 +43,6 @@ public static void main(String args[]) throws Exception {
             for (ErrorCompi e: build.getErrors())
                 System.out.println(e.toString());
  
-        //prog.accept(pretty);
-        //System.out.println("ULTIMO OFFSET"+maxOffset);  
          IntermediateCodeVisitor iCodeVisitor = new IntermediateCodeVisitor(maxOffset);
          iCodeVisitor.visit(prog);
          java.util.LinkedList<IntermediateCode> l = iCodeVisitor.getList();

@@ -189,8 +189,7 @@ void test(){
     aux = 2; 
     print_int(gcd(factorial(3),factorial(4)));
     print_int(nthprimeArray(gcd(factorial(3),factorial(4))));
-    
-    aux = potencia(aux,nthprimeArray(gcd(factorial(3),factorial(4))));
+    aux = potencia(mostrar2,aux);
     print_int(aux);
     return;
 }
@@ -236,7 +235,7 @@ integer main (){
 		print_string(1);
 
 // test nthprime entero    
-        print_string(5);    
+	print_string(5);    
         x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
         i = 0;        
         while (i<x){              
@@ -244,7 +243,7 @@ integer main (){
             aux=get_int(); // lee los datos para invocar a la funcion
             aux = nthprime(aux);
             print_int(aux);             
-            i=i+1;
+            i+=1;
 	    }
 		print_string(1);
 
@@ -257,9 +256,10 @@ integer main (){
             aux=get_int(); // lee los datos para invocar a la funcion
             aux = nthprimeArray(aux);
             print_int(aux);             
-            i=i+1;
+            i+=1;
 	    }
-		print_string(1);
+		print_string(1);  
+      
 
 // test int2bin entero    
         print_string(7);    
