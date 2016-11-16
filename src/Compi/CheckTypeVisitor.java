@@ -51,9 +51,10 @@ public class CheckTypeVisitor implements ASTVisitor<Type> {
 
 	public Type visit(Class_decl c) {
 		if (c.getField_decl() != null)
-			for (Field_decl f :  c.getField_decl())
+			for (Field_decl f :  c.getField_decl()){
 				if (f.accept(this).toString().compareTo("void")==0)
 					this.addError(f, "Incorrect type");
+			}
 		if (c.getMethod_decl() != null)
 			for (Method_decl m :  c.getMethod_decl())
 				m.accept(this);

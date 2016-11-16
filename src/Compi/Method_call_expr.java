@@ -8,6 +8,7 @@ public class Method_call_expr extends Expr {
 	private String id_param; // object.param_id()
 	private String claseContenedora;
 	private boolean isExtern;
+	private int offsetObject;
 
 	public Method_call_expr(String i, LinkedList<Expr> pe, String pi, int n){
 		setId(i);
@@ -63,6 +64,14 @@ public class Method_call_expr extends Expr {
 
 	public String getClaseContenedora(){
 		return this.claseContenedora;
+	}
+
+	public void setOffsetObject(int offsetObject){
+		this.offsetObject = offsetObject;
+	}
+
+	public int getOffsetObject(){
+		return this.offsetObject;
 	}
 
 	@Override

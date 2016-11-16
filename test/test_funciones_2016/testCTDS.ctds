@@ -4,12 +4,11 @@
 
 class main{
 
+void print_int(integer x) extern;
 integer get_int() extern;
 void print_string(integer s) extern;
 integer close_input() extern;
 integer init_input(integer f) extern;
-void print_int(integer s) extern;
-
 
 
 // retorna el factorial de v
@@ -27,7 +26,7 @@ integer factorial (integer v){
     }
     return fact;
   }
-  return 0;
+  return 1;
 }
 
 // retorna el factorial de v
@@ -84,7 +83,7 @@ integer nthprime (integer n) {
       bool divides;
       divides = false;
       i = i + 1;
-      while ( (! divides) && (divs < i)) {
+      while ( ! divides && divs < i) {
        if ( i % divs == 0)
          { divides = true; }
        else
@@ -118,7 +117,7 @@ integer int2bin(integer d){
 
    while (true){
       if(d>1){               
-        aux = d % 2 ;   // toma el ultimo digito
+        aux = d % 2;   // toma el ultimo digito
         { integer j;
           j=0;   
                             
@@ -168,8 +167,7 @@ integer gcd (integer a, integer b) {
 	return result;
 }
 
-
-// Calcula el valor del real m elevado a la n
+/* Calcula el valor del real m elevado a la n*/
 integer potencia(integer m, integer n){
 	integer i;
 	integer acum;
@@ -187,16 +185,12 @@ integer potencia(integer m, integer n){
 
 // invoca varias funciones
 void test(){
-    integer aux,fac1,fac2,mostrar,mostrar2;
+    integer aux;
     aux = 2; 
-    fac1=factorial(3);
-    fac2=factorial(4);
-    mostrar=gcd(fac1,fac2);
-    print_int(mostrar);
-    mostrar2=nthprimeArray(mostrar);
-    print_int(mostrar2);
+    print_int(gcd(factorial(3),factorial(4)));
+    print_int(nthprimeArray(gcd(factorial(3),factorial(4))));
     
-    aux = potencia(aux,mostrar2);
+    aux = potencia(aux,nthprimeArray(gcd(factorial(3),factorial(4))));
     print_int(aux);
     return;
 }
@@ -224,11 +218,10 @@ integer main (){
             aux=get_int(); // lee los datos para invocar a la funcion
             aux = factorial(aux);
             print_int(aux);             
-            i+=1;
-      }
+            i=i+1;
+	    }
 		print_string(1);
-
-
+		
 // test factorial array entero    
         print_string(4);    
         x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
@@ -238,14 +231,35 @@ integer main (){
             aux=get_int(); // lee los datos para invocar a la funcion
             aux = factorialArray(aux);
             print_int(aux);             
-            i+=1;
+            i=i+1;
 	    }
 		print_string(1);
 
 // test nthprime entero    
-      
+        print_string(5);    
+        x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
+        i = 0;        
+        while (i<x){              
+            integer aux;         
+            aux=get_int(); // lee los datos para invocar a la funcion
+            aux = nthprime(aux);
+            print_int(aux);             
+            i=i+1;
+	    }
+		print_string(1);
+
 // test nthprime array entero    
-      
+        print_string(6);    
+        x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
+        i = 0;        
+        while (i<x){              
+            integer aux;         
+            aux=get_int(); // lee los datos para invocar a la funcion
+            aux = nthprimeArray(aux);
+            print_int(aux);             
+            i=i+1;
+	    }
+		print_string(1);
 
 // test int2bin entero    
         print_string(7);    
@@ -256,7 +270,7 @@ integer main (){
             aux=get_int(); // lee los datos para invocar a la funcion
             aux = int2bin(aux);
             print_int(aux);             
-            i+=1;
+            i=i+1;
 	    }
 		print_string(1);
 
@@ -265,32 +279,28 @@ integer main (){
         x=get_int(); // lee la cantidad de veces que ejecutara la funcion  
         i = 0;        
         while (i<x){              
-            integer aux,aux1,aux2;// lee los datos para invocar a la funcion
-        aux1=get_int();
-	aux2=get_int();
-
-	aux = gcd(aux1,aux2);
+            integer aux;// lee los datos para invocar a la funcion
+            aux = gcd(get_int(),get_int());
             print_int(aux);             
-            i+=1;
+            i=i+1;
 	    }
 		print_string(1);
 
 // test test    
         print_string(9);    
-        test();
+        // test();
 		print_string(1);
 
 
 // test test1    
         print_string(10);    
-        test1();
+        // test1();
 		print_string(1);
 
 
 
         close_input();
         return 1;   
-
 }
 
 }

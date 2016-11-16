@@ -5,6 +5,7 @@ public class Name extends AST {
 	private int int_literal;
 	private boolean isArray;
 	private int offset;
+	private boolean isAttribute;
 	
 	public Name(String i,int n){
 		setId(i);
@@ -38,6 +39,14 @@ public class Name extends AST {
 
 	public int getOffset(){
 		return this.offset;
+	}
+
+	public void setIsAttribute(boolean isAttribute){
+		this.isAttribute = isAttribute;
+	}
+
+	public boolean isAttribute(){
+		return this.isAttribute;
 	}
 
 	@Override

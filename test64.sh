@@ -29,4 +29,4 @@ cd ~/Escritorio
 gcc -m32 assembler.s libtestCTDS.c
 echo "Executing a.out ..."
 cd ~/Escritorio
-./a.out
+./a.out 

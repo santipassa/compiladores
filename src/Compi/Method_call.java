@@ -9,6 +9,7 @@ public class Method_call extends Statement {
 	private Type type; // Tipo del id_param()
 	private String claseContenedora;
 	private boolean isExtern;
+	private int offsetObject;
 
 	public Method_call(String i, LinkedList<Expr> pe, String pi, int n){
 		setId(i);
@@ -73,6 +74,14 @@ public class Method_call extends Statement {
 
 	public String getClaseContenedora(){
 		return this.claseContenedora;
+	}
+
+	public void setOffsetObject(int offsetObject){
+		this.offsetObject = offsetObject;
+	}
+
+	public int getOffsetObject(){
+		return this.offsetObject;
 	}
 
 	@Override

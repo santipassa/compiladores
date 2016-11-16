@@ -1,31 +1,27 @@
+class Mult {
+	integer a, b, c;
+	integer mult(integer x, integer y){
+		return x*y;
+	}
+}
+
+class Arit {
+	integer x,y;
+	bool j;
+	integer z;
+	integer add(integer p, integer y){
+		return x+z;
+	}
+}
 
 class main {
-  integer nthprime (integer n) {
-    integer i;
-    integer divs;
-    i = 0;
-    divs = 2;
-    n = n +1;
-    while ( n > 0) {
-      bool divides;
-      divides = false;
-      i = i + 1;
-      while ( (! divides) && (divs < i)) {
-       if ( i % divs == 0)
-         { divides = true; }
-       else
-         { divs = divs + 1; }
-      }
-      divs = 2;
-      if ( ! divides)
-        { n = n - 1; }
-    }
-    return i;
-  }
-
-  integer main (){
-    return nthprime(7);
-  }
+	integer main (){
+		Mult a;
+		Arit b;
+		a.a= 10;
+		a.b= 2;
+		return a.mult(a.a, a.b);
+	}
 
 }
 

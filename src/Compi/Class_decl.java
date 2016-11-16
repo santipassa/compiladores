@@ -6,6 +6,7 @@ class Class_decl extends AST {
 	
 	private LinkedList<Field_decl> field_declList;
 	private LinkedList<Method_decl> method_declList;
+	private int offset;
 
 	public Class_decl(String id,LinkedList<Field_decl> f, LinkedList<Method_decl> m,int numeroLinea){
 		this.field_declList=f;
@@ -85,6 +86,14 @@ class Class_decl extends AST {
 			if (f.searchName(id))
 				return f.getOffset(id);
 		return 0;
+	}
+
+	public void setOffset(int offset){
+		this.offset = offset;
+	}
+
+	public int getOffset(){
+		return this.offset;
 	}
 
 	@Override

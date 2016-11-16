@@ -2,15 +2,16 @@
 
 import java.util.LinkedList;
 public class IntermediateCodeVisitor implements ASTVisitor<AST>{
-	 public LinkedList<IntermediateCode> list;
-	 public LinkedList<Label> lblentrada;
-	 public LinkedList<Label> lblsalida;
-	 int temporalCounter;
-	 int ifCounter = 0;
-	 int whileCounter = 0;
-	 int maxOffset;
-	 private String className; // auxiliar
-	
+	public LinkedList<IntermediateCode> list;
+	public LinkedList<Label> lblentrada;
+	public LinkedList<Label> lblsalida;
+	public int temporalCounter;
+	public int ifCounter = 0;
+	public int whileCounter = 0;
+	public int maxOffset;
+	private String className; // auxiliar
+	private int offsetObject;
+
 	public LinkedList<IntermediateCode> getList(){
 		return list;
 		
@@ -83,16 +84,22 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 
 	public AST visit(Field_decl x){
+		if (x.getName() != null)
+			for (Name c :x.getName()){
+				c.accept(this);
+			}
 		return null;
 	}
 
 	public AST visit(Name x){
-		Location tmp ;
+		
+		/*Location tmp;
 		tmp = new Location("TMP"+temporalCounter,temporalCounter);
 		tmp.setOffset(maxOffset);
 		maxOffset-=4;
 		temporalCounter++;
-		return tmp;
+		return tmp;*/
+		return null;
 	}
 	
 	public AST visit(Body x){
@@ -105,10 +112,10 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 
 
 	public AST visit(Class_decl x){
-		if (x.getField_decl() != null)
+		/*if (x.getField_decl() != null)
 			for (Field_decl f : x.getField_decl()) {
 				f.accept(this);
-			}
+			}*/
 		if (x.getMethod_decl() != null)
 			for (Method_decl md : x.getMethod_decl()) {
 				className=x.getId();
@@ -124,12 +131,20 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		temporalCounter=0;
 		if (!x.getBody().isExtern()){
 			String id;
-			/*if (x.getId().compareTo("main")!=0)
+			if (x.getId().compareTo("main")!=0)
 				id = className+x.getId();
-			else*/
+			else
 				id = x.getId();
 			IntermediateCode methodDecl = new IntermediateCode("MDECL",null,null,new Label(id));
+			
 			list.add(methodDecl);
+
+			offsetObject=8;
+			if (x.getParam_decl()!=null){
+				offsetObject = offsetObject + x.getParam_decl().size()*4; 
+			}
+			
+			
 			x.getBody().accept(this);
 			
 			IntermediateCode endMeth = new IntermediateCode("ENDMETH",null,null,null);
@@ -161,8 +176,17 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	}
 	
 	public AST visit(Location x){
-		if(x.isArray()){
-			list.add(new IntermediateCode("ARRAY", x, x.getExpr().accept(this), null));		
+		if (x.isAttribute()){
+			if(x.isArray()){
+				// list.add(new IntermediateCode("ATTRIBUTEARRAY", x, x.getExpr().accept(this), null));		
+			}else{
+				x.setOffsetObject(offsetObject);
+				list.add(new IntermediateCode("ATTRIBUTE", x, null, null));						
+			}
+		}else{
+			if(x.isArray()){
+				list.add(new IntermediateCode("ARRAY", x, x.getExpr().accept(this), null));		
+			}
 		}
 		return x;
 	}
@@ -178,7 +202,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			}
 			x.setParam_expr(acceptParams);
 		}
-		/*String id="";
+		String id="";
 		if (!x.isExtern()){
 			if (x.isObjectCall())
 				id = x.getClaseContenedora()+x.getId_param();
@@ -188,8 +212,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 		}else{
 			id=x.getId();
 		}
-		list.add(new IntermediateCode("CALL", x, null, new Label(id)));*/
-		list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
+		list.add(new IntermediateCode("CALL", x, null, new Label(id)));
 		return new Registro("%eax");
 	}
 	
@@ -218,8 +241,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 	public AST visit(Block x){
 		if(x.getField_decl()!=null){
 			for(Field_decl f : x.getField_decl()){
-				f.accept(this);
-				
+				f.accept(this);	
 			}
 		}
 		if(x.getStatement()!=null){
@@ -243,7 +265,7 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			}
 			x.setParam_expr(acceptParams);
 		}			
-		/*String id="";
+		String id="";
 		if (!x.isExtern()){
 			if (x.isObjectCall())
 				id = x.getClaseContenedora()+x.getId_param();
@@ -254,7 +276,6 @@ public class IntermediateCodeVisitor implements ASTVisitor<AST>{
 			id=x.getId();
 		}
 		list.add(new IntermediateCode("CALL", x, null, new Label(id)));
-		*/list.add(new IntermediateCode("CALL", x, null, new Label(x.getId())));
 		return null;
 	}
 	

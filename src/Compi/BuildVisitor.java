@@ -11,6 +11,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 	private LinkedList<ErrorCompi> errors;
 	private int offset;
 	private String className;
+	private boolean isAttribute;
 
 	public BuildVisitor(){
 		stack = new LinkedList<TableLevel>();
@@ -83,12 +84,16 @@ public class BuildVisitor implements ASTVisitor<String> {
 	public String visit(Class_decl expr) {
 		TableLevel x = new TableLevel();
 		this.createLevel(x);
-		if (expr.getField_decl() != null)
+		if (expr.getField_decl() != null){
+			isAttribute=true;
 			for (Field_decl c :expr.getField_decl()){
 				if (c.getType().isObject() || c.getType().toString()=="void")
 					this.addError(c, "Invalid type");
 				c.accept(this);
 			}
+			isAttribute=false;
+		}
+		expr.setOffset(-(offset+4));	// offset del objeto
 		if (expr.getMethod_decl() != null)
 			for (Method_decl c :expr.getMethod_decl()){
 				className = expr.getId();
@@ -102,16 +107,23 @@ public class BuildVisitor implements ASTVisitor<String> {
 		SymbolTable aux;
 		if (expr.getName() != null)
 			for (Name c :expr.getName()){
+				c.setIsAttribute(isAttribute);
 				if (c.isArray()){
 					if (c.getIntLiteral()<=0)
 						this.addError(c,"[index] must be greater than zero");
 					aux = new SymbolTable(c.getId(), expr.getType(), true, c);
 					this.incOffset(c.getIntLiteral());
-					c.setOffset(offset+4);	// El fin del arreglo.
+					c.setOffset(offset+4);	// El "fin" del arreglo.
 				}else{	
 					aux = new SymbolTable(c.getId(), expr.getType(), c);
-					c.setOffset(offset);
-					this.incOffset();
+					if (expr.getType().isObject()){
+						int offsetClass = ((Class_decl) this.searchClass(expr.getType().toString()).getAst()).getOffset();
+						this.incOffset(offsetClass/4);
+						c.setOffset(offset+4);
+					}else{	
+						c.setOffset(offset);
+						this.incOffset();
+					}
 				}
 				if (stack.getLast().search(aux)){	// Repeated checking
 					this.addError(c, "Redefined");
@@ -207,15 +219,16 @@ public class BuildVisitor implements ASTVisitor<String> {
 						else{
 							boolean attIsArray = class_decl.getAttributeIsArray(expr.getId_param());
 							offset_decl = class_decl.getOffset(expr.getId_param());
+							Name name = (Name) symbol.getAst();
 							if (attIsArray && symbol.isArray()){
 								expr.setType(attType);
-								expr.setOffset(offset_decl);
+								expr.setOffset(name.getOffset()-offset_decl-4);
 								expr.getExpr().accept(this);
 							}
 							else
 								if (!attIsArray && !symbol.isArray()){
 									expr.setType(attType);
-									expr.setOffset(offset_decl);
+									expr.setOffset(name.getOffset()-offset_decl-4);
 								}
 								else
 									this.addError(expr, "."+expr.getId_param()+" var array");
@@ -227,6 +240,7 @@ public class BuildVisitor implements ASTVisitor<String> {
 					Name n = (Name) symbol.getAst();
 					offset_decl = n.getOffset();
 					expr.setOffset(offset_decl);
+					expr.setIsAttribute(n.isAttribute());
 				}else{
 					Param_decl n = (Param_decl) symbol.getAst(); // si es un parametro
 					offset_decl = n.getOffset();
@@ -272,6 +286,8 @@ public class BuildVisitor implements ASTVisitor<String> {
 						this.addError(expr, "."+expr.getId_param()+" Undefined");
 					}
 					else{
+						Name name = (Name) symbol.getAst();
+						expr.setOffsetObject(name.getOffset());
 						expr.setType(methodType);						
 						expr.setClaseContenedora(class_decl.getId());
 					}

@@ -6,6 +6,8 @@ public class Location extends Expr {
 
 	private boolean isArray;
 	private String id_param; // object.id_param
+	private boolean isAttribute;
+	private int offsetObject;
 
 	public Location(String i, int n){
 		setId(i);
@@ -51,6 +53,22 @@ public class Location extends Expr {
 
 	public String getId_param(){
 		return id_param;
+	}
+
+	public void setIsAttribute(boolean isAttribute){
+		this.isAttribute = isAttribute;
+	}
+
+	public boolean isAttribute(){
+		return this.isAttribute;
+	}
+
+	public void setOffsetObject(int offsetObject){
+		this.offsetObject = offsetObject;
+	}
+
+	public int getOffsetObject(){
+		return this.offsetObject;
 	}
 
 	@Override

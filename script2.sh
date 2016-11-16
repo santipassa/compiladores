@@ -26,3 +26,9 @@ cd ../bin/
 echo "TEST 1"
 java -cp .:../lib/java-cup-11b-runtime.jar Compi.Main ../test/testPrueba.test	 
 
+echo "Ensambling assembler.s ..."
+cd ~/Escritorio
+gcc -m32 assembler.s 
+echo "Executing a.out ..."
+cd ~/Escritorio
+./a.out 
